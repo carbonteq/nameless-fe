@@ -17,4 +17,34 @@ export const siteConfig = {
 			href:"/signin"
 		}
 	],
+
+	SideBarItems :[
+		{
+			label: "Movies",
+			href: "/movies"
+		},
+		{
+			label: "Collections",
+			href: "/movies"
+		},
+		{
+			label: "TrackList",
+			href: "/movies"
+		},
+		{
+			label: "Books",
+			href: "/movies"
+		},
+		{
+			label: "Shelves",
+			href: "/movies"
+		},
+		{
+			label: "Track",
+			href: "/movies"
+		}
+
+
+	]
+
 };
