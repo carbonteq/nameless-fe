@@ -1,4 +1,3 @@
-
 import "@/styles/globals.css";
 import { Link } from "@nextui-org/link";
 import clsx from "clsx";
@@ -33,7 +32,6 @@ export default function RootLayout({
 }: {
 	children: React.ReactNode;
 }) {
-
 	return (
 		<html suppressHydrationWarning lang="en">
 			<head />
@@ -52,8 +50,6 @@ export default function RootLayout({
 								{children}
 							</main>
 						</div>
-						<footer className="w-full flex items-center justify-center py-3">
-						</footer>
 					</div>
 				</Providers>
 			</body>

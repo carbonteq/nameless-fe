@@ -35,7 +35,7 @@ export const Navbar = () => {
 	const brandStyle = {
 		fontSize: "30px", // Adjust the font size of the brand text
 		color: "#000000", // Adjust the brand text color as needed
-		marginLeft: "-90px", // Move the brand name to the left
+		marginLeft: "-137px", // Move the brand name to the left
 		fontFamily: "inter", // Change the font family
 	};
 
@@ -72,9 +72,15 @@ export const Navbar = () => {
 				<NavbarItem className="hidden md:flex">
 					<Button
 						size="small"
-						style={{ backgroundColor: "#000000", color: "#FFFFFF" }}
+						style={{
+							backgroundColor: "#000000",
+							color: "#FFFFFF",
+							marginRight: "-100px",
+						}}
 					>
-						Login
+						<a href="/signin" className="link">
+							Login
+						</a>
 					</Button>
 				</NavbarItem>
 			</NavbarContent>
