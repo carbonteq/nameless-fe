@@ -1,20 +1,27 @@
 "use client";
 
 import { Link } from "@nextui-org/link";
+import { useTheme } from "next-themes";
 import { usePathname } from "next/navigation";
-import type React from "react";
 
 const Sidebar: React.FC = () => {
 	const pathname = usePathname();
 	const showSidebar = (pathname !== "/signin" && pathname !== "/signup") ? 1 : 0;
-
+    const { theme, setTheme } = useTheme();
+    
+    const setColour=():string=>{
+        let colour:string=""
+        theme === "dark" ? colour = "#22334b" : colour= "#b1AAAA"
+        return colour
+    }
+   
 	if (!showSidebar) return <></>;
 
 	return (
 		<aside
 			className="sidebar"
 			style={{
-				//backgroundColor: "#b1aaa7",
+				backgroundColor: setColour(),
 				width: "190px",
 				color: "#1871cf",
 			}}
@@ -34,7 +41,7 @@ const Sidebar: React.FC = () => {
 								fontWeight: "bold",
 								marginBottom: "1rem",
 								color: "#000000",
-								backgroundColor: "#dcdcdc", // Highlight background color
+								backgroundColor: theme === 'dark' ? "#1a222e" : "#b1AAAA", 
 								padding: "0.4rem",
 								borderRadius: "7px",
 							}}
@@ -78,7 +85,7 @@ const Sidebar: React.FC = () => {
 								fontWeight: "bold",
 								marginBottom: "1rem",
 								color: "#000000",
-								backgroundColor: "#dcdcdc", // Highlight background color
+								backgroundColor: theme === 'dark' ? "#1a222e" : "#b1AAAA", // Highlight background color
 								padding: "0.4rem",
 								borderRadius: "7px",
 							}}

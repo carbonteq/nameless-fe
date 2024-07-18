@@ -1,5 +1,4 @@
 import "@/styles/globals.css";
-import { Link } from "@nextui-org/link";
 import clsx from "clsx";
 import type { Metadata, Viewport } from "next";
 import { Providers } from "./providers";
@@ -11,6 +10,7 @@ import { siteConfig } from "@/config/site";
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
+
 	title: {
 		default: siteConfig.name,
 		template: `%s - ${siteConfig.name}`,
@@ -42,7 +42,7 @@ export default function RootLayout({
 					fontSans.variable,
 				)}
 			>
-				<Providers themeProps={{ attribute: "class", defaultTheme: "" }}>
+				<Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
 					<div className="relative flex flex-col h-screen">
 						<Navbar />
 						<div className="flex flex-grow">

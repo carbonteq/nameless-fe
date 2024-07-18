@@ -1,3 +1,4 @@
+"use client"
 import {
     Navbar as NextUINavbar,
     NavbarContent,
@@ -8,28 +9,29 @@ import {
     NavbarMenuItem,
 } from "@nextui-org/navbar";
 import { Button } from "@nextui-org/button";
-import { Link } from "@nextui-org/link";
 import { Input } from "@nextui-org/input";
 import NextLink from "next/link";
-import { ThemeSwitch } from "@/components/theme-switch";
-import { siteConfig } from "@/config/site";
 import { ModeToggle } from "./ui/toggle";
+import { useTheme } from "next-themes";
 
 export const Navbar = () => {
-    const searchInput = (
-        <Input
-            aria-label="Search"
-            classNames={{
-                inputWrapper: "bg-default-100",
-                input: "text-sm",
-            }}
-        />
-    );
+
+    const { theme } = useTheme();
+
+    // const searchInput = (
+    //     <Input
+    //         aria-label="Search"
+    //         classNames={{
+    //             inputWrapper: "bg-default-100",
+    //             input: "text-sm",
+    //         }}
+    //     />
+    // );
 
     const navbarStyle = {
         height: "70px",
         padding: "0 60px", // Adjust the padding as needed
-        backgroundColor: "#b1aaaa", // Adjust the background color as needed
+        backgroundColor: theme === "dark" ? "#22334b" : "#b1AAAA", // Adjust the background color as needed
         transition: "all 0.3s ease-in-out",
     };
 
@@ -77,8 +79,8 @@ export const Navbar = () => {
                     <Button
                         size="md"
                         style={{
-                            // backgroundColor: "#000000",
-                            // color: "#FFFFFF",
+                            backgroundColor: theme === "dark" ? "#1a222e" : "#b1AAAA",
+                            //color: "#FFFFFF",
                             marginRight: "0",
                         }}
                     >
@@ -89,17 +91,17 @@ export const Navbar = () => {
                 </NavbarItem>
             </NavbarContent>
 
-            <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
+            {/* <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
                 <ModeToggle />
                 <NavbarMenuToggle />
-            </NavbarContent>
-            <NavbarMenu>
+            </NavbarContent> */}
+            {/* <NavbarMenu>
                 {siteConfig.navItems.map((item) => (
                     <NavbarMenuItem key={item.href}>
                         <Link href={item.href}>{item.label}</Link>
                     </NavbarMenuItem>
                 ))}
-            </NavbarMenu>
+            </NavbarMenu> */}
         </NextUINavbar>
     );
 };
