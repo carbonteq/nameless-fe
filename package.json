@@ -19,6 +19,7 @@
 		"@nextui-org/avatar": "^2.0.31",
 		"@nextui-org/button": "2.0.34",
 		"@nextui-org/code": "2.0.29",
+		"@nextui-org/dropdown": "^2.1.27",
 		"@nextui-org/input": "2.2.2",
 		"@nextui-org/kbd": "2.0.30",
 		"@nextui-org/link": "2.0.32",
@@ -43,6 +44,7 @@
 		"next-themes": "^0.2.1",
 		"react": "18.3.1",
 		"react-dom": "18.3.1",
+		"styled-components": "^6.1.12",
 		"tailwind-merge": "^2.4.0",
 		"tailwindcss-animate": "^1.0.7"
 	},

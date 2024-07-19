@@ -18,7 +18,6 @@ export default function Home() {
   const genres = ["Fantasy", "Sci-Fi", "Mystery"];
 
   const handleSearch = (event: { preventDefault: () => void; }) => {
-    // Perform search logic here
     console.log("Search query:");
     console.log("Selected genres:", selectedGenres);
     console.log("Rating:", rating);
@@ -27,11 +26,8 @@ export default function Home() {
       title: "TA-DA",
       description: "Filters Applied",
     })
-
-        return 
-    // Example logic to set results (replace with your own logic)
-    // const filteredResults = data.filter(item => item.includes(query));
-    // setResults(filteredResults);
+    setIsDropdownOpen(false);
+    return 
   };
 
   const handleGenreChange = (genre: string) => {
@@ -71,7 +67,7 @@ export default function Home() {
             <Search />
           </div>
           <Slider
-            label="Rating"
+            label="Min Rating"
             step={1}
             maxValue={9}
             minValue={0}
