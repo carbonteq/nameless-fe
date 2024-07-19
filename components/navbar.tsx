@@ -11,6 +11,7 @@ import { Button } from "@nextui-org/button";
 import NextLink from "next/link";
 import { ModeToggle } from "./ui/toggle";
 import { button, ThemeColour } from "./primitives";
+import Link from "next/link";
 
 export const Navbar = () => {
 
@@ -30,7 +31,7 @@ export const Navbar = () => {
     };
 
     return (
-        <NextUINavbar className={`${ThemeColour.variants.background.main}`} maxWidth="full" position="sticky" style={navbarStyle}>
+        <NextUINavbar className={`${ThemeColour.variants.background.main} shadow-lg`} maxWidth="full" position="sticky" style={navbarStyle}>
             <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
                 <NavbarBrand as="li" className="gap-0 max-w-fit">
                     <NextLink className="flex justify-start items-center gap-0 pt-2" href="/">
@@ -39,13 +40,6 @@ export const Navbar = () => {
                         </p>
                     </NextLink>
                 </NavbarBrand>
-                {/* <ul className="hidden lg:flex gap-4 justify-start ml-0">
-                    {siteConfig.navItems.map((item) => (
-                        <NavbarItem key={item.href} style={itemStyle}>
-                            <Link href={item.href}>{item.label}</Link>
-                        </NavbarItem>
-                    ))}
-                </ul> */}
             </NavbarContent>
 
             <NavbarContent
@@ -57,24 +51,12 @@ export const Navbar = () => {
                 </NavbarItem>
                 <NavbarItem className="hidden md:flex">
                     <Button className={`mr-0 ${button.variants.background.main}`} size="md">
-                        <a href="/signin" className="link ">
-                            Login
-                        </a>
+                        <Link href="/signin"
+                        >Login
+                        </Link>
                     </Button>
                 </NavbarItem>
             </NavbarContent>
-
-            {/* <NavbarContent className="sm:hidden basis-1 pl-4" justify="end">
-                <ModeToggle />
-                <NavbarMenuToggle />
-            </NavbarContent> */}
-            {/* <NavbarMenu>
-                {siteConfig.navItems.map((item) => (
-                    <NavbarMenuItem key={item.href}>
-                        <Link href={item.href}>{item.label}</Link>
-                    </NavbarMenuItem>
-                ))}
-            </NavbarMenu> */}
         </NextUINavbar>
     );
 };

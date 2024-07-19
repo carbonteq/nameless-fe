@@ -9,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import Link from "next/link";
 import { useState } from "react";
 
 export default function SignIn() {
@@ -59,13 +60,13 @@ export default function SignIn() {
 
             <div>
               <text>Don't have an account? </text>
-              <a href="#" className="text-blue-500 hover:underline">
-                Sign Up
-              </a>
+              <Link href="/signup"
+                className="text-blue-500 hover:underline">Sign Up
+              </Link>
             </div>
-            <a href="#" className="text-blue-500 hover:underline mb-2">
-              Forgot Password?
-            </a>
+            <Link href="/forgotpassword"
+              className="text-blue-500 hover:underline">Forgot Password?
+            </Link>
           </CardFooter>
         </Card>
       </form>
