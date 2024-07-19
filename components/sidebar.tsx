@@ -1,29 +1,21 @@
-"use client";
-
+"use client"
 import { Link } from "@nextui-org/link";
-import { useTheme } from "next-themes";
 import { usePathname } from "next/navigation";
+import { button, TextTheme, ThemeColour } from "./primitives";
 
 const Sidebar: React.FC = () => {
 	const pathname = usePathname();
 	const showSidebar = (pathname !== "/signin" && pathname !== "/signup") ? 1 : 0;
-    const { theme, setTheme } = useTheme();
-    
-    const setColour=():string=>{
-        let colour:string=""
-        theme === "dark" ? colour = "#22334b" : colour= "#b1AAAA"
-        return colour
-    }
    
 	if (!showSidebar) return <></>;
 
 	return (
 		<aside
-			className="sidebar"
+			className={`sidebar ${ThemeColour.variants.background.main}`}
 			style={{
-				backgroundColor: setColour(),
 				width: "190px",
 				color: "#1871cf",
+                transition: "all 0.3s ease-in-out",
 			}}
 		>
 			<nav className="p-4">
@@ -35,13 +27,12 @@ const Sidebar: React.FC = () => {
 				>
 					<li>
 						<div
-							className="nav-item"
+							className={`nav-item ${button.variants.background.main}`}
 							style={{
 								fontSize: "1.25rem",
 								fontWeight: "bold",
 								marginBottom: "1rem",
-								color: "#000000",
-								backgroundColor: theme === 'dark' ? "#1a222e" : "#b1AAAA", 
+								color: "#808080",
 								padding: "0.4rem",
 								borderRadius: "7px",
 							}}
@@ -54,8 +45,8 @@ const Sidebar: React.FC = () => {
 									href="/movies/MyCollections_m"
 									className="nav-subitem"
 									style={{
-										fontSize: "1rem",
-										color: "#000000",
+										fontSize: "1.1rem",
+										color: "#808080",
 										textDecoration: "none",
 									}}
 								>
@@ -67,8 +58,8 @@ const Sidebar: React.FC = () => {
 									href="/movies/MyTracklist_m"
 									className="nav-subitem"
 									style={{
-										fontSize: "1rem",
-										color: "#000000",
+										fontSize: "1.1rem",
+										color: "#808080",
 										textDecoration: "none",
 									}}
 								>
@@ -79,13 +70,12 @@ const Sidebar: React.FC = () => {
 					</li>
 					<li>
 						<div
-							className="nav-item mt-4"
+							className={`nav-item mt-4 ${button.variants.background.main}`}
 							style={{
 								fontSize: "1.25rem",
 								fontWeight: "bold",
-								marginBottom: "1rem",
-								color: "#000000",
-								backgroundColor: theme === 'dark' ? "#1a222e" : "#b1AAAA", // Highlight background color
+								marginBottom: "1.1rem",
+								color: "#808080",
 								padding: "0.4rem",
 								borderRadius: "7px",
 							}}
@@ -98,8 +88,8 @@ const Sidebar: React.FC = () => {
 									href="/books/MyShelf_b"
 									className="nav-subitem"
 									style={{
-										fontSize: "1rem",
-										color: "#000000",
+										fontSize: "1.1rem",
+                                        color: "#808080",
 										textDecoration: "none",
 									}}
 								>
@@ -111,9 +101,9 @@ const Sidebar: React.FC = () => {
 									href="/books/MyTracklist_b"
 									className="nav-subitem"
 									style={{
-										fontSize: "1rem",
-										color: "#000000",
+										fontSize: "1.1rem",
 										textDecoration: "none",
+                                        color:"#808080"
 									}}
 								>
 									My Tracklist

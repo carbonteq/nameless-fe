@@ -51,3 +51,36 @@ export const subtitle = tv({
     fullWidth: true,
   },
 });
+
+export const button = tv({
+  variants:{
+    background:{
+      main: "dark:bg-[#1a222e] bg-[#b1AAAA]",
+    },
+  },
+  defaultVariants:{
+    background:'main'
+  },
+})
+
+export const ThemeColour = tv({
+  variants:{
+    background:{
+      main: "dark:bg-[#22334b] bg-[#b1AAAA]",
+    },
+  },
+  defaultVariants:{
+    background:'main'
+  },
+})
+
+export const TextTheme = tv({
+  variants:{
+    background:{
+      main: "dark:bg-[#808080] bg-[#000000]",
+    },
+  },
+  defaultVariants:{
+    background:'main'
+  },
+})

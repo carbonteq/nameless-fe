@@ -9,10 +9,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function SignIn() {
+    
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
