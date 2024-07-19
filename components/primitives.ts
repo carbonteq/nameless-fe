@@ -53,34 +53,45 @@ export const subtitle = tv({
 });
 
 export const button = tv({
-  variants:{
-    background:{
+  variants: {
+    background: {
       main: "dark:bg-[#1a222e] bg-[#b1AAAA]",
     },
   },
-  defaultVariants:{
-    background:'main'
+  defaultVariants: {
+    background: 'main'
   },
 })
 
 export const ThemeColour = tv({
-  variants:{
-    background:{
-      main: "dark:bg-[#22334b] bg-[#b1AAAA]",
+  variants: {
+    background: {
+      main: "dark:bg-gray-900 bg-[#b1AAAA]",
     },
   },
-  defaultVariants:{
-    background:'main'
+  defaultVariants: {
+    background: 'main'
   },
 })
 
 export const TextTheme = tv({
-  variants:{
-    background:{
+  variants: {
+    background: {
       main: "dark:bg-[#808080] bg-[#000000]",
     },
   },
-  defaultVariants:{
-    background:'main'
+  defaultVariants: {
+    background: 'main'
+  },
+})
+
+export const HoverButton = tv({
+  variants: {
+    background: {
+      main: "dark:bg-[#1a222e] bg-[#808080]",
+    },
+  },
+  defaultVariants: {
+    background: 'main'
   },
 })

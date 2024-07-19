@@ -1,120 +1,56 @@
 "use client"
-import { Link } from "@nextui-org/link";
 import { usePathname } from "next/navigation";
-import { button, TextTheme, ThemeColour } from "./primitives";
+import { button, HoverButton, TextTheme, ThemeColour } from "./primitives";
 
 const Sidebar: React.FC = () => {
-	const pathname = usePathname();
-	const showSidebar = (pathname !== "/signin" && pathname !== "/signup") ? 1 : 0;
-   
-	if (!showSidebar) return <></>;
+    const pathname = usePathname();
+    const showSidebar = (pathname !== "/signin" && pathname !== "/signup") ? 1 : 0;
 
-	return (
-		<aside
-			className={`sidebar ${ThemeColour.variants.background.main}`}
-			style={{
-				width: "190px",
-				color: "#1871cf",
-                transition: "all 0.3s ease-in-out",
-			}}
-		>
-			<nav className="p-4">
-				<ul
-					style={{
-						listStyle: "none",
-						padding: 0,
-					}}
-				>
-					<li>
-						<div
-							className={`nav-item ${button.variants.background.main}`}
-							style={{
-								fontSize: "1.25rem",
-								fontWeight: "bold",
-								marginBottom: "1rem",
-								color: "#808080",
-								padding: "0.4rem",
-								borderRadius: "7px",
-							}}
-						>
-							Movies
-						</div>
-						<ul className="pl-5">
-							<li>
-								<Link
-									href="/movies/MyCollections_m"
-									className="nav-subitem"
-									style={{
-										fontSize: "1.1rem",
-										color: "#808080",
-										textDecoration: "none",
-									}}
-								>
-									My Collection
-								</Link>
-							</li>
-							<li>
-								<Link
-									href="/movies/MyTracklist_m"
-									className="nav-subitem"
-									style={{
-										fontSize: "1.1rem",
-										color: "#808080",
-										textDecoration: "none",
-									}}
-								>
-									My Tracklist
-								</Link>
-							</li>
-						</ul>
-					</li>
-					<li>
-						<div
-							className={`nav-item mt-4 ${button.variants.background.main}`}
-							style={{
-								fontSize: "1.25rem",
-								fontWeight: "bold",
-								marginBottom: "1.1rem",
-								color: "#808080",
-								padding: "0.4rem",
-								borderRadius: "7px",
-							}}
-						>
-							Books
-						</div>
-						<ul className="pl-5">
-							<li>
-								<Link
-									href="/books/MyShelf_b"
-									className="nav-subitem"
-									style={{
-										fontSize: "1.1rem",
-                                        color: "#808080",
-										textDecoration: "none",
-									}}
-								>
-									My Shelf
-								</Link>
-							</li>
-							<li>
-								<Link
-									href="/books/MyTracklist_b"
-									className="nav-subitem"
-									style={{
-										fontSize: "1.1rem",
-										textDecoration: "none",
-                                        color:"#808080"
-									}}
-								>
-									My Tracklist
-								</Link>
-							</li>
-						</ul>
-					</li>
-				</ul>
-			</nav>
-		</aside>
-	);
+    if (!showSidebar) return <></>;
+
+    return (
+        <>
+
+            <div className={`sidebar fixed top-[60px] bottom-0 lg:left-0 p-2 w-[230px] overflow-y-auto text-center ${ThemeColour.variants.background.main}`} style={{ transition: "all 0.3s ease-in-out" }}>
+                <div className=" mt-3 flex items-center rounded-md px-3 duration-300 text-white">
+                    <i className="bi bi-house-door-fill" />
+                    <span className="text-[25px] ml-4 text-[#808080] font-bold">Movies</span>
+                </div>
+
+                <div
+                    className="text-left text-sm mt-2 w-4/5 mx-auto text-gray-200 font-bold"
+                    id="submenu"
+                >
+                    <h1 className={`cursor-pointer p-2 hover:bg-[#1a222e] rounded-md mt-1`}>
+                        Collections
+                    </h1>
+                    <h1 className="cursor-pointer p-2 hover:bg-[#1a222e] rounded-md mt-1">
+                        Track List
+                    </h1>
+                </div>
+                {/* Straight Line */}
+                <div className="my-4 bg-gray-600 h-[1px]" />
+
+
+                <div className=" mt-3 flex items-center rounded-md px-3 duration-300 text-white">
+                    <i className="bi bi-bookmark-fill" />
+                    <span className="text-[25px] ml-4 text-[#808080] font-bold">Books</span>
+                </div>
+
+                <div
+                    className="text-left text-sm mt-2 w-4/5 mx-auto text-gray-200 font-bold"
+                    id="submenu"
+                >
+                    <h1 className="cursor-pointer p-2 hover:bg-[#1a222e] rounded-md mt-1">
+                        Shelves
+                    </h1>
+                    <h1 className="cursor-pointer p-2 hover:bg-[#1a222e] rounded-md mt-1">
+                        Track List
+                    </h1>
+                </div>
+            </div>
+        </>
+    );
 };
 
 export default Sidebar;

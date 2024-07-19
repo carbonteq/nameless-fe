@@ -14,25 +14,15 @@ import { button, ThemeColour } from "./primitives";
 
 export const Navbar = () => {
 
-    // const searchInput = (
-    //     <Input
-    //         aria-label="Search"
-    //         classNames={{
-    //             inputWrapper: "bg-default-100",
-    //             input: "text-sm",
-    //         }}
-    //     />
-    // );
-
     const navbarStyle = {
         height: "70px",
-        padding: "0 60px", // Adjust the padding as needed
+        padding: "0", // Adjust the padding as needed
         //backgroundColor: ThemeColour.variants.background.main, // Adjust the background color as needed
         transition: "all 0.3s ease-in-out",
     };
 
     const brandStyle = {
-        fontSize: "35px", // Adjust the font size of the brand text
+        fontSize: "45px", // Adjust the font size of the brand text
         color: "#808080", // Adjust the brand text color as needed
         marginLeft: "0", // Remove the left margin for responsiveness
         fontFamily: "Papyrus, sans-serif",
@@ -40,10 +30,10 @@ export const Navbar = () => {
     };
 
     return (
-        <NextUINavbar className={`${ThemeColour.variants.background.main}`} maxWidth="xl" position="sticky" style={navbarStyle}>
+        <NextUINavbar className={`${ThemeColour.variants.background.main}`} maxWidth="full" position="sticky" style={navbarStyle}>
             <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
                 <NavbarBrand as="li" className="gap-0 max-w-fit">
-                    <NextLink className="flex justify-start items-center gap-0" href="/">
+                    <NextLink className="flex justify-start items-center gap-0 pt-2" href="/">
                         <p className="font-bold text-inherit" style={brandStyle}>
                             NAMELESS
                         </p>
