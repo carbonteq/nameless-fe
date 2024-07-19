@@ -35,8 +35,9 @@ export const Navbar = () => {
 	const brandStyle = {
 		fontSize: "30px", // Adjust the font size of the brand text
 		color: "#000000", // Adjust the brand text color as needed
-		marginLeft: "-137px", // Move the brand name to the left
-		fontFamily: "inter", // Change the font family
+		marginLeft: "-136px", // Move the brand name to the left
+		fontFamily: "Magnific Caos, cursive",
+		//	fontFamily: "inter",
 	};
 
 	const itemStyle = {
@@ -57,7 +58,7 @@ export const Navbar = () => {
 				</NavbarBrand>
 				<ul className="hidden lg:flex gap-4 justify-start ml-0">
 					{siteConfig.navItems.map((item) => (
-						<NavbarItem key={item.href} style={itemStyle}></NavbarItem>
+						<NavbarItem key={item.href} style={itemStyle} />
 					))}
 				</ul>
 			</NavbarContent>
@@ -71,7 +72,7 @@ export const Navbar = () => {
 				</NavbarItem>
 				<NavbarItem className="hidden md:flex">
 					<Button
-						size="small"
+						size="sm"
 						style={{
 							backgroundColor: "#000000",
 							color: "#FFFFFF",
@@ -89,30 +90,6 @@ export const Navbar = () => {
 				<ThemeSwitch />
 				<NavbarMenuToggle />
 			</NavbarContent>
-
-			<NavbarMenu>
-				{searchInput}
-				<div className="mx-4 mt-2 flex flex-col gap-2">
-					{siteConfig.navMenuItems.map((item, index) => (
-						<NavbarMenuItem key={item.href}>
-							<Link
-								color={
-									index === 2
-										? "primary"
-										: index === siteConfig.navMenuItems.length - 1
-											? "danger"
-											: "foreground"
-								}
-								href="#"
-								size="lg"
-								style={{ color: "#808080" }}
-							>
-								{item.label}
-							</Link>
-						</NavbarMenuItem>
-					))}
-				</div>
-			</NavbarMenu>
 		</NextUINavbar>
 	);
 };

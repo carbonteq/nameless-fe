@@ -17,6 +17,7 @@ const Sidebar: React.FC = () => {
 				backgroundColor: "#b1aaa7",
 				width: "190px",
 				color: "#1871cf",
+				fontFamily: "Papyrus, sans-serif", // Apply Papyrus font here
 			}}
 		>
 			<nav className="p-4">
@@ -31,7 +32,7 @@ const Sidebar: React.FC = () => {
 							className="nav-item"
 							style={{
 								fontSize: "1.25rem",
-								fontWeight: "bold",
+								fontWeight: "medium",
 								marginBottom: "1rem",
 								color: "#000000",
 								backgroundColor: "#dcdcdc", // Highlight background color
@@ -50,6 +51,7 @@ const Sidebar: React.FC = () => {
 										fontSize: "1rem",
 										color: "#f3f9ff",
 										textDecoration: "none",
+										marginBottom: "1rem", // Increase space between items
 									}}
 								>
 									My Collection
@@ -63,6 +65,7 @@ const Sidebar: React.FC = () => {
 										fontSize: "1rem",
 										color: "#f3f9ff",
 										textDecoration: "none",
+										marginBottom: "2rem", // Increase space between items
 									}}
 								>
 									My Tracklist
@@ -75,7 +78,7 @@ const Sidebar: React.FC = () => {
 							className="nav-item mt-4"
 							style={{
 								fontSize: "1.25rem",
-								fontWeight: "bold",
+								fontWeight: "medium",
 								marginBottom: "1rem",
 								color: "#000000",
 								backgroundColor: "#dcdcdc", // Highlight background color
@@ -94,6 +97,7 @@ const Sidebar: React.FC = () => {
 										fontSize: "1rem",
 										color: "#f3f9ff",
 										textDecoration: "none",
+										marginBottom: "1rem", // Increase space between items
 									}}
 								>
 									My Shelf

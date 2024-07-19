@@ -64,6 +64,8 @@ const SignInPage: React.FC = () => {
           background-color: white;
           box-shadow: 0 7px 78px 8px rgba(0, 0, 0, 0.1);
           border-radius: 0px;
+		  
+		  
         }
         .title {
           text-align: center;
