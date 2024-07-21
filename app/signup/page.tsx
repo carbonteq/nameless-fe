@@ -29,7 +29,7 @@ export default function SignIn() {
     return (
         <div className="flex items-center justify-center" >
             <form onSubmit={handleSubmit}>
-                <Card className="w-[400px] shadow-lg pt-2 mt-16">
+                <Card className="w-[400px] shadow-lg pt-2 mt-16 dark:bg-gray-900">
                     <CardHeader>
                         <CardTitle className="text-center">Sign Up</CardTitle>
                     </CardHeader>

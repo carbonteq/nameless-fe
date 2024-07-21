@@ -10,7 +10,7 @@ import {
 import { Button } from "@nextui-org/button";
 import NextLink from "next/link";
 import { ModeToggle } from "./ui/toggle";
-import { button, ThemeColour } from "./primitives";
+import { button, TextTheme, ThemeColour } from "./primitives";
 import Link from "next/link";
 
 export const Navbar = () => {
@@ -18,24 +18,15 @@ export const Navbar = () => {
     const navbarStyle = {
         height: "70px",
         padding: "0", // Adjust the padding as needed
-        //backgroundColor: ThemeColour.variants.background.main, // Adjust the background color as needed
         transition: "all 0.3s ease-in-out",
-    };
-
-    const brandStyle = {
-        fontSize: "45px", // Adjust the font size of the brand text
-        color: "#808080", // Adjust the brand text color as needed
-        marginLeft: "0", // Remove the left margin for responsiveness
-        fontFamily: "Papyrus, sans-serif",
-        //    fontFamily: "inter", // Change the font family
     };
 
     return (
         <NextUINavbar className={`${ThemeColour.variants.background.main} shadow-lg`} maxWidth="full" position="sticky" style={navbarStyle}>
             <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
                 <NavbarBrand as="li" className="gap-0 max-w-fit">
-                    <NextLink className="flex justify-start items-center gap-0 pt-2" href="/">
-                        <p className="font-bold text-inherit" style={brandStyle}>
+                    <NextLink className={`flex justify-start items-center gap-0 pt-2 `} href="/">
+                        <p className="font-bold ml-0 text-[40px] font-[Papyrus] text-gray-800 dark:text-white">
                             NAMELESS
                         </p>
                     </NextLink>

@@ -1,5 +1,6 @@
 "use client";
 import InputField from "@/components/inputfield";
+import { ThemeColour } from "@/components/primitives";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -28,7 +29,8 @@ export default function SignIn() {
   return (
     <div className="flex items-center justify-center" >
       <form onSubmit={handleSubmit}>
-        <Card className="w-[400px] shadow-lg pt-2 mt-16">
+        {/* We can apply the same navbar colour to our card through ThemeColor from primitives.tsx */}
+        <Card className={`w-[400px] shadow-lg pt-2 mt-16 dark:bg-gray-900 `}>
           <CardHeader>
             <CardTitle className="text-center">Sign In</CardTitle>
           </CardHeader>

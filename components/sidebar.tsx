@@ -14,17 +14,17 @@ const Sidebar: React.FC = () => {
             <div className={`sidebar fixed top-[60px] bottom-0 lg:left-0 p-2 w-[230px] overflow-y-auto text-center ${ThemeColour.variants.background.main}`} style={{ transition: "all 0.3s ease-in-out" }}>
                 <div className=" mt-3 flex items-center rounded-md px-3 duration-300 text-white">
                     <i className="bi bi-house-door-fill" />
-                    <span className="text-[25px] ml-4 text-[#808080] font-bold">Movies</span>
+                    <span className="text-[25px] ml-4 text-gray-800 dark:text-white font-bold">Movies</span>
                 </div>
 
                 <div
-                    className="text-left text-sm mt-2 w-4/5 mx-auto text-gray-200 font-bold"
+                    className="text-left text-sm mt-2 w-4/5 mx-auto font-bold"
                     id="submenu"
                 >
-                    <h1 className={`cursor-pointer p-2 hover:bg-[#1a222e] rounded-md mt-1`}>
+                    <h1 className={`cursor-pointer p-2 text-gray-600 hover:bg-[#969393] dark:text-white dark:hover:bg-[#1a222e] rounded-md mt-1`}>
                         Collections
                     </h1>
-                    <h1 className="cursor-pointer p-2 hover:bg-[#1a222e] rounded-md mt-1">
+                    <h1 className="cursor-pointer p-2 text-gray-600 hover:bg-[#969393] dark:text-white dark:hover:bg-[#1a222e] rounded-md mt-1">
                         Track List
                     </h1>
                 </div>
@@ -34,17 +34,17 @@ const Sidebar: React.FC = () => {
 
                 <div className=" mt-3 flex items-center rounded-md px-3 duration-300 text-white">
                     <i className="bi bi-bookmark-fill" />
-                    <span className="text-[25px] ml-4 text-[#808080] font-bold">Books</span>
+                    <span className="text-[25px] ml-4 text-gray-800 dark:text-white font-bold">Books</span>
                 </div>
 
                 <div
                     className="text-left text-sm mt-2 w-4/5 mx-auto text-gray-200 font-bold"
                     id="submenu"
                 >
-                    <h1 className="cursor-pointer p-2 hover:bg-[#1a222e] rounded-md mt-1">
+                    <h1 className="cursor-pointer p-2 text-gray-600 hover:bg-[#969393] dark:text-white dark:hover:bg-[#1a222e] rounded-md mt-1">
                         Shelves
                     </h1>
-                    <h1 className="cursor-pointer p-2 hover:bg-[#1a222e] rounded-md mt-1">
+                    <h1 className="cursor-pointer text-gray-600 p-2 hover:bg-[#969393] dark:text-white dark:hover:bg-[#1a222e] rounded-md mt-1">
                         Track List
                     </h1>
                 </div>

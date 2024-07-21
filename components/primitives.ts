@@ -55,7 +55,7 @@ export const subtitle = tv({
 export const button = tv({
   variants: {
     background: {
-      main: "dark:bg-[#1a222e] bg-[#b1AAAA]",
+      main: "dark:bg-[#1a222e] bg-[#969393]",
     },
   },
   defaultVariants: {
@@ -77,7 +77,7 @@ export const ThemeColour = tv({
 export const TextTheme = tv({
   variants: {
     background: {
-      main: "dark:bg-[#808080] bg-[#000000]",
+      main: "dark:bg-[#000000] bg-orange",
     },
   },
   defaultVariants: {
@@ -95,3 +95,4 @@ export const HoverButton = tv({
     background: 'main'
   },
 })
+

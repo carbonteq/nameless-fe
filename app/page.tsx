@@ -27,7 +27,7 @@ export default function Home() {
       description: "Filters Applied",
     })
     setIsDropdownOpen(false);
-    return 
+    return
   };
 
   const handleGenreChange = (genre: string) => {
