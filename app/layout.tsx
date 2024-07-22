@@ -8,10 +8,9 @@ import Sidebar from "@/components/sidebar";
 import { fontSans } from "@/config/fonts";
 import { siteConfig } from "@/config/site";
 import { Toaster } from "@/components/ui/toaster";
-import { ThemeColour } from "@/components/primitives";
+import { ThemeBack } from "@/components/primitives"; // Import the ThemeBack object
 
 export const metadata: Metadata = {
-
 	title: {
 		default: siteConfig.name,
 		template: `%s - ${siteConfig.name}`,
@@ -24,7 +23,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
 	themeColor: [
-		{ media: "(prefers-color-scheme: light)", color: "white" },
+		{ media: "(prefers-color-scheme: light)", color: "cyan" },
 		{ media: "(prefers-color-scheme: dark)", color: "black" },
 	],
 };
@@ -38,20 +37,21 @@ export default function RootLayout({
 		<html suppressHydrationWarning lang="en">
 			<head />
 			<body
-				className={`clsx(
-					"min-h-screen bg-background font-sans antialiased",
+				className={clsx(
+					"min-h-screen font-sans antialiased",
 					fontSans.variable,
-				)`}
+					"bg-cover bg-center",
+					ThemeBack.variants.background.main, // Apply the background image classes
+				)}
 			>
-				<Providers themeProps={{ attribute: "class", defaultTheme: "" }}>
-					<div className="relative flex flex-col h-screen ">
+				<Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
+					<div className="relative flex flex-col h-screen">
 						<Navbar />
 						<div className="flex flex-grow">
 							<Sidebar />
-							<main className="flex-grow mx-auto pt-12 px-6 bg-[#E3E0E0] text-black dark:bg-gray-800 dark:text-white">
+							<main className="container mx-auto max-w-7xl pt-12 px-6 flex-grow">
 								{children}
 							</main>
-
 							<Toaster />
 						</div>
 					</div>

@@ -8,7 +8,12 @@ module.exports = {
     './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}'
   ],
   theme: {
-    extend: {},
+    extend: {
+      backgroundImage: {
+        'custom-bg-dark': "url('/dark-bg.jpg')",
+        'custom-bg-light': "url('/light-bg.jpg')",
+      },
+    },
   },
   darkMode: "class",
   plugins: [nextui()],

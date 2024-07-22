@@ -12,25 +12,23 @@ const StyledInput = styled(Input)`
 `;
 
 const Search = () => {
-    const [query, setQuery] = useState('');
-  
-    const handleChange = (e: { target: { value: SetStateAction<string>; }; }) => {
-      setQuery(e.target.value);
+  const [query, setQuery] = useState('');
+
+  const handleChange = (e: { target: { value: SetStateAction<string>; }; }) => {
+    setQuery(e.target.value);
     //   if (onSearch) {
     //     onSearch(e.target.value);
     //   }
-    };
-  
-    return (
-      <StyledInput
-        //clearable
-        //bordered
-        placeholder="Search..."
-        value={query}
-        onChange={handleChange}
-      />
-    );
   };
-  
-  export default Search;
-  
+
+  return (
+    <StyledInput
+      placeholder="Search..."
+      value={query}
+      onChange={handleChange}
+      width={"5px"}
+    />
+  );
+};
+
+export default Search;

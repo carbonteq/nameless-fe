@@ -1,9 +1,10 @@
 "use client";
+import { ThemeColour } from "@/components/primitives";
 import Search from "@/components/search";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
+import { siteConfig } from "@/config/site";
 import {
-  Input,
   Slider,
   Checkbox,
 } from "@nextui-org/react";
@@ -14,8 +15,8 @@ export default function Home() {
   const [selectedGenres, setSelectedGenres] = useState(["All"]);
   const [rating, setRating] = useState(5);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [showSlider, setShowSlider] = useState(false);
 
-  const genres = ["Fantasy", "Sci-Fi", "Mystery"];
 
   const handleSearch = (event: { preventDefault: () => void; }) => {
     console.log("Search query:");
@@ -27,6 +28,7 @@ export default function Home() {
       description: "Filters Applied",
     })
     setIsDropdownOpen(false);
+    setShowSlider(false)
     return
   };
 
@@ -55,33 +57,41 @@ export default function Home() {
     setIsDropdownOpen(false);
   };
 
+
   return (
-    <div className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
+    <div className="flex flex-col items-center justify-center gap-4 pl-[170px] py-8 md:py-10">
       <div className="inline-block max-w-lg text-center justify-center">
-        <h1 className="text-3xl font-bold">NAMELESS</h1>
+        {/* <h1 className="text-3xl font-bold">NAMELESS</h1>
         <h1 className="text-3xl font-bold text-violet-500">or smth</h1>
         <br />
-        <br />
+        <br /> */}
         <div className="flex justify-between gap-6 w-full">
-          <div className="w-3/4">
+          <div className="w-full">
             <Search />
           </div>
-          <Slider
-            label="Min Rating"
-            step={1}
-            maxValue={9}
-            minValue={0}
-            defaultValue={5}
-            className="max-w-md"
-            onChange={handleRatingChange}
-          />
+          <div className="relative max-w-xs">
+            <Button className={`${ThemeColour.variants.background.main} hover:bg-[#969393] text-black dark:text-white dark:hover:bg-[#1a222e]`} onClick={() => setShowSlider(prev => !prev)}>Rating</Button>
+            {showSlider && (
+              <div className={`transition-opacity duration-300 `}>
+                <Slider
+                  label="Min Rating"
+                  step={1}
+                  maxValue={9}
+                  minValue={0}
+                  defaultValue={rating}
+                  className="max-w-xs"
+                  onChange={handleRatingChange}
+                />
+              </div>
+            )}
+          </div>
           <div className="relative">
-            <Button onClick={toggleDropdown}>Genre</Button>
+            <Button className={`${ThemeColour.variants.background.main} hover:bg-[#969393] text-black dark:text-white dark:hover:bg-[#1a222e]`} onClick={toggleDropdown}>Genre</Button>
             {/* DropDown Menu */}
             {isDropdownOpen && (
               <div className="absolute z-10 mt-2 w-48 border border-gray-200 rounded-md shadow-lg">
                 <div className="p-2">
-                  {genres.map((genre) => (
+                  {siteConfig.Genres.map((genre) => (
                     <div key={genre} className="flex items-center">
                       <Checkbox
                         isSelected={selectedGenres.includes(genre)}
@@ -93,14 +103,14 @@ export default function Home() {
                   ))}
                 </div>
                 <div className="p-2 text-right">
-                  <Button onClick={closeDropdown}>Close</Button>
+                  <Button className={`${ThemeColour.variants.background.main} hover:bg-[#969393] text-black dark:text-white dark:hover:bg-[#1a222e]`} onClick={closeDropdown}>Close</Button>
                 </div>
               </div>
             )}
           </div>
-          <Button onClick={handleSearch}>Apply Filters</Button>
+          <Button className={`${ThemeColour.variants.background.main} hover:bg-[#969393] text-black dark:text-white dark:hover:bg-[#1a222e]`} onClick={handleSearch}>Apply Filters</Button>
         </div>
       </div>
-    </div>
+    </div >
   );
 }

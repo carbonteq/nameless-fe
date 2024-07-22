@@ -1,25 +1,31 @@
+"use client"
 import {
     Navbar as NextUINavbar,
     NavbarContent,
-    NavbarMenu,
-    NavbarMenuToggle,
     NavbarBrand,
     NavbarItem,
-    NavbarMenuItem,
 } from "@nextui-org/navbar";
 import { Button } from "@nextui-org/button";
 import NextLink from "next/link";
 import { ModeToggle } from "./ui/toggle";
-import { button, TextTheme, ThemeColour } from "./primitives";
+import { button, ThemeColour } from "./primitives";
 import Link from "next/link";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { useState } from "react";
 
 export const Navbar = () => {
+
+    const [user, setUser] = useState(true)
 
     const navbarStyle = {
         height: "70px",
         padding: "0", // Adjust the padding as needed
         transition: "all 0.3s ease-in-out",
     };
+
+    function handleProfileOptions(): void {
+        setUser(prev => !prev)
+    }
 
     return (
         <NextUINavbar className={`${ThemeColour.variants.background.main} shadow-lg`} maxWidth="full" position="sticky" style={navbarStyle}>
@@ -41,11 +47,23 @@ export const Navbar = () => {
                     <ModeToggle />
                 </NavbarItem>
                 <NavbarItem className="hidden md:flex">
-                    <Button className={`mr-0 ${button.variants.background.main}`} size="md">
-                        <Link href="/signin"
-                        >Login
-                        </Link>
-                    </Button>
+                    {user && (
+                        <div className="">
+                            <Avatar onClick={handleProfileOptions} >
+                                <AvatarImage src="https://github.com/shadcn.png" sizes="full" />
+                                <AvatarFallback>Avatar</AvatarFallback>
+                            </Avatar>
+                        </div>
+                    )}
+
+                    {!user && (
+                        <Button className={`mr-0 ${button.variants.background.main}`} size="md">
+                            <Link href="/signin"
+                            >Login
+                            </Link>
+                        </Button>
+                    )}
+
                 </NavbarItem>
             </NavbarContent>
         </NextUINavbar>

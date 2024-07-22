@@ -1,6 +1,7 @@
 "use client"
 import { usePathname } from "next/navigation";
 import { button, HoverButton, TextTheme, ThemeColour } from "./primitives";
+import Link from "next/link";
 
 const Sidebar: React.FC = () => {
     const pathname = usePathname();
@@ -22,10 +23,14 @@ const Sidebar: React.FC = () => {
                     id="submenu"
                 >
                     <h1 className={`cursor-pointer p-2 text-gray-600 hover:bg-[#969393] dark:text-white dark:hover:bg-[#1a222e] rounded-md mt-1`}>
-                        Collections
+                        <Link href="/collections" className="block w-full h-full">
+                            Collections
+                        </Link>
                     </h1>
                     <h1 className="cursor-pointer p-2 text-gray-600 hover:bg-[#969393] dark:text-white dark:hover:bg-[#1a222e] rounded-md mt-1">
-                        Track List
+                        <Link href="/tracklist-movies" className="block w-full h-full">
+                            Track List
+                        </Link>
                     </h1>
                 </div>
                 {/* Straight Line */}
@@ -42,10 +47,14 @@ const Sidebar: React.FC = () => {
                     id="submenu"
                 >
                     <h1 className="cursor-pointer p-2 text-gray-600 hover:bg-[#969393] dark:text-white dark:hover:bg-[#1a222e] rounded-md mt-1">
-                        Shelves
+                        <Link href="/shelves" className="block w-full h-full">
+                            Shelves
+                        </Link>
                     </h1>
                     <h1 className="cursor-pointer text-gray-600 p-2 hover:bg-[#969393] dark:text-white dark:hover:bg-[#1a222e] rounded-md mt-1">
-                        Track List
+                        <Link href="/tracklist-books" className="block w-full h-full">
+                            Track List
+                        </Link>
                     </h1>
                 </div>
             </div>

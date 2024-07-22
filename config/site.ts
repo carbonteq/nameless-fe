@@ -14,11 +14,11 @@ export const siteConfig = {
 		},
 		{
 			label: "Sign In",
-			href:"/signin"
+			href: "/signin"
 		}
 	],
 
-	SideBarItems :[
+	SideBarItems: [
 		{
 			label: "Movies",
 			href: "/movies"
@@ -44,7 +44,13 @@ export const siteConfig = {
 			href: "/movies"
 		}
 
+	],
 
+	Genres: [
+		"Fantasy",
+		"Sci-Fi",
+		"Mystery",
+		"Thriller",
 	]
 
 };

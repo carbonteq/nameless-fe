@@ -13,8 +13,6 @@ interface MyComponentProps {
 
 const InputField: React.FC<MyComponentProps> = ({ label, value, type, onChange, placeholder, inputWidth }) => {
 
-  const [state, setState] = useState()
-
   return (
     <div className="flex flex-col space-y-1.5">
       <h1>{label}</h1>
