@@ -48,6 +48,10 @@ export default function SignIn() {
       if (response.ok) {
         const result = await response.json();
         console.log('User created successfully:', result);
+        toast({
+          title: "WO-HOO",
+          description: "Account Created",
+        })
 
       } else {
         console.error('Error creating user:', response.statusText);
@@ -55,12 +59,6 @@ export default function SignIn() {
     } catch (error) {
       console.error('Network error:', error);
     }
-
-    console.log({
-      email: email,
-      password: password
-    })
-
   };
 
   return (
@@ -96,7 +94,6 @@ export default function SignIn() {
               Sign In
             </Button>
             <br />
-
             <div>
               <text>Don't have an account? </text>
               <Link href="/signup"

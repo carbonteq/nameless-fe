@@ -13,7 +13,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { signInSchema } from "@/components/schema";
 import { toast } from "@/components/ui/use-toast";
-import { format } from "path";
+import router from "next/router";
 
 
 export default function SignIn() {
@@ -21,11 +21,13 @@ export default function SignIn() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [username, setUsername] = useState('');
+    const [signedIn, setSignedIn] = useState(false)
     const [errors, setErrors] = useState<{ email?: string, password?: string, username?: string }>({});
 
 
     const handleSubmit = async (event: { preventDefault: () => void; }) => {
 
+        event.preventDefault();
         const result = signInSchema.safeParse({ email, password, username });
         if (!result.success) {
             const formErrors = result.error.flatten().fieldErrors;
@@ -41,9 +43,8 @@ export default function SignIn() {
             return
         }
 
-        event.preventDefault();
         try {
-            const response = await fetch('http://localhost:8000/users', {
+            const response = await fetch('http://localhost:8000/auth/register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -53,18 +54,24 @@ export default function SignIn() {
 
             if (response.ok) {
                 const result = await response.json();
-                console.log('User created successfully:', result);
-
+                toast({
+                    title: "WO-HOO",
+                    description: "Account Created",
+                })
+                setPassword('')
+                setEmail('')
+                setUsername('')
+                setSignedIn(true)
             } else {
                 console.error('Error creating user:', response.statusText);
+                toast({
+                    title: "Disclaimer",
+                    description: response.statusText,
+                })
             }
         } catch (error) {
             console.error('Network error:', error);
         }
-        console.log({
-            email: email,
-            password: password
-        })
     };
 
     return (
