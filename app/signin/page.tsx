@@ -20,7 +20,8 @@ export default function SignIn() {
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<{ email?: string, password?: string }>({});
 
-  const handleSubmit = (event: { preventDefault: () => void; }) => {
+  const handleSubmit = async (event: { preventDefault: () => void; }) => {
+    event.preventDefault();
 
     const result = signInSchema.safeParse({ email, password });
     if (!result.success) {
@@ -33,12 +34,33 @@ export default function SignIn() {
         title: "Disclaimer",
         description: errors.email ? errors.email : errors.password,
       })
+      return
     }
-    event.preventDefault();
+    try {
+      const response = await fetch('http://localhost:3000/auth/login', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log('User created successfully:', result);
+
+      } else {
+        console.error('Error creating user:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Network error:', error);
+    }
+
     console.log({
       email: email,
       password: password
     })
+
   };
 
   return (

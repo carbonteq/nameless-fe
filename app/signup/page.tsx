@@ -11,17 +11,56 @@ import {
 } from "@/components/ui/card";
 import Link from "next/link";
 import { useState } from "react";
+import { signInSchema } from "@/components/schema";
+import { toast } from "@/components/ui/use-toast";
+import { format } from "path";
+
 
 export default function SignIn() {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [username, setUsername] = useState('');
+    const [errors, setErrors] = useState<{ email?: string, password?: string, username?: string }>({});
 
-    const handleSubmit = (event: { preventDefault: () => void; }) => {
 
+    const handleSubmit = async (event: { preventDefault: () => void; }) => {
 
-        //event.preventDefault();
+        const result = signInSchema.safeParse({ email, password, username });
+        if (!result.success) {
+            const formErrors = result.error.flatten().fieldErrors;
+            setErrors({
+                email: formErrors.email?.[0],
+                password: formErrors.password?.[0],
+                username: formErrors.password?.[0]
+            });
+            toast({
+                title: "Disclaimer",
+                description: "Invalid Credentials",
+            })
+            return
+        }
+
+        event.preventDefault();
+        try {
+            const response = await fetch('http://localhost:8000/users', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, email, password })
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                console.log('User created successfully:', result);
+
+            } else {
+                console.error('Error creating user:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Network error:', error);
+        }
         console.log({
             email: email,
             password: password
@@ -31,7 +70,7 @@ export default function SignIn() {
     return (
         <div className="flex items-center justify-center" >
             <form onSubmit={handleSubmit}>
-                <Card className="w-[400px] shadow-lg pt-2 mt-16 dark:bg-gray-900">
+                <Card className="w-[400px] shadow-lg pt-2 mt-16 bg-[#b0b0b0] dark:bg-gray-900">
                     <CardHeader>
                         <CardTitle className="text-center">Sign Up</CardTitle>
                     </CardHeader>
