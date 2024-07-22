@@ -19,7 +19,9 @@ export default function SignIn() {
     const [username, setUsername] = useState('');
 
     const handleSubmit = (event: { preventDefault: () => void; }) => {
-        event.preventDefault();
+
+
+        //event.preventDefault();
         console.log({
             email: email,
             password: password

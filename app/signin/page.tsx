@@ -1,6 +1,6 @@
 "use client";
 import InputField from "@/components/inputfield";
-import { ThemeColour } from "@/components/primitives";
+import { signInSchema } from "@/components/schema";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -10,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { toast } from "@/components/ui/use-toast";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -17,8 +18,22 @@ export default function SignIn() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errors, setErrors] = useState<{ email?: string, password?: string }>({});
 
   const handleSubmit = (event: { preventDefault: () => void; }) => {
+
+    const result = signInSchema.safeParse({ email, password });
+    if (!result.success) {
+      const formErrors = result.error.flatten().fieldErrors;
+      setErrors({
+        email: formErrors.email?.[0],
+        password: formErrors.password?.[0],
+      });
+      toast({
+        title: "Disclaimer",
+        description: errors.email ? errors.email : errors.password,
+      })
+    }
     event.preventDefault();
     console.log({
       email: email,
@@ -30,7 +45,7 @@ export default function SignIn() {
     <div className="flex items-center justify-center" >
       <form onSubmit={handleSubmit}>
         {/* We can apply the same navbar colour to our card through ThemeColor from primitives.tsx */}
-        <Card className={`w-[400px] shadow-lg pt-2 mt-16 dark:bg-gray-900 `}>
+        <Card className={`w-[400px] shadow-lg pt-2 mt-16 bg-[#b0b0b0] dark:bg-gray-900 `}>
           <CardHeader>
             <CardTitle className="text-center">Sign In</CardTitle>
           </CardHeader>
