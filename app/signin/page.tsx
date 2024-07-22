@@ -23,7 +23,11 @@ export default function SignIn() {
   const handleSubmit = async (event: { preventDefault: () => void; }) => {
     event.preventDefault();
 
+
+    // ZOD Validation
+
     const result = signInSchema.safeParse({ email, password });
+
     if (!result.success) {
       const formErrors = result.error.flatten().fieldErrors;
       setErrors({
@@ -36,9 +40,12 @@ export default function SignIn() {
       })
       return
     }
+
+    // Sending POST Request to the server for login
+
     try {
-      const response = await fetch('http://localhost:3000/auth/login', {
-        method: 'GET',
+      const response = await fetch('http://localhost:8000/auth/login', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
@@ -50,11 +57,11 @@ export default function SignIn() {
         console.log('User created successfully:', result);
         toast({
           title: "WO-HOO",
-          description: "Account Created",
+          description: `Successfully Signed In ${result}`,
         })
 
       } else {
-        console.error('Error creating user:', response.statusText);
+        console.error('Error Signing In the User:', response.statusText);
       }
     } catch (error) {
       console.error('Network error:', error);
