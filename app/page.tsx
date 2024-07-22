@@ -89,8 +89,8 @@ export default function Home() {
             <Button className={`${ThemeColour.variants.background.main} hover:bg-[#969393] text-black dark:text-white dark:hover:bg-[#1a222e]`} onClick={toggleDropdown}>Genre</Button>
             {/* DropDown Menu */}
             {isDropdownOpen && (
-              <div className="absolute z-10 mt-2 w-48 border border-gray-200 rounded-md shadow-lg">
-                <div className="p-2">
+              <div className={`${ThemeColour.variants.background.main} absolute z-10 mt-2 w-48 border border-gray-200 rounded-md shadow-lg`}>
+                <div className="p-2 ">
                   {siteConfig.Genres.map((genre) => (
                     <div key={genre} className="flex items-center">
                       <Checkbox

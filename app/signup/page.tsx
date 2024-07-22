@@ -13,7 +13,8 @@ import Link from "next/link";
 import { useState } from "react";
 import { signInSchema } from "@/components/schema";
 import { toast } from "@/components/ui/use-toast";
-import router from "next/router";
+import { useRouter } from "next/navigation";
+
 
 
 export default function SignIn() {
@@ -21,9 +22,9 @@ export default function SignIn() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [username, setUsername] = useState('');
-    const [signedIn, setSignedIn] = useState(false)
     const [errors, setErrors] = useState<{ email?: string, password?: string, username?: string }>({});
 
+    const router = useRouter();
 
     const handleSubmit = async (event: { preventDefault: () => void; }) => {
 
@@ -61,7 +62,8 @@ export default function SignIn() {
                 setPassword('')
                 setEmail('')
                 setUsername('')
-                setSignedIn(true)
+                router.push("/");
+
             } else {
                 console.error('Error creating user:', response.statusText);
                 toast({

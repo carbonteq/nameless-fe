@@ -5,27 +5,27 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { toast } from "@/components/ui/use-toast";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function SignIn() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState<{ email?: string; password?: string }>(
+    {},
+  );
+  const router = useRouter();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [errors, setErrors] = useState<{ email?: string, password?: string }>({});
-
-  const handleSubmit = async (event: { preventDefault: () => void; }) => {
+  const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
 
-
     // ZOD Validation
-
     const result = signInSchema.safeParse({ email, password });
 
     if (!result.success) {
@@ -37,42 +37,49 @@ export default function SignIn() {
       toast({
         title: "Disclaimer",
         description: errors.email ? errors.email : errors.password,
-      })
-      return
+      });
+      return;
     }
 
     // Sending POST Request to the server for login
-
     try {
-      const response = await fetch('http://localhost:8000/auth/login', {
-        method: 'POST',
+      const response = await fetch("http://localhost:8000/auth/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password }),
       });
 
       if (response.ok) {
         const result = await response.json();
-        console.log('User created successfully:', result);
+        console.log("User created successfully:");
         toast({
-          title: "WO-HOO",
-          description: `Successfully Signed In ${result}`,
-        })
-
+          title: "Success",
+          description: "Successfully Signed In",
+        });
+        router.push("/");
       } else {
-        console.error('Error Signing In the User:', response.statusText);
+        const errorText = await response.text();
+        console.error("Error Signing In the User:", errorText);
+        toast({
+          title: "Sign In Error",
+          description: errorText,
+        });
       }
     } catch (error) {
-      console.error('Network error:', error);
+      console.error("Network error:", error);
+      toast({
+        title: "Network Error",
+        //description: error.message,
+      });
     }
   };
 
   return (
-    <div className="flex items-center justify-center" >
+    <div className="flex items-center justify-center">
       <form onSubmit={handleSubmit}>
-        {/* We can apply the same navbar colour to our card through ThemeColor from primitives.tsx */}
-        <Card className={`w-[400px] shadow-lg pt-2 mt-16 bg-[#b0b0b0] dark:bg-gray-900 `}>
+        <Card className="w-[400px] shadow-lg pt-2 mt-16 bg-[#b0b0b0] dark:bg-gray-900">
           <CardHeader>
             <CardTitle className="text-center">Sign In</CardTitle>
           </CardHeader>
@@ -93,27 +100,27 @@ export default function SignIn() {
                 placeholder="Enter your password"
               />
             </div>
-
           </CardContent>
-
           <CardFooter className="flex flex-col items-center">
             <Button className="w-full mb-2" type="submit">
               Sign In
             </Button>
             <br />
             <div>
-              <text>Don't have an account? </text>
-              <Link href="/signup"
-                className="text-blue-500 hover:underline">Sign Up
+              <span>Don't have an account? </span>
+              <Link href="/signup" className="text-blue-500 hover:underline">
+                Sign Up
               </Link>
             </div>
-            <Link href="/forgotpassword"
-              className="text-blue-500 hover:underline">Forgot Password?
+            <Link
+              href="/forgotpassword"
+              className="text-blue-500 hover:underline"
+            >
+              Forgot Password?
             </Link>
           </CardFooter>
         </Card>
       </form>
     </div>
   );
-
 }
