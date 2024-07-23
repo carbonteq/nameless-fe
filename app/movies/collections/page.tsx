@@ -1,12 +1,14 @@
-const Collections = () => {
+"use client";
+import { useRouter } from "next/router";
 
-    return (
-        <>
-            <section className="flex flex-col md:flex-row items-center justify-between ">
-                <div className="lg:pr-[150px] md:pr[50px] sm:pr-[0px]" />
-            </section>
-        </>
-    );
+const Collections = () => {
+	return (
+		<>
+			<section className="flex flex-col md:flex-row items-center justify-between">
+				<span>My Collections</span>
+			</section>
+		</>
+	);
 };
 
 export default Collections;
