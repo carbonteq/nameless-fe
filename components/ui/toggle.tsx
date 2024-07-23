@@ -2,6 +2,7 @@
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
+import { button } from "../primitives";
 
 export function ModeToggle() {
 	const { theme, setTheme } = useTheme();
@@ -12,8 +13,8 @@ export function ModeToggle() {
 
 	return (
 		<Button
-			className="bg-[#b1aaaa]"
-			variant="outline"
+			className={`${button.variants.background.main}`}
+			variant="ghost"
 			size="icon"
 			onClick={toggleTheme}
 		>

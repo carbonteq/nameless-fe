@@ -8,10 +8,12 @@ import {
   Slider,
   Checkbox,
 } from "@nextui-org/react";
-import { useState } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "./redux/store";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import GenresDropdown from "@/components/genresDropdown";
+import { setUserId } from "./redux/slices/authSlice";
+import Jwt from "jsonwebtoken"
+
 
 export default function Home() {
   const [results, setResults] = useState([]);
@@ -19,7 +21,7 @@ export default function Home() {
   const [rating, setRating] = useState(5);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showSlider, setShowSlider] = useState(false);
-  const userId = useSelector((state: RootState) => state.auth.userId);
+  const userId = useSelector((state: any) => state.auth.userId);
 
   //console.log("UserId in HomePage => ", userId)
 
@@ -62,6 +64,20 @@ export default function Home() {
     setIsDropdownOpen(false);
   };
 
+  useEffect(() => {
+    const JwtToken = localStorage.getItem('jwtToken')
+    if (JwtToken) {
+      console.log("HELLO")
+      const dispatch = useDispatch();
+      const decodedToken = Jwt.decode(JwtToken);
+      if (decodedToken && typeof decodedToken === 'object' && 'userId' in decodedToken.data) {
+        console.log("User ID:", decodedToken.data.userId);
+        dispatch(setUserId(decodedToken.data.userId));
+      } else {
+        console.error("Invalid token");
+      }
+    }
+  }, []);
 
   return (
     <div className="flex flex-col items-center justify-center gap-4 pl-[170px] py-8 md:py-10">

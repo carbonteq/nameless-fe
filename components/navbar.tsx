@@ -10,14 +10,12 @@ import NextLink from "next/link";
 import { ModeToggle } from "./ui/toggle";
 import { button, ThemeColour } from "./primitives";
 import Link from "next/link";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { useSelector } from "react-redux";
-import { RootState } from "@/app/redux/store";
 import ProfileDropdown from "./profileDropdown";
 
 export const Navbar = () => {
 
-    const userId = useSelector((state: RootState) => state.auth.userId);
+    const userId = useSelector((state: any) => state.auth.userId);
 
 
     const navbarStyle = {
@@ -28,9 +26,9 @@ export const Navbar = () => {
 
     function profilemenu(): void {
 
-
-
     }
+
+
 
     return (
         <NextUINavbar className={`${ThemeColour.variants.background.main} shadow-lg`} maxWidth="full" position="sticky" style={navbarStyle}>
@@ -57,11 +55,11 @@ export const Navbar = () => {
                     )}
 
                     {!userId && (
-                        <Button className={`mr-0 ${button.variants.background.main}`} size="md">
-                            <Link href="/signin"
-                            >Login
-                            </Link>
-                        </Button>
+                        <Link href="/signin" passHref>
+                            <Button className={`mr-0 ${button.variants.background.main}`} size="md">
+                                Login
+                            </Button>
+                        </Link>
                     )}
 
                 </NavbarItem>

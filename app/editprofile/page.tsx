@@ -5,8 +5,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { useState } from "react";
-import { useSelector } from 'react-redux';
-import { RootState } from "../redux/store";
 
 
 const EditProfile = () => {

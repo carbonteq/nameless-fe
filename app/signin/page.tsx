@@ -1,5 +1,4 @@
 "use client";
-import { Input } from "@/components/ui/input";
 import { signInSchema } from "@/components/schema";
 import { Button } from "@/components/ui/button";
 import {
@@ -61,6 +60,10 @@ export default function SignIn() {
           description: "Successfully Signed In",
         });
         const decodedToken = Jwt.decode(result.token);
+
+        //Saving the token to Browser's Local Storage
+        localStorage.setItem("jwtToken", result.token);
+
         //console.log("DECODED TOKEN = ", decodedToken)
         if (decodedToken && typeof decodedToken === 'object' && 'userId' in decodedToken.data) {
           console.log("User ID:", decodedToken.data.userId);
@@ -71,11 +74,9 @@ export default function SignIn() {
         router.push("/");
       } else {
         const errorText = await response.text();
-        //console.error("Error Signing In the User:", errorText);
       }
     } catch (error) {
       console.error("Network error:", error);
-
     }
   };
 
