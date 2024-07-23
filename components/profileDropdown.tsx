@@ -4,10 +4,15 @@ import React, { useState, useRef, useEffect } from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"; // Adjust the import path accordingly
 import { ThemeColour } from "./primitives";
 import Link from "next/link";
+import { clearUserId } from '@/app/redux/slices/authSlice';
+import { useDispatch } from "react-redux";
+import { useRouter } from "next/navigation";
 
 const ProfileDropdown = () => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
+    const router = useRouter()
+    const dispatch = useDispatch();
 
     const toggleDropdown = () => {
         setDropdownOpen(!dropdownOpen);
@@ -20,6 +25,18 @@ const ProfileDropdown = () => {
         ) {
             setDropdownOpen(false);
         }
+    };
+
+    const handleLogout = () => {
+
+        // Dispatch the logout action to clear the UserId from Redux App State
+        dispatch(clearUserId());
+
+        // Clear local storage
+        localStorage.removeItem('jwtToken');
+
+        // Redirect to the login page
+        router.push('/');
     };
 
     useEffect(() => {
@@ -37,19 +54,19 @@ const ProfileDropdown = () => {
             </Avatar>
 
             {dropdownOpen && (
-                <div className="pt-4">
+                <div>
                     <div
-                        className={`${ThemeColour.variants.background.main} absolute right-0 p-1 mt-2 w-48 border border-gray-200 rounded-md shadow-lg z-20`}
+                        className={`${ThemeColour.variants.background.main} absolute right-0 p-1 mt-4 w-48 border border-gray-200 rounded-md shadow-lg z-20`}
                     >
                         <Link
                             href="/editprofile"
-                            className="block px-4 py-2 hover:bg-gray-800"
+                            className="block px-4 py-2 hover:bg-[#969393] dark:hover:bg-[#1a222e]"
                         >
                             Profile
                         </Link>
-                        <Link href="/logout" className="block px-4 py-2 hover:bg-gray-800">
+                        <div onClick={handleLogout} className="block px-4 py-2 hover:bg-[#969393] dark:hover:bg-[#1a222e]">
                             Logout
-                        </Link>
+                        </div>
                     </div>
                 </div>
             )}

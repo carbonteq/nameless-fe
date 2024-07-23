@@ -17,18 +17,11 @@ export const Navbar = () => {
 
     const userId = useSelector((state: any) => state.auth.userId);
 
-
     const navbarStyle = {
         height: "70px",
         padding: "0", // Adjust the padding as needed
         transition: "all 0.3s ease-in-out",
     };
-
-    function profilemenu(): void {
-
-    }
-
-
 
     return (
         <NextUINavbar className={`${ThemeColour.variants.background.main} shadow-lg`} maxWidth="full" position="sticky" style={navbarStyle}>
@@ -61,7 +54,6 @@ export const Navbar = () => {
                             </Button>
                         </Link>
                     )}
-
                 </NavbarItem>
             </NavbarContent>
         </NextUINavbar>

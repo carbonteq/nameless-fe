@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -16,15 +17,27 @@ import { useDispatch } from "react-redux";
 import Jwt from "jsonwebtoken"
 import { setUserId } from "../redux/slices/authSlice";
 import InputField from "@/components/inputfield";
+import { useSelector } from "react-redux";
+import extractToken from "../token";
+import loginService from "../services/login";
+
 
 export default function SignIn() {
+
+  const dispatch = useDispatch();
+  const router = useRouter();
+  //const userId = useSelector((state: any) => state.auth.userId);
+
+  // if (userId) {
+  //   router.push("/");
+  // }
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<{ email?: string; password?: string }>(
     {},
   );
-  const dispatch = useDispatch();
-  const router = useRouter();
+
 
   const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
@@ -43,47 +56,39 @@ export default function SignIn() {
     setErrors({});
 
     // Sending POST Request to the server for login
-    try {
-      const response = await fetch("http://localhost:8000/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
 
-      if (response.ok) {
-        const result = await response.json();
-        console.log("User created successfully:", result);
-        toast({
-          title: "Success",
-          description: "Successfully Signed In",
-        });
-        const decodedToken = Jwt.decode(result.token);
-
-        //Saving the token to Browser's Local Storage
-        localStorage.setItem("jwtToken", result.token);
-
-        //console.log("DECODED TOKEN = ", decodedToken)
-        if (decodedToken && typeof decodedToken === 'object' && 'userId' in decodedToken.data) {
-          console.log("User ID:", decodedToken.data.userId);
-          dispatch(setUserId(decodedToken.data.userId));
-        } else {
-          console.error("Invalid token");
-        }
-        router.push("/");
-      } else {
-        const errorText = await response.text();
-      }
-    } catch (error) {
-      console.error("Network error:", error);
+    const loginEmail = email
+    const loginPassword = password
+    const response = await loginService(loginEmail, loginPassword, dispatch, setUserId)
+    if (response.ok) {
+      router.push('/')
     }
+    // if (response.ok) {
+    //     const result = await response.json();
+    //     console.log("User created successfully:", result);
+    //     toast({
+    //       title: "Success",
+    //       description: "Successfully Signed In",
+    //     });
+
+    //     //Saving the token to Browser's Local Storage
+    //     localStorage.setItem("jwtToken", result.token);
+
+    //     dispatch(setUserId(extractToken(result.token)))
+    //     router.push('/')
+
+    //   } else {
+    //     const errorText = await response.text();
+    //   }
+    // } catch (error) {
+    //   console.error("Network error:", error);
+    // }
   };
 
   return (
     <div className="flex items-center justify-center">
       <form onSubmit={handleSubmit}>
-        <Card className="w-[400px] shadow-lg pt-2 mt-16 bg-[#b0b0b0] dark:bg-gray-900">
+        <Card className="w-[400px] shadow-lg pt-2 mt-16 bg-gray-100 bg-opacity-50 dark:bg-gray-900 dark:bg-opacity-50">
           <CardHeader>
             <CardTitle className="text-center">Sign In</CardTitle>
           </CardHeader>

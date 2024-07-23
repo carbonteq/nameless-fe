@@ -1,5 +1,5 @@
 // components/GenresDropdown.tsx
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@nextui-org/react";
 import { ThemeColour } from "@/components/primitives";
@@ -12,25 +12,45 @@ interface GenresDropdownProps {
 }
 
 const GenresDropdown: React.FC<GenresDropdownProps> = ({ selectedGenres, onGenreChange, onApplyFilters }) => {
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    //const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
+
 
     const toggleDropdown = () => {
-        setIsDropdownOpen((prev) => !prev);
+        setDropdownOpen((prev) => !prev);
     };
 
     const closeDropdown = () => {
-        setIsDropdownOpen(false);
+        setDropdownOpen(false);
     };
 
+    const handleClickOutside = (event: MouseEvent) => {
+        if (
+            dropdownRef.current &&
+            !dropdownRef.current.contains(event.target as Node)
+        ) {
+            setDropdownOpen(false);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
+
     return (
-        <div className="relative">
+        <div className="relative" ref={dropdownRef}>
             <Button
                 className={`${ThemeColour.variants.background.main} hover:bg-[#969393] text-black dark:text-white dark:hover:bg-[#1a222e]`}
                 onClick={toggleDropdown}
             >
                 Genre
             </Button>
-            {isDropdownOpen && (
+            {dropdownOpen && (
                 <div className={`${ThemeColour.variants.background.main} absolute z-10 mt-2 w-48 border border-gray-200 rounded-md shadow-lg`}>
                     <div className="p-2">
                         {siteConfig.Genres.map((genre) => (
@@ -44,17 +64,7 @@ const GenresDropdown: React.FC<GenresDropdownProps> = ({ selectedGenres, onGenre
                             </div>
                         ))}
                     </div>
-                    <div className="p-2 text-right">
-                        <Button
-                            className={`${ThemeColour.variants.background.main} hover:bg-[#969393] text-black dark:text-white dark:hover:bg-[#1a222e]`}
-                            onClick={() => {
-                                closeDropdown();
-                                onApplyFilters();
-                            }}
-                        >
-                            Apply Filters
-                        </Button>
-                    </div>
+
                 </div>
             )}
         </div>

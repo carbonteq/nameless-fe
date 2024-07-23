@@ -18,7 +18,7 @@ const InputField: React.FC<MyComponentProps> = ({ label, value, type, onChange, 
     <div className="flex flex-col space-y-1.5">
       <h1>{label}</h1>
       <Input style={{ width: inputWidth }}
-        className="bg-[#d8dbe0] text-gray-800 border-gray-300 p-2 rounded dark:text-white"
+        className="bg-[#d2d8e1] dark:bg-gray-900 text-gray-800 border-gray-300 p-2 rounded dark:text-white"
         type={type}
         value={value}
         placeholder={placeholder}
@@ -27,6 +27,7 @@ const InputField: React.FC<MyComponentProps> = ({ label, value, type, onChange, 
         error={error}
       />
     </div>
+
   );
 };
 
