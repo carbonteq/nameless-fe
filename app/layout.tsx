@@ -9,6 +9,7 @@ import { fontSans } from "@/config/fonts";
 import { siteConfig } from "@/config/site";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeBack } from "@/components/primitives"; // Import the ThemeBack object
+import { ReduxProvider } from "./redux/reduxProvider";
 
 export const metadata: Metadata = {
 	title: {
@@ -44,18 +45,20 @@ export default function RootLayout({
 					ThemeBack.variants.background.main, // Apply the background image classes
 				)}
 			>
-				<Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
-					<div className="relative flex flex-col h-screen">
-						<Navbar />
-						<div className="flex flex-grow">
-							<Sidebar />
-							<main className="container mx-auto max-w-7xl pt-12 px-6 flex-grow">
-								{children}
-							</main>
-							<Toaster />
+				<ReduxProvider>
+					<Providers themeProps={{ attribute: "class", defaultTheme: "dark" }} >
+						<div className="relative flex flex-col h-screen">
+							<Navbar />
+							<div className="flex flex-grow">
+								<Sidebar />
+								<main className="container mx-auto max-w-7xl pt-12 px-6 flex-grow">
+									{children}
+								</main>
+								<Toaster />
+							</div>
 						</div>
-					</div>
-				</Providers>
+					</Providers>
+				</ReduxProvider>
 			</body>
 		</html>
 	);

@@ -11,11 +11,14 @@ import { ModeToggle } from "./ui/toggle";
 import { button, ThemeColour } from "./primitives";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/redux/store";
+import ProfileDropdown from "./profileDropdown";
 
 export const Navbar = () => {
 
-    const [user, setUser] = useState(true)
+    const userId = useSelector((state: RootState) => state.auth.userId);
+
 
     const navbarStyle = {
         height: "70px",
@@ -23,8 +26,10 @@ export const Navbar = () => {
         transition: "all 0.3s ease-in-out",
     };
 
-    function handleProfileOptions(): void {
-        setUser(prev => !prev)
+    function profilemenu(): void {
+
+
+
     }
 
     return (
@@ -47,16 +52,11 @@ export const Navbar = () => {
                     <ModeToggle />
                 </NavbarItem>
                 <NavbarItem className="hidden md:flex">
-                    {user && (
-                        <div className="">
-                            <Avatar onClick={handleProfileOptions} >
-                                <AvatarImage src="https://github.com/shadcn.png" sizes="full" />
-                                <AvatarFallback>Avatar</AvatarFallback>
-                            </Avatar>
-                        </div>
+                    {userId && (
+                        <ProfileDropdown />
                     )}
 
-                    {!user && (
+                    {!userId && (
                         <Button className={`mr-0 ${button.variants.background.main}`} size="md">
                             <Link href="/signin"
                             >Login

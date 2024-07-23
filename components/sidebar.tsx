@@ -23,12 +23,12 @@ const Sidebar: React.FC = () => {
                     id="submenu"
                 >
                     <h1 className={`cursor-pointer p-2 text-gray-600 hover:bg-[#969393] dark:text-white dark:hover:bg-[#1a222e] rounded-md mt-1`}>
-                        <Link href="/collections" className="block w-full h-full">
+                        <Link href="/movies/collections" className="block w-full h-full">
                             Collections
                         </Link>
                     </h1>
                     <h1 className="cursor-pointer p-2 text-gray-600 hover:bg-[#969393] dark:text-white dark:hover:bg-[#1a222e] rounded-md mt-1">
-                        <Link href="/tracklist-movies" className="block w-full h-full">
+                        <Link href="/movies/track-movies" className="block w-full h-full">
                             Track List
                         </Link>
                     </h1>
@@ -47,13 +47,13 @@ const Sidebar: React.FC = () => {
                     id="submenu"
                 >
                     <h1 className="cursor-pointer p-2 text-gray-600 hover:bg-[#969393] dark:text-white dark:hover:bg-[#1a222e] rounded-md mt-1">
-                        <Link href="/shelves" className="block w-full h-full">
+                        <Link href="/books/shelf" className="block w-full h-full">
                             Shelves
                         </Link>
                     </h1>
                     <h1 className="cursor-pointer text-gray-600 p-2 hover:bg-[#969393] dark:text-white dark:hover:bg-[#1a222e] rounded-md mt-1">
-                        <Link href="/tracklist-books" className="block w-full h-full">
-                            Track List
+                        <Link href="/books/track-books" className="block w-full h-full">
+                            Track Shelf
                         </Link>
                     </h1>
                 </div>

@@ -1,5 +1,5 @@
 "use client";
-import InputField from "@/components/inputfield";
+import { Input } from "@/components/ui/input";
 import { signInSchema } from "@/components/schema";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,6 +13,10 @@ import { toast } from "@/components/ui/use-toast";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import Jwt from "jsonwebtoken"
+import { setUserId } from "../redux/slices/authSlice";
+import InputField from "@/components/inputfield";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
@@ -20,6 +24,7 @@ export default function SignIn() {
   const [errors, setErrors] = useState<{ email?: string; password?: string }>(
     {},
   );
+  const dispatch = useDispatch();
   const router = useRouter();
 
   const handleSubmit = async (event: { preventDefault: () => void }) => {
@@ -34,12 +39,9 @@ export default function SignIn() {
         email: formErrors.email?.[0],
         password: formErrors.password?.[0],
       });
-      toast({
-        title: "Disclaimer",
-        description: errors.email ? errors.email : errors.password,
-      });
       return;
     }
+    setErrors({});
 
     // Sending POST Request to the server for login
     try {
@@ -53,26 +55,27 @@ export default function SignIn() {
 
       if (response.ok) {
         const result = await response.json();
-        console.log("User created successfully:");
+        console.log("User created successfully:", result);
         toast({
           title: "Success",
           description: "Successfully Signed In",
         });
+        const decodedToken = Jwt.decode(result.token);
+        //console.log("DECODED TOKEN = ", decodedToken)
+        if (decodedToken && typeof decodedToken === 'object' && 'userId' in decodedToken.data) {
+          console.log("User ID:", decodedToken.data.userId);
+          dispatch(setUserId(decodedToken.data.userId));
+        } else {
+          console.error("Invalid token");
+        }
         router.push("/");
       } else {
         const errorText = await response.text();
-        console.error("Error Signing In the User:", errorText);
-        toast({
-          title: "Sign In Error",
-          description: errorText,
-        });
+        //console.error("Error Signing In the User:", errorText);
       }
     } catch (error) {
       console.error("Network error:", error);
-      toast({
-        title: "Network Error",
-        //description: error.message,
-      });
+
     }
   };
 
@@ -91,6 +94,7 @@ export default function SignIn() {
                 type="email"
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
+                error={errors.email}
               />
               <InputField
                 label="Password"
@@ -98,6 +102,7 @@ export default function SignIn() {
                 type="password"
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Enter your password"
+                error={errors.password}
               />
             </div>
           </CardContent>

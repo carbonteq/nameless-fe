@@ -5,6 +5,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { useState } from "react";
+import { useSelector } from 'react-redux';
+import { RootState } from "../redux/store";
+
 
 const EditProfile = () => {
 
@@ -13,6 +16,7 @@ const EditProfile = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const { toast } = useToast()
+    //console.log("UserID in EditProfile =>", userId)
 
     const handleSubmit = (event: { preventDefault: () => void; }) => {
         event.preventDefault();

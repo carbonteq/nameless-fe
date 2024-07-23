@@ -9,9 +9,10 @@ interface MyComponentProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder: string;
   inputWidth?: string
+  error?: string
 }
 
-const InputField: React.FC<MyComponentProps> = ({ label, value, type, onChange, placeholder, inputWidth }) => {
+const InputField: React.FC<MyComponentProps> = ({ label, value, type, onChange, placeholder, inputWidth, error }) => {
 
   return (
     <div className="flex flex-col space-y-1.5">
@@ -23,6 +24,7 @@ const InputField: React.FC<MyComponentProps> = ({ label, value, type, onChange, 
         placeholder={placeholder}
         onChange={onChange}
         required
+        error={error}
       />
     </div>
   );
