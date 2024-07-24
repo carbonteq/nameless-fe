@@ -1,4 +1,3 @@
-// authSlice.js
 "use client"
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
@@ -15,7 +14,6 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     setUserId: (state, action: PayloadAction<string>) => {
-      console.log("Payload in setUserId => ", action.payload)
       state.userId = action.payload;
     },
 

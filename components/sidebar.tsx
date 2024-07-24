@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const Sidebar: React.FC = () => {
     const pathname = usePathname();
-    const showSidebar = pathname !== "/signin" && pathname !== "/signup" ? 1 : 0;
+    const showSidebar = pathname !== "/signin" && pathname !== "/signup" && pathname !== "/forgot-password" ? 1 : 0;
 
     if (!showSidebar) return <></>;
 
@@ -63,12 +63,6 @@ const Sidebar: React.FC = () => {
                     </h1>
                 </div>
             </div>
-
-            {/* Overlay for mobile view */}
-            <div
-                className={`fixed inset-0 bg-black opacity-50 z-40 lg:hidden ${showSidebar ? 'block' : 'hidden'}`}
-                style={{ transition: "all 0.3s ease-in-out" }}
-            />
         </>
     );
 };

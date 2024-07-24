@@ -1,12 +1,13 @@
 "use client";
 import InputField from "@/components/inputfield";
-import { title } from "@/components/primitives";
+import { ThemeColour, title } from "@/components/primitives";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { useEffect, useState } from "react";
-import { Card } from "@nextui-org/react"; // Import Card from NextUI
 import { fetchUserData } from "../services/fetchuserprofile";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Edit } from "lucide-react";
 
 const EditProfile = () => {
     const [name, setName] = useState("");
@@ -43,48 +44,52 @@ const EditProfile = () => {
 
     const handleImageEdit = () => {
         toast({
-            title: "Disclaimer",
-            description: "Picture Edit",
+            title: "DON'T",
+            description: "Edit Picture",
         });
     };
 
     return (
-        <>
-            <div className="flex justify-center py-10 px-4 md:px-0">
-                <Card className="p-6 max-w-3xl w-full bg-opacity-10">
-                    <section className="flex flex-col md:flex-row items-center justify-between mb-6">
-                        <div className="text-center md:text-left">
-                            <h1 className={title()}>Edit Profile</h1>
-                        </div>
-                        <div className="md:pl-6 mt-4 md:mt-0">
-                            <Avatar
-                                onClick={handleImageEdit}
-                                className="w-36 h-36"
-                            >
-                                <AvatarImage src="https://github.com/shadcn.png" sizes="full" />
-                                <AvatarFallback>Avatar</AvatarFallback>
-                            </Avatar>
-                        </div>
-                    </section>
+        <div className="flex items-center justify-center">
+            <form onSubmit={handleSubmit}>
+                <Card className="w-[600px] shadow-lg pt-2 ml-[270px] mt-[60px] bg-gray-100 bg-opacity-80 dark:bg-gray-900 dark:bg-opacity-97">
+                    <CardHeader>
+                        <CardTitle className="text-center">
+                            <div className="flex justify-between">
+                                <div className={title()}>
+                                    Edit Profile
+                                </div>
 
-                    <form onSubmit={handleSubmit}>
+                                <Avatar
+                                    onClick={handleImageEdit}
+                                    className="w-[80px] h-[80px]"
+                                >
+                                    <AvatarImage src="https://github.com/shadcn.png" sizes="full" />
+                                    <Edit className="absolute bottom-0 right-0 bg-white rounded-full m-2 p-1 shadow-md" size={20} color="black" />
+                                    <AvatarFallback>Avatar</AvatarFallback>
+
+                                </Avatar>
+                            </div>
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+
                         <div className="grid w-full items-center gap-4">
+
                             <InputField
                                 label="Name"
                                 value={name}
                                 type="text"
                                 onChange={(e) => setName(e.target.value)}
                                 placeholder="Enter your name"
-                                inputWidth="w-full md:w-80"
+                                inputWidth="w-full"
                             />
-
                             <InputField
                                 label="Email"
                                 value={email}
                                 type="email"
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="Enter your email"
-                                inputWidth="w-full md:w-80"
                             />
                             <InputField
                                 label="Password"
@@ -92,19 +97,19 @@ const EditProfile = () => {
                                 type="password"
                                 onChange={(e) => setPassword(e.target.value)}
                                 placeholder="Enter your password"
-                                inputWidth="w-full md:w-80"
                             />
                         </div>
+
+                    </CardContent>
+                    <CardFooter className="flex flex-col items-center">
+                        <Button className="w-full mb-2" type="submit">
+                            Edit
+                        </Button>
                         <br />
-                        <div className="flex">
-                            <Button className="w-full md:w-80" type="submit">
-                                Submit Changes
-                            </Button>
-                        </div>
-                    </form>
+                    </CardFooter>
                 </Card>
-            </div>
-        </>
+            </form>
+        </div>
     );
 };
 

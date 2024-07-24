@@ -105,4 +105,5 @@ export const ThemeBack = {
   },
 };
 
+export const JWT_TOKEN = "jwtToken";
 
