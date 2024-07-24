@@ -6,7 +6,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { useState } from 'react';
 import { resetPasswordSchema } from '@/components/schema';
 import { usePathname, useRouter } from 'next/navigation';
-import resetPasswordService from '@/app/services/resetPassword';
+import { userService } from '@/app/services/userService';
 
 const ResetPassword = () => {
     const [password, setPassword] = useState("");
@@ -39,7 +39,7 @@ const ResetPassword = () => {
         // }
         // setErrors({});
 
-        await resetPasswordService(password, path, func)
+        await userService.resetPasswordService(password, path, func)
     };
 
     return (

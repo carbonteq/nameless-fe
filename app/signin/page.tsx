@@ -14,8 +14,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setUserId } from "../redux/slices/authSlice";
 import InputField from "@/components/inputfield";
-import loginService from "../services/login";
-import forgotPasswordService from "../services/forgotPassword";
+import { userService } from "../services/userService";
 
 
 export default function SignIn() {
@@ -59,7 +58,7 @@ export default function SignIn() {
 
     // Sending POST Request to the server for login
 
-    await loginService(email, password, dispatch, setUserId, func)
+    await userService.loginService(email, password, dispatch, setUserId, func)
 
   };
 
@@ -84,7 +83,7 @@ export default function SignIn() {
 
     // Sending POST Request to the server for login
 
-    await forgotPasswordService(email, func)
+    await userService.forgotPasswordService(email, func)
   }
 
   return (
