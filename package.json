@@ -36,6 +36,7 @@
 		"@react-aria/ssr": "3.9.4",
 		"@react-aria/visually-hidden": "3.8.12",
 		"@reduxjs/toolkit": "^2.2.6",
+		"boxicons": "^2.1.4",
 		"class-variance-authority": "^0.7.0",
 		"clsx": "^2.1.1",
 		"framer-motion": "~11.1.1",

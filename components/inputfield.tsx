@@ -4,7 +4,7 @@ import { Input } from './ui/input'
 
 interface MyComponentProps {
   label: string;
-  value: string;
+  value: string | number;
   type: string
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder: string;

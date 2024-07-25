@@ -55,17 +55,17 @@ const TypeDropdown = () => {
                 Type
             </Button>
             {isTypeOpen && (
-                // <div className={`${ThemeColour.variants.background.main} absolute left-1/2 transform -translate-x-1/2 mt-2 p-4 border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg w-[100px] h-[90px] `}>
                 <div
-                    className={`${ThemeColour.variants.background.main} absolute left-1/2 p-1transform -translate-x-1/2 p-4 mt-2 w-[100px] h-[90px] border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg z-20`}
+                    className={`${ThemeColour.variants.background.main} absolute left-1/2 transform -translate-x-1/2 py-2 px-1 mt-2 w-[100px] h-[90px] border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg z-20`}
                 >
-                    <div onClick={() => setType("Movies")} className=" hover:bg-[#969393] dark:hover:bg-[#1a222e]" >
+                    <div onClick={() => setType("Movies")} className="mb-2 p-1 hover:bg-[#969393] dark:hover:bg-[#1a222e]">
                         Movies
                     </div>
-                    <div onClick={() => setType("Books")} className="mb-4 hover:bg-[#969393] dark:hover:bg-[#1a222e]">
-                        <label className="block text-sm font-medium font-bold">Books</label>
+                    <div onClick={() => setType("Books")} className="p-1 hover:bg-[#969393] dark:hover:bg-[#1a222e]">
+                        Books
                     </div>
                 </div>
+
             )}
         </div>
 

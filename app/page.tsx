@@ -63,10 +63,10 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-4 pl-[170px] py-8 md:py-10">
+    <div className="flex flex-col items-center justify-center pl-[170px] py-8 md:py-10">
       <div className="inline-block max-w-lg text-center justify-center">
-        <div className="flex justify-between gap-6">
-          <div className="w-full">
+        <div className="flex justify-between gap-4">
+          <div className="w-full w-[800px]">
             <Search />
           </div>
           <TypeDropdown />
@@ -77,7 +77,6 @@ export default function Home() {
             onRatingChange={handleRatingChange}
           // onApplyFilters={handleSearch}
           />
-          <Button className={`${ThemeColour.variants.background.main} hover:bg-[#969393] text-black dark:text-white dark:hover:bg-[#1a222e]`} onClick={handleSearch}>Apply Filters</Button>
         </div>
       </div>
     </div >
