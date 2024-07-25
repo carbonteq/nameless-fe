@@ -1,4 +1,4 @@
-// components/GenresDropdown.tsx
+// components/filtersDropdown.tsx
 import React, { useEffect, useRef, useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Checkbox, Slider } from "@nextui-org/react";
@@ -53,7 +53,7 @@ const FiltersDropdown: React.FC<FiltersDropdownProps> = ({ selectedGenres, onGen
             </Button>
 
             {dropdownOpen && (
-                <div className={`${ThemeColour.variants.background.main} absolute z-10 mt-2 w-48 border border-gray-200 rounded-md shadow-lg`}>
+                <div className={`${ThemeColour.variants.background.main} absolute left-1/2 transform -translate-x-1/2 mt-2 p-4 absolute z-10 mt-2 w-48 border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg rounded-md shadow-lg`}>
                     {/* Rating Filter */}
 
                     <div className="mb-4">

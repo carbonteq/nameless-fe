@@ -9,8 +9,9 @@ import {
 } from "@nextui-org/react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import FiltersDropdown from "@/components/genresDropdown";
+import FiltersDropdown from "@/components/filtersDropdown";
 import { Dropdown } from "@nextui-org/react";
+import TypeDropdown from "@/components/typeDropdown";
 
 export default function Home() {
   const [results, setResults] = useState([]);
@@ -68,6 +69,7 @@ export default function Home() {
           <div className="w-full">
             <Search />
           </div>
+          <TypeDropdown />
           <FiltersDropdown
             selectedGenres={selectedGenres}
             onGenreChange={handleGenreChange}
