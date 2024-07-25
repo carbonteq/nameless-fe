@@ -8,6 +8,7 @@ import { clearUserId } from '@/app/redux/slices/authSlice';
 import { useDispatch } from "react-redux";
 import { useRouter } from "next/navigation";
 
+
 const ProfileDropdown = () => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
@@ -59,6 +60,7 @@ const ProfileDropdown = () => {
                         className={`${ThemeColour.variants.background.main} absolute right-0 p-1 mt-4 w-48 border border-gray-200 rounded-md shadow-lg z-20`}
                     >
                         <Link
+                            onClick={() => { setDropdownOpen(false) }}
                             href="/profile"
                             className="block px-4 py-2 hover:bg-[#969393] dark:hover:bg-[#1a222e]"
                         >
@@ -74,4 +76,5 @@ const ProfileDropdown = () => {
     );
 };
 
-export default ProfileDropdown;
+export default ProfileDropdown
+

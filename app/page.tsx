@@ -9,9 +9,8 @@ import {
 } from "@nextui-org/react";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import GenresDropdown from "@/components/genresDropdown";
-
-
+import FiltersDropdown from "@/components/genresDropdown";
+import { Dropdown } from "@nextui-org/react";
 
 export default function Home() {
   const [results, setResults] = useState([]);
@@ -62,35 +61,19 @@ export default function Home() {
     setIsDropdownOpen(false);
   };
 
-
-
   return (
     <div className="flex flex-col items-center justify-center gap-4 pl-[170px] py-8 md:py-10">
       <div className="inline-block max-w-lg text-center justify-center">
-        <div className="flex justify-between gap-6 w-full">
+        <div className="flex justify-between gap-6">
           <div className="w-full">
             <Search />
           </div>
-          <div className="relative max-w-xs">
-            <Button className={`${ThemeColour.variants.background.main} hover:bg-[#969393] text-black dark:text-white dark:hover:bg-[#1a222e]`} onClick={() => setShowSlider(prev => !prev)}>Rating</Button>
-            {showSlider && (
-              <div className={`transition-opacity duration-300 `}>
-                <Slider
-                  label="Min Rating"
-                  step={1}
-                  maxValue={9}
-                  minValue={0}
-                  defaultValue={rating}
-                  className="max-w-xs"
-                  onChange={handleRatingChange}
-                />
-              </div>
-            )}
-          </div>
-          <GenresDropdown
+          <FiltersDropdown
             selectedGenres={selectedGenres}
             onGenreChange={handleGenreChange}
-            onApplyFilters={handleSearch}
+            rating={rating}
+            onRatingChange={handleRatingChange}
+          // onApplyFilters={handleSearch}
           />
           <Button className={`${ThemeColour.variants.background.main} hover:bg-[#969393] text-black dark:text-white dark:hover:bg-[#1a222e]`} onClick={handleSearch}>Apply Filters</Button>
         </div>

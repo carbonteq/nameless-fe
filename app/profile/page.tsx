@@ -1,6 +1,6 @@
 "use client";
 import InputField from "@/components/inputfield";
-import { ThemeColour, title } from "@/components/primitives";
+import { title } from "@/components/primitives";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Edit } from "lucide-react";
 import { userService } from "../services/userService";
+
 
 const EditProfile = () => {
     const [name, setName] = useState("");
@@ -54,13 +55,12 @@ const EditProfile = () => {
                         <Card className="w-[600px] shadow-lg pt-2 ml-[270px] mt-[60px] bg-gray-100 bg-opacity-80 dark:bg-gray-900 dark:bg-opacity-97">
                             <CardHeader>
                                 <CardTitle className="text-center">
-                                    <div className="flex justify-between">
+                                    <div className="flex justify-between p-2">
                                         <div className={title()}>
                                             Profile
                                         </div>
 
                                         <Avatar
-                                            onClick={handleImageEdit}
                                             className="w-[80px] h-[80px] hover:w-[100px] hover:h-[100px] transition-all"
                                         >
                                             <AvatarImage src="https://github.com/shadcn.png" sizes="full" />
@@ -72,12 +72,18 @@ const EditProfile = () => {
                             </CardHeader>
                             <CardContent>
 
-                                <div className="grid w-full items-center gap-4">
-                                    <div className="text-2xl font-bold text-gray-800">
-                                        {name}
+                                <div className="p-4">
+                                    <div className="mb-4">
+                                        <div className="flex items-center space-x-4">
+                                            <p className="text-lg font-bold font-medium">Username:</p>
+                                            <h1 className="text-xl font-bold ">{name}</h1>
+                                        </div>
                                     </div>
-                                    <div className="mt-2 text-gray-600">
-                                        {email}
+                                    <div>
+                                        <div className="flex items-center space-x-4">
+                                            <p className="text-lg font-medium ">Email:</p>
+                                            <p className="text-lg font-bold">{email}</p>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -100,16 +106,21 @@ const EditProfile = () => {
                             <CardHeader>
                                 <CardTitle className="text-center">
                                     <div className="flex justify-between">
-                                        <div className={title()}>
-                                            Edit Profile
+                                        <div className="flex items-center space-x-2">
+                                            <div onClick={() => { setIsEdit(false) }} className="w-[40px] text-5xl rounded-full cursor-pointer">
+                                                &#8249;
+                                            </div>
+                                            <div className={title()}>
+                                                Edit Profile
+                                            </div>
                                         </div>
 
                                         <Avatar
                                             onClick={handleImageEdit}
-                                            className="w-[80px] h-[80px] hover:w-[100px] hover:h-[100px] transition-all"
+                                            className={`w-[80px] h-[80px] hover:w-[100px] hover:h-[100px] transition-all`}
                                         >
                                             <AvatarImage src="https://github.com/shadcn.png" sizes="full" />
-                                            <Edit className="absolute bottom-0 right-0 bg-white rounded-full m-2 p-1 shadow-md" size={20} color="black" />
+                                            <Edit className="absolute bottom-1 right-1 bg-white rounded-full m-2 p-1 shadow-md " size={18} color="black" />
                                             <AvatarFallback>Avatar</AvatarFallback>
 
                                         </Avatar>
@@ -146,8 +157,8 @@ const EditProfile = () => {
 
                             </CardContent>
                             <CardFooter className="flex flex-col items-center">
-                                <Button className="w-full mb-2" type="submit">
-                                    Edit
+                                <Button className="w-full mb-2 font-black" type="submit">
+                                    Update
                                 </Button>
                                 <br />
                             </CardFooter>

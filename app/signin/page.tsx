@@ -27,7 +27,7 @@ export default function SignIn() {
   //   router.push("/");
   // }
 
-  const func = () => {
+  const onSuccess = () => {
     router.push('/')
   }
 
@@ -58,7 +58,7 @@ export default function SignIn() {
 
     // Sending POST Request to the server for login
 
-    await userService.loginService(email, password, dispatch, setUserId, func)
+    await userService.loginService(email, password, dispatch, setUserId, onSuccess)
 
   };
 
@@ -83,7 +83,7 @@ export default function SignIn() {
 
     // Sending POST Request to the server for login
 
-    await userService.forgotPasswordService(email, func)
+    await userService.forgotPasswordService(email, onSuccess)
   }
 
   return (
@@ -93,7 +93,7 @@ export default function SignIn() {
         <form onSubmit={handleSubmit}>
           <Card className="w-[400px] shadow-lg pt-2 mt-16 bg-gray-100 bg-opacity-95 dark:bg-gray-900 dark:bg-opacity-95">
             <CardHeader>
-              <CardTitle className="text-center">Sign In</CardTitle>
+              <CardTitle className="text-center font-black">Sign In</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid w-full items-center gap-4">
@@ -116,19 +116,19 @@ export default function SignIn() {
               </div>
             </CardContent>
             <CardFooter className="flex flex-col items-center">
-              <Button className="w-full mb-2" type="submit">
+              <Button className="w-full mb-2 font-black" type="submit">
                 Sign In
               </Button>
               <br />
               <div>
-                <span>Don't have an account? </span>
-                <Link href="/signup" className="text-blue-500 hover:underline">
+                <span className="font-semibold">Don't have an account? </span>
+                <Link href="/signup" className="font-semibold text-blue-500 hover:underline">
                   Sign Up
                 </Link>
               </div>
               <div
                 onClick={handleForgotPassword}
-                className="text-blue-500 hover:underline"
+                className="text-blue-500 hover:underline font-semibold"
               >
                 Forgot Password?
               </div>
@@ -163,8 +163,6 @@ export default function SignIn() {
           </Card>
         </form>
       )}
-
-
 
     </div>
   );

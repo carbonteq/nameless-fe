@@ -15,6 +15,7 @@ import { toast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import InputField from "@/components/inputfield";
 
+
 export default function SignUp() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -37,10 +38,6 @@ export default function SignUp() {
                 email: formErrors.email?.[0],
                 password: formErrors.password?.[0],
             });
-            // toast({
-            //     title: "Disclaimer",
-            //     description: "Invalid Credentials",
-            // });
             return;
         }
         setErrors({});
@@ -79,7 +76,7 @@ export default function SignUp() {
     return (
         <div className="flex items-center justify-center">
             <form onSubmit={handleSubmit}>
-                <Card className="w-[400px] shadow-lg pt-2 mt-16 bg-gray-100 bg-opacity-50 dark:bg-gray-900 dark:bg-opacity-50">
+                <Card className="w-[400px] shadow-lg pt-2 mt-16 bg-gray-100 bg-opacity-95 dark:bg-gray-900 dark:bg-opacity-95">
                     <CardHeader>
                         <CardTitle className="text-center">Sign Up</CardTitle>
                     </CardHeader>

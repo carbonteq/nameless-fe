@@ -4,10 +4,10 @@ import { useRouter } from "next/navigation";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { ThemeProviderProps } from "next-themes/dist/types";
 import { useEffect } from 'react';
-import Jwt from "jsonwebtoken"
 import { useDispatch } from "react-redux";
 import { setUserId } from "./redux/slices/authSlice";
 import extractIdFromToken from "./token";
+import { JWT_TOKEN } from "@/components/primitives";
 
 export interface ProvidersProps {
   children: React.ReactNode;
@@ -20,12 +20,12 @@ export function Providers({ children, themeProps }: ProvidersProps) {
 
   useEffect(() => {
 
-    const JwtToken = localStorage.getItem('jwtToken')
+    const JwtToken = localStorage.getItem(JWT_TOKEN)
     if (JwtToken) {
       dispatch(setUserId(extractIdFromToken(JwtToken)))
     }
 
-  }, []);
+  }, [dispatch]);
 
 
   return (

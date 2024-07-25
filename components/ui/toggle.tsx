@@ -22,30 +22,13 @@ export function ModeToggle() {
 			onMouseEnter={() => setIsHovered(true)}
 			onMouseLeave={() => setIsHovered(false)}
 		>
-			{theme === 'dark' && (
-				<><Sun
-					className={`absolute h-[1.2rem] w-[1.2rem]  ${isHovered ? 'opacity-100' : 'opacity-0'
-						}`}
+			<>
+				<Sun className={`absolute h-[1.2rem] w-[1.2rem] ${isHovered ? 'opacity-0' : 'opacity-100'} dark:${isHovered ? 'opacity-100' : 'opacity-0'} `}
 				/>
-					<Moon
-						className={`absolute h-[1.2rem] w-[1.2rem] ${!isHovered ? 'opacity-100' : 'opacity-0'
-							}`}
-					/>
-					<span className="sr-only">Toggle theme</span>
-				</>)}
-
-			{theme === 'light' && (
-				<><Sun
-					className={`absolute h-[1.2rem] w-[1.2rem] ${isHovered ? 'opacity-0' : 'opacity-100'
-						}`}
+				<Moon className={`absolute h-[1.2rem] w-[1.2rem] ${isHovered ? 'opacity-100' : 'opacity-0'} dark:${isHovered ? 'opacity-0' : 'opacity-100'}`}
 				/>
-					<Moon
-						className={`absolute h-[1.2rem] w-[1.2rem] ${!isHovered ? 'opacity-0' : 'opacity-100'
-							}`}
-					/>
-					<span className="sr-only">Toggle theme</span>
-				</>)}
-
+				<span className="sr-only">Toggle theme</span>
+			</>
 		</Button>
 	);
 }
