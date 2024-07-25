@@ -14,6 +14,9 @@ import { signInSchema } from "@/components/schema";
 import { toast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import InputField from "@/components/inputfield";
+import { userService } from "../services/userService";
+import { useDispatch } from "react-redux";
+import { setUserId } from "../redux/slices/authSlice";
 
 
 export default function SignUp() {
@@ -25,6 +28,11 @@ export default function SignUp() {
         password?: string;
     }>({});
     const router = useRouter();
+    const dispatch = useDispatch();
+
+    const onSuccess = () => {
+        router.push('/')
+    }
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -42,35 +50,7 @@ export default function SignUp() {
         }
         setErrors({});
 
-        try {
-            const response = await fetch("http://localhost:8000/auth/register", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ username, email, password }),
-            });
-
-            if (response.ok) {
-                const result = await response.json();
-                toast({
-                    title: "WO-HOO",
-                    description: "Account Created",
-                });
-                setPassword("");
-                setEmail("");
-                setUsername("");
-                router.push("/signin"); // Redirect to Sign In page
-            } else {
-                console.error("Error creating user:", response.statusText);
-                toast({
-                    title: "Disclaimer",
-                    description: response.statusText,
-                });
-            }
-        } catch (error) {
-            console.error("Network error:", error);
-        }
+        await userService.signUpService(username, email, password, dispatch, setUserId, onSuccess)
     };
 
     return (

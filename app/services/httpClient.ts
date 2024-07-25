@@ -11,6 +11,17 @@ export class httpClient {
         });
     }
 
+    static signUpUser = async (username: string, email: string, password: string) => {
+        const baseUrl = "http://localhost:3000/user-verify"
+        return await fetch("http://localhost:8000/auth/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ username, email, password, baseUrl }),
+        });
+    }
+
     static FetchUserProfile = async (token: string) => {
         return await fetch("http://localhost:8000/users/me", {
             method: "GET",

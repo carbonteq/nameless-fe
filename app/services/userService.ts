@@ -8,6 +8,7 @@ import { toast } from "@/components/ui/use-toast";
 export class userService {
 
     static loginService = async (email: string, password: string, dispatch: Dispatch, setUserId: ActionCreatorWithPayload<string, "auth/setUserId">, func: () => void) => {
+
         const response = await httpClient.LoginUser(email, password)
 
         if (response.ok) {
@@ -33,6 +34,31 @@ export class userService {
         return response
     }
 
+    static signUpService = async (username: string, email: string, password: string, dispatch: Dispatch, setUserId: ActionCreatorWithPayload<string, "auth/setUserId">, onSuccess: () => void) => {
+        const response = await httpClient.signUpUser(username, email, password)
+        if (response.ok) {
+            const result = await response.json();
+            console.log("User created successfully:", result);
+
+            //Saving the token to Browser's Local Storage
+            localStorage.setItem(JWT_TOKEN, result.token);
+
+            dispatch(setUserId(extractIdFromToken(result.token)))
+            onSuccess()
+
+        } else {
+            if (response.status === 401) {
+                toast({
+                    title: "Try Again",
+                    description: "Invalid Email/Password",
+                });
+            }
+            const errorText = await response.text();
+            console.log(errorText)
+        }
+        return response
+
+    }
 
     static fetchUserData = async () => {
         const token = localStorage.getItem('jwtToken');
