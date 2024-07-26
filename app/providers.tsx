@@ -7,7 +7,7 @@ import { useEffect } from 'react';
 import { useDispatch } from "react-redux";
 import { setUserId } from "./redux/slices/authSlice";
 import extractIdFromToken from "./token";
-import { JWT_TOKEN } from "@/components/primitives";
+import { JWT_TOKEN } from "@/components/constants";
 
 export interface ProvidersProps {
   children: React.ReactNode;
@@ -25,7 +25,7 @@ export function Providers({ children, themeProps }: ProvidersProps) {
       dispatch(setUserId(extractIdFromToken(JwtToken)))
     }
 
-  }, [dispatch]);
+  }, []);
 
 
   return (

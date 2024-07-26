@@ -1,5 +1,5 @@
 import { ActionCreatorWithPayload, Dispatch } from "@reduxjs/toolkit";
-import { JWT_TOKEN } from "@/components/primitives";
+import { JWT_TOKEN } from "@/components/constants";
 import extractIdFromToken from "../token";
 import { httpClient } from "./httpClient";
 import { toast } from "@/components/ui/use-toast";

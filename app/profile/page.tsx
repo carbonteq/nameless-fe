@@ -8,14 +8,20 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Edit } from "lucide-react";
 import { userService } from "../services/userService";
+import { useRouter } from "next/navigation";
 
 
 const EditProfile = () => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [password, setPassword] = useState("********");
     const [isEdit, setIsEdit] = useState(false)
+    const [enableEmail, setEnableEmail] = useState(false)
+    const [enablePassword, setEnablePassword] = useState(false)
+
+
     const { toast } = useToast();
+    const router = useRouter();
 
     useEffect(() => {
         const loadUserData = async () => {
@@ -56,8 +62,13 @@ const EditProfile = () => {
                             <CardHeader>
                                 <CardTitle className="text-center">
                                     <div className="flex justify-between p-2">
-                                        <div className={title()}>
-                                            Profile
+                                        <div className="flex items-center space-x-2">
+                                            <div onClick={() => { router.push('/') }} className="w-[40px] text-5xl rounded-full cursor-pointer">
+                                                &#8249;
+                                            </div>
+                                            <div className={title()}>
+                                                Profile
+                                            </div>
                                         </div>
 
                                         <Avatar
@@ -70,28 +81,35 @@ const EditProfile = () => {
                                     </div>
                                 </CardTitle>
                             </CardHeader>
+
                             <CardContent>
 
-                                <div className="p-4">
-                                    <div className="mb-4">
-                                        <div className="flex items-center space-x-4">
-                                            <p className="text-lg font-bold font-medium">Username:</p>
-                                            <h1 className="text-xl font-bold ">{name}</h1>
+                                <div className="px-4">
+                                    <div className="flex items-center space-x-4 mb-4">
+                                        <p className="text-lg font-bold font-medium">Username:</p>
+                                        <h1 className="text-xl font-bold ">{name}</h1>
+                                    </div>
+                                    <div>
+                                        <div className="flex items-center space-x-4 mb-4">
+                                            <p className="text-lg font-medium ">Email:</p>
+                                            <p className="text-lg font-bold">{email}</p>
                                         </div>
                                     </div>
                                     <div>
                                         <div className="flex items-center space-x-4">
-                                            <p className="text-lg font-medium ">Email:</p>
-                                            <p className="text-lg font-bold">{email}</p>
+                                            <p className="text-lg font-medium ">Password:</p>
+                                            <p className="text-lg font-bold">********</p>
                                         </div>
                                     </div>
                                 </div>
 
                             </CardContent>
                             <CardFooter className="flex flex-col items-center">
-                                <Button onClick={() => setIsEdit(true)} className="w-full mb-2" type="submit">
-                                    Edit
-                                </Button>
+                                <div className="px-4 w-full">
+                                    <Button className="w-full mb-2 font-black " onClick={() => { setIsEdit(true) }}>
+                                        Edit
+                                    </Button>
+                                </div>
                                 <br />
                             </CardFooter>
                         </Card>
@@ -128,38 +146,50 @@ const EditProfile = () => {
                                 </CardTitle>
                             </CardHeader>
                             <CardContent>
+                                <div className="grid w-full items-center gap-4 px-4">
+                                    <div className="flex flex-col gap-2">
+                                        <div className="flex justify-between"><label className="font-black">Email</label>
+                                            <div onClick={() => { setEnableEmail(true) }} className={` cursor-pointer text-blue-500 hover:text-blue-700 self-end ${enableEmail ? 'invisible' : 'visible'}`}>Edit</div>
+                                        </div>
+                                        <InputField
+                                            label=""
+                                            value={email}
+                                            type="email"
+                                            onChange={(e) => setEmail(e.target.value)}
+                                            placeholder="Enter your email"
+                                            disabled={!enableEmail}
+                                            inputWidth="w-full" // Ensure the input spans the entire width
+                                        />
+                                    </div>
 
-                                <div className="grid w-full items-center gap-4">
+                                    <div className="flex flex-col gap-2">
+                                        <div className="flex justify-between"><label className="font-black">Password</label>
+                                            <div onClick={() => {
+                                                setEnablePassword(true)
+                                                setPassword("")
+                                            }} className={` cursor-pointer text-blue-500 hover:text-blue-700 self-end ${enablePassword ? 'invisible' : 'visible'}`}>Edit</div>
+                                        </div>
 
-                                    <InputField
-                                        label="Name"
-                                        value={name}
-                                        type="text"
-                                        onChange={(e) => setName(e.target.value)}
-                                        placeholder="Enter your name"
-                                        inputWidth="w-full"
-                                    />
-                                    <InputField
-                                        label="Email"
-                                        value={email}
-                                        type="email"
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        placeholder="Enter your email"
-                                    />
-                                    <InputField
-                                        label="Password"
-                                        value={password}
-                                        type="password"
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        placeholder="Enter your password"
-                                    />
+                                        <InputField
+                                            label=""
+                                            value={password}
+                                            type="password"
+                                            onChange={(e) => setPassword(e.target.value)}
+                                            placeholder="Enter new password"
+                                            disabled={!enablePassword}
+                                            inputWidth="w-full" // Ensure the input spans the entire width
+                                        />
+                                    </div>
                                 </div>
-
                             </CardContent>
-                            <CardFooter className="flex flex-col items-center">
-                                <Button className="w-full mb-2 font-black" type="submit">
-                                    Update
-                                </Button>
+
+
+                            <CardFooter className="flex flex-col items-center mt-2">
+                                <div className="px-4 w-full">
+                                    <Button className="w-full mb-2 font-black " type="submit">
+                                        Update
+                                    </Button>
+                                </div>
                                 <br />
                             </CardFooter>
                         </Card>
