@@ -48,7 +48,7 @@ const ProfileDropdown = () => {
 		<div className="relative" ref={dropdownRef}>
 			<Avatar onClick={toggleDropdown}>
 				<AvatarImage
-					src="https://avatars.githubusercontent.com/u/129286639?v=4"
+					src="https://avatars.githubusercontent.com/u/114104536?v=4"
 					sizes="full"
 				/>
 				<AvatarFallback>Avatar</AvatarFallback>

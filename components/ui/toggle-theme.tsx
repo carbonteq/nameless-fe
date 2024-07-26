@@ -22,7 +22,7 @@ export function ModeToggle() {
 
 	return (
 		<Button
-			className={`${button.variants.background.main} hover:bg-[red] relative`}
+			className={`${button.variants.background.main} relative`}
 			variant="ghost"
 			size="icon"
 			onClick={toggleTheme}

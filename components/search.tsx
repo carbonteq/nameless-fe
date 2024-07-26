@@ -1,4 +1,4 @@
-import { SetStateAction, useState } from "react";
+import { type SetStateAction, useState } from "react";
 import styled from "styled-components";
 import { Input } from "./ui/input";
 import TypeDropdown from "./typeDropdown";
@@ -14,6 +14,7 @@ const StyledInput = styled(Input)`
   padding-left: 4rem; 
   display: block;
   font:bold
+  transition:300
 `;
 
 const Search = () => {
@@ -26,6 +27,7 @@ const Search = () => {
 	return (
 		<div className="w-[500px] flex">
 			<SearchContainer>
+				{/* biome-ignore lint/a11y/useButtonType: <explanation> */}
 				<button className="absolute right-20 left-0 top-0 mt-3 ml-4 size-0">
 					{/* biome-ignore lint/a11y/noSvgWithoutTitle: <explanation> */}
 					<svg
@@ -46,13 +48,13 @@ const Search = () => {
 					</svg>
 				</button>
 				<StyledInput
-					placeholder="           Search..."
+					placeholder="Search..."
 					value={query}
 					onChange={handleChange}
 				/>
 				{/* biome-ignore lint/a11y/useButtonType: <explanation> */}
 
-				<div className="absolute right-0 top-0">
+				<div className="absolute border-orange-50 right-0 top-0">
 					<TypeDropdown />
 				</div>
 			</SearchContainer>

@@ -43,7 +43,7 @@ const TypeDropdown = () => {
 	return (
 		<div className="relative" ref={dropdownRef}>
 			<Button
-				className="bg-white border hover:bg-gray-100 text-black dark:bg-black dark:text-white dark:hover:bg-[#1a222e]"
+				className="bg-white border dark:border-slate-800 hover:bg-gray-100 text-black dark:bg-slate-950 dark:text-white dark:hover:bg-[#1a222e]"
 				onClick={toggleDropdown}
 			>
 				Type
