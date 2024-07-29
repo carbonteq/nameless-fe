@@ -7,7 +7,7 @@ import { movie } from "@/components/constants";
 
 import { useRouter } from "next/navigation";
 import { Card, CardBody, CardHeader } from "@nextui-org/react";
-import { CardContent, CardTitle } from "@/components/ui/card";
+import { CardTitle, CardContent } from "@/components/ui/card";
 
 const MovieDetails = () => {
 	const router = useRouter();
@@ -42,7 +42,7 @@ const MovieDetails = () => {
 						<CardHeader>
 							<CardTitle>
 								<div className="text-2xl">{movie.Title}</div>
-								<div className="flex items-center space-x-2 text-gray-400 dark:text-gray-600 mt-3">
+								<div className="flex w-full items-center space-x-2 text-gray-400 dark:text-gray-600 mt-3">
 									<span className="text-yellow-600 dark:text-yellow-400">
 										★ {movie.imdbRating}
 									</span>
@@ -50,6 +50,7 @@ const MovieDetails = () => {
 									<span>{movie.Runtime}</span>
 								</div>
 							</CardTitle>
+							<span className="text-red-600 ml-auto">Untracked</span>
 						</CardHeader>
 						<CardBody>
 							<CardContent className="p-0">
@@ -57,7 +58,35 @@ const MovieDetails = () => {
 									<p>{movie.Plot}</p>
 								</div>
 
-								<div className="grid grid-cols-4 gap-4 mt-5 ">
+								<table className="table-fixed mt-3">
+									<tbody>
+										<tr>
+											<td>Country</td>
+											<td className="pl-10">{movie.Country}</td>
+										</tr>
+
+										<tr className="mb-4">
+											<td>Year</td>
+											<td className="pl-10">{movie.Year}</td>
+										</tr>
+
+										<tr className="mb-4">
+											<td>Cast</td>
+											<td className="pl-10">{movie.Actors}</td>
+										</tr>
+
+										<tr className="mb-4">
+											<td>Director</td>
+											<td className="pl-10">{movie.Director}</td>
+										</tr>
+
+										<tr className="mb-4">
+											<td>Genre</td>
+											<td className="pl-10">{movie.Genre}</td>
+										</tr>
+									</tbody>
+								</table>
+								{/* <div className="grid grid-cols-4 gap-4 mt-5 ">
 									<div className="flex flex-col gap-2">
 										<div>Country</div>
 										<div>Year</div>
@@ -72,7 +101,7 @@ const MovieDetails = () => {
 										<div className="flex-1">{movie.Director}</div>
 										<div className="flex-1">{movie.Genre}</div>
 									</div>
-								</div>
+								</div> */}
 							</CardContent>
 						</CardBody>
 					</Card>
