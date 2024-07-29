@@ -1,19 +1,165 @@
-const Shelf = () => {
+"use client";
+import { ThemeColour, title } from "@/components/primitives";
+import Search from "@/components/search";
+import {
+	Card,
+	CardContent,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
-    const handleSubmit = (event: { preventDefault: () => void }) => {
-        event.preventDefault();
+const Collections = () => {
+	const router = useRouter();
+	const [isType, setIsType] = useState(false);
+	return (
+		<>
+			<section className="flex ml-[270px] flex-col md:flex-row items-center justify-between">
+				<div className="flex justify-start">
+					{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
+					<div
+						onClick={() => {
+							router.push("/");
+						}}
+						className="w-[40px] text-5xl rounded-full cursor-pointer"
+					>
+						&#8249;
+					</div>
+					<div className={title()}>Shelves</div>
+				</div>
+				<div className="justify-end">
+					<Search isShowType={isType} />
+				</div>
+			</section>
 
+			<section className="flex ml-[275px] flex-wrap gap-6 mt-[50px]">
+				<Card
+					className={`${ThemeColour.variants.background.main} w-[160px] h-[160px] opacity-80 hover:w-[190px] hover:h-[190px] transition-all`}
+				>
+					<CardHeader>
+						<CardTitle className=" flex text-md justify-center">
+							Shelf 1
+						</CardTitle>
+					</CardHeader>
 
-        return;
-    };
+					<CardContent></CardContent>
 
-    return (
-        <>
-            <section className="flex flex-col md:flex-row items-center justify-between ">
-                <div className="lg:pr-[150px] md:pr[50px] sm:pr-[0px]" />
-            </section>
-        </>
-    );
+					<CardFooter></CardFooter>
+				</Card>
+
+				<Card
+					className={`${ThemeColour.variants.background.main} w-[160px] h-[160px] opacity-80 hover:w-[190px] hover:h-[190px] transition-all`}
+				>
+					<CardHeader>
+						<CardTitle className=" flex text-md justify-center">
+							Shelf 2
+						</CardTitle>
+					</CardHeader>
+
+					<CardContent></CardContent>
+
+					<CardFooter></CardFooter>
+				</Card>
+
+				<Card
+					className={`${ThemeColour.variants.background.main} w-[160px] h-[160px] opacity-80 hover:w-[190px] hover:h-[190px] transition-all`}
+				>
+					<CardHeader>
+						<CardTitle className=" flex text-md justify-center">
+							Shelf 3
+						</CardTitle>
+					</CardHeader>
+
+					<CardContent></CardContent>
+
+					<CardFooter></CardFooter>
+				</Card>
+
+				<Card
+					className={`${ThemeColour.variants.background.main} w-[160px] h-[160px] opacity-80 hover:w-[190px] hover:h-[190px] transition-all`}
+				>
+					<CardHeader>
+						<CardTitle className=" flex text-md justify-center">
+							Shelf 4
+						</CardTitle>
+					</CardHeader>
+
+					<CardContent></CardContent>
+
+					<CardFooter></CardFooter>
+				</Card>
+
+				<Card
+					className={`${ThemeColour.variants.background.main} w-[160px] h-[160px] opacity-80 hover:w-[190px] hover:h-[190px] transition-all`}
+				>
+					<CardHeader>
+						<CardTitle className=" flex text-md justify-center">
+							Shelf 5
+						</CardTitle>
+					</CardHeader>
+
+					<CardContent></CardContent>
+
+					<CardFooter></CardFooter>
+				</Card>
+
+				<Card
+					className={`${ThemeColour.variants.background.main} w-[160px] h-[160px] opacity-80 hover:w-[190px] hover:h-[190px] transition-all`}
+				>
+					<CardHeader>
+						<CardTitle className=" flex text-md justify-center">
+							Shelf 6
+						</CardTitle>
+					</CardHeader>
+
+					<CardContent></CardContent>
+
+					<CardFooter></CardFooter>
+				</Card>
+				<Card
+					className={`${ThemeColour.variants.background.main} w-[160px] h-[160px] opacity-80 hover:w-[190px] hover:h-[190px] transition-all`}
+				>
+					<CardHeader>
+						<CardTitle className=" flex text-md justify-center">
+							Shelf 6
+						</CardTitle>
+					</CardHeader>
+
+					<CardContent></CardContent>
+
+					<CardFooter></CardFooter>
+				</Card>
+				<Card
+					className={`${ThemeColour.variants.background.main} w-[160px] h-[160px] opacity-80 hover:w-[190px] hover:h-[190px] transition-all`}
+				>
+					<CardHeader>
+						<CardTitle className=" flex text-md justify-center">
+							Shelf 6
+						</CardTitle>
+					</CardHeader>
+
+					<CardContent></CardContent>
+
+					<CardFooter></CardFooter>
+				</Card>
+				<Card
+					className={`${ThemeColour.variants.background.main} w-[160px] h-[160px] opacity-80 hover:w-[190px] hover:h-[190px] transition-all`}
+				>
+					<CardHeader>
+						<CardTitle className=" flex text-md justify-center">
+							Shelf 6
+						</CardTitle>
+					</CardHeader>
+
+					<CardContent></CardContent>
+
+					<CardFooter></CardFooter>
+				</Card>
+			</section>
+		</>
+	);
 };
 
-export default Shelf;
+export default Collections;

@@ -43,7 +43,8 @@ export default function RootLayout({
 					// fontSans.variable,
 					papyrus.className,
 					"bg-cover bg-center",
-					ThemeBack.variants.background.main, // Apply the background image classes
+					ThemeBack.variants.background.main,
+					// Apply the background image classes
 				)}
 			>
 				<ReduxProvider>
@@ -64,4 +65,3 @@ export default function RootLayout({
 		</html>
 	);
 }
-

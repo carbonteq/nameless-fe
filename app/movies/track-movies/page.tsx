@@ -1,12 +1,31 @@
-const TrackMovies = () => {
+import DataTable, { columns } from "@/components/table";
+import type { Payment } from "./columns";
 
-    return (
-        <>
-            <section className="flex flex-col md:flex-row items-center justify-between ">
-                <div className="lg:pr-[150px] md:pr[50px] sm:pr-[0px]" />
-            </section>
-        </>
-    );
-};
+async function getData(): Promise<Payment[]> {
+	// Fetch data from your API here.
+	return [
+		{
+			id: "728ed52f",
+			status: "Watched",
+			movies: "Maze Runner",
+		},
 
-export default TrackMovies;
+		{
+			id: "728ed52e",
+			status: "On Hold",
+			movies: "Parasite",
+		},
+
+		// ...
+	];
+}
+
+export default async function DemoPage() {
+	const data = await getData();
+
+	return (
+		<div className="container mx-auto py-10">
+			<DataTable columns={columns} data={data} />
+		</div>
+	);
+}

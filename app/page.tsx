@@ -9,6 +9,7 @@ export default function Home() {
 	const [results, setResults] = useState([]);
 	const [selectedGenres, setSelectedGenres] = useState(["All"]);
 	const [rating, setRating] = useState(5);
+	const [isType] = useState(true);
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
 	const handleSearch = (event?: { preventDefault: () => void }) => {
@@ -43,9 +44,8 @@ export default function Home() {
 			<div className="inline-block max-w-lg text-center justify-center">
 				<div className="flex justify-between gap-4">
 					<div className="w-full w-[800px]">
-						<Search />
+						<Search isShowType={isType} />
 					</div>
-					{/* <TypeDropdown /> */}
 					<FiltersDropdown
 						selectedGenres={selectedGenres}
 						onGenreChange={handleGenreChange}

@@ -14,10 +14,9 @@ const StyledInput = styled(Input)`
   padding-left: 4rem; 
   display: block;
   font:bold
-  transition:300
 `;
 
-const Search = () => {
+const Search = ({ isShowType }) => {
 	const [query, setQuery] = useState("");
 
 	const handleChange = (e: { target: { value: SetStateAction<string> } }) => {
@@ -54,9 +53,11 @@ const Search = () => {
 				/>
 				{/* biome-ignore lint/a11y/useButtonType: <explanation> */}
 
-				<div className="absolute border-orange-50 right-0 top-0">
-					<TypeDropdown />
-				</div>
+				{isShowType && (
+					<div className="absolute border-orange-50 right-0 top-0">
+						<TypeDropdown />
+					</div>
+				)}
 			</SearchContainer>
 		</div>
 	);
