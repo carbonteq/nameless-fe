@@ -15,7 +15,7 @@ const MovieDetails = () => {
 	return (
 		<Card className="ml-[270px] shadow-lg bg-gray-100 bg-opacity-80 dark:bg-gray-900 dark:bg-opacity-97">
 			<CardHeader>
-				<CardTitle>
+				<CardTitle className="pl-7">
 					<div className="flex items-center space-x-2 py-3">
 						{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 						<div
