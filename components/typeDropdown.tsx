@@ -52,7 +52,6 @@ const TypeDropdown = () => {
 				<div
 					className={`${ThemeColour.variants.background.main} absolute left-1/2 transform -translate-x-1/2 py-2 px-1 mt-2 w-[100px] h-[90px] border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg z-20`}
 				>
-					{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 					<div
 						onClick={() => {
 							setType("Movies");
@@ -62,7 +61,6 @@ const TypeDropdown = () => {
 					>
 						Movies
 					</div>
-					{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 					<div
 						onClick={() => {
 							setType("Books");

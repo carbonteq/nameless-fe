@@ -9,11 +9,18 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 
 const Collections = () => {
 	const router = useRouter();
 	const [isType, setIsType] = useState(false);
+	const [query, setQuery] = useState("");
+
+	const handleSearchChange = (newQuery: SetStateAction<string>) => {
+		setQuery(newQuery);
+	};
+
+
 	return (
 		<>
 			<section className="flex ml-[270px] flex-col md:flex-row items-center justify-between">

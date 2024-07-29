@@ -51,7 +51,6 @@ const Search = ({ isShowType }) => {
 					value={query}
 					onChange={handleChange}
 				/>
-				{/* biome-ignore lint/a11y/useButtonType: <explanation> */}
 
 				{isShowType && (
 					<div className="absolute border-orange-50 right-0 top-0">

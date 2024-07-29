@@ -53,6 +53,7 @@ const FiltersDropdown: React.FC<FiltersDropdownProps> = ({
 	};
 
 	const handleMaxChange = (e: { target: { value: string } }) => {
+		// biome-ignore lint/style/useNumberNamespace: <explanation>
 		const value = parseInt(e.target.value, 10);
 		if (value >= 0 && value <= 10 && value >= minValue) {
 			setMaxValue(value);

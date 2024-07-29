@@ -1,7 +1,7 @@
 "use client";
 import Search from "@/components/search";
 import { toast } from "@/components/ui/use-toast";
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 import FiltersDropdown from "@/components/filtersDropdown";
 import TypeDropdown from "@/components/typeDropdown";
 
@@ -11,6 +11,12 @@ export default function Home() {
 	const [rating, setRating] = useState(5);
 	const [isType] = useState(true);
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+	const [query, setQuery] = useState("");
+
+	const handleSearchChange = (newQuery: SetStateAction<string>) => {
+		setQuery(newQuery);
+	};
 
 	const handleSearch = (event?: { preventDefault: () => void }) => {
 		if (event) event.preventDefault();
@@ -51,7 +57,7 @@ export default function Home() {
 						onGenreChange={handleGenreChange}
 						rating={rating}
 						onRatingChange={handleRatingChange}
-						// onApplyFilters={handleSearch}
+					// onApplyFilters={handleSearch}
 					/>
 				</div>
 			</div>

@@ -100,7 +100,7 @@ export const HoverButton = tv({
 export const ThemeBack = {
   variants: {
     background: {
-      main: 'bg-custom-bg-light dark:bg-custom-bg-dark',
+      main: 'bg-custom-bg-light dark:bg-custom-bg-dark bg-cover bg-norepest bg-center',
     },
   },
 };
