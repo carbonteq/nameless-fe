@@ -2,7 +2,6 @@
 
 import { title } from "@/components/primitives";
 import { Image } from "@nextui-org/image";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { movie } from "@/components/constants";
 
 import { useRouter } from "next/navigation";
