@@ -24,7 +24,7 @@ const Search = ({ isShowType }) => {
 	};
 
 	return (
-		<div className="w-[500px] flex">
+		<div className={`max-sm:w-[200px] max-md:w-[300px] ${isShowType ? "w-[500px]" : "w-[400px]"} flex ${isShowType ? "" : "pr-[60px]"}`}>
 			<SearchContainer>
 				{/* biome-ignore lint/a11y/useButtonType: <explanation> */}
 				<button className="absolute right-20 left-0 top-0 mt-3 ml-4 size-0">

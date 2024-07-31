@@ -5,14 +5,14 @@ import Link from "next/link";
 
 const Sidebar: React.FC = () => {
     const pathname = usePathname();
-    const showSidebar = pathname !== "/signin" && pathname !== "/signup" && pathname !== "/forgot-password" ? 1 : 0;
+    const showSidebar = pathname !== "/signin" && pathname !== "/signup" && pathname !== "/test" && pathname !== "/forgot-password" ? 1 : 0;
 
     if (!showSidebar) return <></>;
 
     return (
         <>
             <div
-                className={`font-black sidebar fixed top-[60px] bottom-0 p-2 w-[230px] lg:w-[250px] xl:w-[280px] overflow-y-auto text-center ${ThemeColour.variants.background.main}`}
+                className={`font-black sidebar fixed top-[60px] bottom-0 p-2 max-sm:hidden lg:w-[250px] xl:w-[280px] overflow-y-auto text-center ${ThemeColour.variants.background.main}`}
                 style={{ transition: "all 0.3s ease-in-out" }}
             >
                 <div className="mt-6 flex items-center rounded-md px-3 duration-300 text-white">

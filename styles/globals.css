@@ -2,21 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Hide the spinners in WebKit browsers */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
 
-@layer utilities {
-    .ease-custom {
-        transition-timing-function: cubic-bezier(0.65, 0, 0.076, 1);
-    }
-
-    .learn-more:hover .circle {
-        @apply w-full;
-    }
-
-    .learn-more:hover .icon.arrow {
-        @apply bg-white transform translate-x-4;
-    }
-
-    .learn-more:hover .button-text {
-        @apply text-white;
-    }
+/* Hide the spinners in Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
 }

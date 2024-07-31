@@ -67,7 +67,6 @@ const EditProfile = () => {
 								<CardTitle className="text-center">
 									<div className="flex justify-between p-2">
 										<div className="flex items-center space-x-2">
-											{/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
 											<div
 												onClick={() => {
 													router.push("/");

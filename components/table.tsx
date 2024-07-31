@@ -18,7 +18,6 @@ import {
 import { ThemeColour } from "./primitives";
 import { useEffect, useState } from "react";
 
-
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
 	data: TData[];
@@ -29,8 +28,8 @@ export default function DataTable<TData, TValue>({
 	data,
 }: DataTableProps<TData, TValue>) {
 
-	const [isStatusMenu, setIsStatusMenu] = useState<boolean[]>([])
-	const [stateData, setStateData] = useState(data)
+	const [openDropdownIndex, setOpenDropdownIndex] = useState<number | null>(null);
+	const [stateData, setStateData] = useState(data);
 
 	const table = useReactTable({
 		data: stateData,
@@ -38,24 +37,16 @@ export default function DataTable<TData, TValue>({
 		getCoreRowModel: getCoreRowModel(),
 	});
 
-
-
-
-	function handleStatusClick(id: string, status: boolean): void {
-		const index = parseInt(id, 10);
-		setIsStatusMenu((prev) => {
-			const newStatusMenu = [...prev];
-			newStatusMenu[index] = status;
-			return newStatusMenu;
-		});
+	function handleStatusClick(index: number) {
+		setOpenDropdownIndex((prev) => (prev === index ? null : index));
 	}
 
 	const updateData = (rowIndex: string, columnId: string, value: string) => {
-		const rowId = parseInt(rowIndex)
+		const rowId = parseInt(rowIndex);
 		setStateData((prev) =>
 			prev.map((row, index) => {
 				if (index === rowId) {
-					console.log(index)
+					console.log(index);
 					return {
 						...prev[rowId],
 						['status']: value,
@@ -66,17 +57,15 @@ export default function DataTable<TData, TValue>({
 		);
 	};
 
-
 	return (
 		<div className="rounded-md border ml-[300px]">
-
 			<Table>
 				<TableHeader>
 					{table.getHeaderGroups().map((headerGroup) => (
 						<TableRow key={headerGroup.id}>
 							{headerGroup.headers.map((header) => {
 								return (
-									<TableHead key={header.id} className=" border font-black text-4xl px-[150px] py-4">
+									<TableHead key={header.id} className="border font-black text-4xl px-[150px] py-4">
 										{header.isPlaceholder
 											? null
 											: flexRender(
@@ -98,21 +87,25 @@ export default function DataTable<TData, TValue>({
 							>
 								{row.getVisibleCells().map((cell) => {
 									const isStatusColumn = cell.column.id === 'status';
+									const rowIndex = parseInt(row.id);
 									return (
 										<TableCell key={cell.id} className="border font-black">
 											{isStatusColumn ? (
 												<>
-													<button className={`rounded h-[50px] w-[100px] hover:bg-[#b1AAAA] dark:hover:bg-gray-900 `} onClick={() => handleStatusClick(row.id, true)}>
+													<button
+														className="rounded h-[50px] w-[100px] hover:bg-[#b1AAAA] dark:hover:bg-gray-900"
+														onClick={() => handleStatusClick(rowIndex)}
+													>
 														{flexRender(cell.column.columnDef.cell, cell.getContext())}
 													</button>
-													{isStatusMenu[parseInt(row.id)] && (
+													{openDropdownIndex === rowIndex && (
 														<div
-															className={`${ThemeColour.variants.background.main} absolute left-1/2 transform -translate-x-1/2 py-2 px-1 mt-2 w-[100px] h-[115px] border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg z-20`}
+															className={`${ThemeColour.variants.background.main} absolute py-2 px-2 w-[100px] h-[115px] border border-gray-300 dark:border-gray-700 rounded-lg shadow-lg z-20`}
 														>
 															<div
 																onClick={() => {
-																	handleStatusClick(row.id, false);
-																	updateData(row.id, cell.column.id, "Watched")
+																	handleStatusClick(rowIndex);
+																	updateData(row.id, cell.column.id, "Watched");
 																}}
 																className="mb-2 p-1 rounded hover:bg-[#969393] dark:hover:bg-[#1a222e]"
 															>
@@ -120,8 +113,8 @@ export default function DataTable<TData, TValue>({
 															</div>
 															<div
 																onClick={() => {
-																	handleStatusClick(row.id, false);
-																	updateData(row.id, cell.column.id, "To Watch")
+																	handleStatusClick(rowIndex);
+																	updateData(row.id, cell.column.id, "To Watch");
 																}}
 																className="mb-2 p-1 rounded hover:bg-[#969393] dark:hover:bg-[#1a222e]"
 															>
@@ -129,9 +122,8 @@ export default function DataTable<TData, TValue>({
 															</div>
 															<div
 																onClick={() => {
-																	handleStatusClick(row.id, false);
-																	updateData(row.id, cell.column.id, "On Hold")
-
+																	handleStatusClick(rowIndex);
+																	updateData(row.id, cell.column.id, "On Hold");
 																}}
 																className="p-1 rounded hover:bg-[#969393] dark:hover:bg-[#1a222e]"
 															>
@@ -147,7 +139,6 @@ export default function DataTable<TData, TValue>({
 									);
 								})}
 							</TableRow>
-
 						))
 					) : (
 						<TableRow>

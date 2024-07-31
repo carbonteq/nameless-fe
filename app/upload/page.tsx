@@ -1,4 +1,3 @@
-// pages/upload.js
 "use client";
 import { useState, useMemo, useEffect } from "react";
 import Papa from "papaparse";
@@ -12,15 +11,17 @@ import {
 import { z } from "zod";
 import { title } from "@/components/primitives";
 import { Tooltip } from "@nextui-org/react";
+import { schema } from "../test/page";
 
 
-// Define Zod schema for validation
 const dataSchema = z.object({
     Name: z
-        .string()
+        .string({ message: "Name must be a string" })
         .min(10, "Name of atleast 10 characters is required ")
         .max(15, ""),
-    Email: z.string().email("Invalid email address"),
+    Email: z.
+        string({ message: "Email must be a string" })
+        .email("Invalid email address"),
     Age: z
         .number({ message: "Age Must be a number" })
         .nonnegative("Age must be a non-negative integer")
@@ -37,10 +38,6 @@ export default function UploadPage() {
         setFile(e.target.files[0]);
         console.log(e.target.files[0])
     };
-
-    // useEffect(() => {
-    //     console.log(file)
-    // }, [file])
 
     const handleFileUpload = () => {
 
@@ -122,7 +119,7 @@ export default function UploadPage() {
                         )}
                     </div>
                     <div className="flex justify-center">
-                        <button className="mb-6 rounded-3xl hover:border hover:border-cyan-950 hover:px-12 hover:py-5 hover:shadow-2xl transition-all px-8 py-3 bg-[#b1AAAA] dark:bg-gray-900 " onClick={handleFileUpload}>Upload</button>
+                        <button className="mb-6 rounded-3xl hover:border-2 hover:border-cyan-900 hover:px-12 hover:py-5 hover:shadow-2xl transition-all px-8 py-3 bg-[#b1AAAA] dark:bg-gray-900 " onClick={handleFileUpload}>Upload</button>
                     </div>
                 </div>
             )}
@@ -143,7 +140,7 @@ export default function UploadPage() {
                         </div>
                         <div className={title()}>Validation Form</div>
                     </div>
-                    <div className="mt-6 flex flex-col justify-center align-middle bg-[#b1AAAA] dark:bg-gray-900 opacity-95 ">
+                    <div className="mt-6 flex flex-col justify-center align-middle bg-[#b1AAAA] dark:bg-gray-900 opacity-80 dark:opacity-80 ">
                         <table>
                             <thead className="text-lg">
                                 {table.getHeaderGroups().map((headerGroup) => (
@@ -197,8 +194,8 @@ export default function UploadPage() {
                                 ))}
                             </tbody>
                         </table>
-
                     </div>
+
                     <div className="flex justify-center mt-[50px]">
                         <button
                             onClick={() => table.previousPage()}
