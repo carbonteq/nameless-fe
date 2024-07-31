@@ -2,8 +2,10 @@
 import { ThemeColour } from '@/components/primitives';
 import React, { useState } from 'react';
 import { z } from 'zod';
+import { setSchema } from '../redux/slices/validationSchemaSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { useRouter } from 'next/navigation';
 
-export let schema;
 const defaultConstraints = {
     string: ['Min', 'Max'],
     integer: ['Min', 'Max'],
@@ -22,6 +24,8 @@ interface Key {
 }
 
 const DynamicForm = () => {
+    const dispatch = useDispatch();
+    const router = useRouter()
     const [keys, setKeys] = useState<Key[]>([
         { name: '', type: 'string', constraints: [] },
         { name: '', type: 'string', constraints: [] },
@@ -87,22 +91,12 @@ const DynamicForm = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        schema = createValidationSchema(keys);
-        const obj = {
-            Name: "Dawood",
-            Email: "dawoodakram@gmail.com",
-            Age: 30
-        }
-        const result = schema.safeParse(obj);
 
-        if (!result.success) {
-            //console.log(result.error.errors);
-            result.error.errors.forEach((err) => {
-                console.log(`${err.path}, Message: ${err.message}`);
-            });
-        } else {
-            console.log('Parsed data:', result.data);
-        }
+        if (dispatch(setSchema(keys))) {
+            console.log("SUCCESS")
+
+        };
+        router.push("/upload")
     };
 
     const createValidationSchema = (keys) => {
@@ -249,4 +243,4 @@ const DynamicForm = () => {
     );
 };
 
-export default DynamicForm;
+export default DynamicForm

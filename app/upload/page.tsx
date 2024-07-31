@@ -8,27 +8,19 @@ import {
     flexRender,
     createColumnHelper,
 } from "@tanstack/react-table";
-import { z } from "zod";
 import { title } from "@/components/primitives";
 import { Tooltip } from "@nextui-org/react";
-import { schema } from "../test/page";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
+import createValidationSchema from "../zodSchemaCreator";
 
 
-const dataSchema = z.object({
-    Name: z
-        .string({ message: "Name must be a string" })
-        .min(10, "Name of atleast 10 characters is required ")
-        .max(15, ""),
-    Email: z.
-        string({ message: "Email must be a string" })
-        .email("Invalid email address"),
-    Age: z
-        .number({ message: "Age Must be a number" })
-        .nonnegative("Age must be a non-negative integer")
-        .max(35, { message: "Age Cannot exceed 35" }),
-});
 
 export default function UploadPage() {
+
+    const keys = useSelector((state: RootState) => state.validationSchema.schema);
+    const dataSchema = createValidationSchema(keys);
+
     const [file, setFile] = useState(null);
     const [data, setData] = useState([]);
     const [invalidCells, setInvalidCells] = useState({});
