@@ -173,7 +173,6 @@ const Home = () => {
 							// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 							key={index}
 							className=" h-12 flex justify-center px-4 gap-x-2 items-center  rounded-full text-black text-center align-middle bg-[#d2d8e1] dark:bg-[#1a222e] dark:text-white"
-
 						>
 							{item.type}
 							<button
@@ -184,7 +183,6 @@ const Home = () => {
 								X
 							</button>
 						</div>
-
 					</>
 				);
 			}
@@ -319,71 +317,78 @@ const Home = () => {
 					>
 						{renderDroppedItems()}
 					</div>
-					<div className="flex flex-1 items-end justify-center ">
+					<div className="flex flex-1 items-end  justify-center ">
 						<button
 							type="submit"
 							//onClick={handleSubmit}
 							onClick={handleAdd}
-							className="mb-6 rounded-3xl hover:border-2 hover:border-cyan-900 hover:px-12 hover:py-5 hover:shadow-2xl transition-all px-8 py-3 bg-[#b1AAAA] dark:bg-gray-900 "
+							className="mb-6 w-[118px] h-12 border border-gray-500 rounded-full text-center p-2 m-2 cursor-pointer"
 						>
 							Add
 						</button>
 					</div>
 				</div>
 
-				<div onClick={handleSubmit}>UPLOAD</div>
-			</div>
-			{/* <div className="relative w-full flex justify-center">
-				<div className="bg-[#d2d8e1] dark:bg-gray-900 rounded-lg mt-6 p-4 opacity-70">
-					<h1 className="text-2xl font-bold">Added Keys</h1>
-					<div className="flex gap-x-4 gap-y-2 flex-wrap p-4">
-						{keys.map((item, index) => (
-							<div key={index} className="mt-8 flex mb-4">
-								<button
-									onClick={showKey(index)}
-									className="w-[100px] h-[40px] text-1xl rounded bg-[#c6d0de]"
-								>
-									{index + 1} {item.name}
-								</button>
-								<button
-									className="w-[20px] h-[20px] text-[10px] bg-red-500 rounded-full ml-2"
-									type="button"
-									onClick={() => handleRemoveKey(index)}
-								>
-									X
-								</button>
-							</div>
-						))}
-					</div>
-				</div>
-				{selectedKey && (
-					<div className="absolute top-0 right-2 bg-[#d2d8e1] dark:bg-gray-900 mt-8 p-4 rounded-lg shadow-lg opacity-70 z-10">
-						<h2 className="text-xl font-bold mb-2">Key Details</h2>
-						<p>
-							<strong>Name:</strong> {selectedKey.name}
-						</p>
-						<p>
-							<strong>Type:</strong> {selectedKey.type}
-						</p>
-						<div>
-							<strong>Constraints:</strong>
-							<ul>
-								{selectedKey.constraints.map((constraint, index) => (
-									<li key={index}>
-										{constraint.name}: {constraint.value}
-									</li>
-								))}
-							</ul>
+				{/* TODO */}
+				<div className="relative w-[202px] flex">
+					<div className="bg-white dark:bg-gray-900 rounded-lg flex-1  p-4 opacity-80">
+						<h1 className="text-2xl font-bold">Added Keys</h1>
+						<div className="flex gap-x-4 gap-y-2 flex-wrap p-4">
+							{keys.map((item, index) => (
+								<div key={index} className="mt-8 flex mb-4">
+									<button
+										onClick={showKey(index)}
+										className="w-[100px] h-[40px] text-1xl rounded bg-[#c6d0de]"
+									>
+										{index + 1} {item.name}
+									</button>
+									<button
+										className="w-[20px] h-[20px] text-[10px] bg-red-500 rounded-full ml-2"
+										type="button"
+										onClick={() => handleRemoveKey(index)}
+									>
+										X
+									</button>
+								</div>
+							))}
 						</div>
 						<button
-							onClick={() => setSelectedKey(null)}
-							className="mt-4 bg-red-500 text-white rounded px-4 py-2"
+							type="submit"
+							onClick={handleSubmit}
+							className="mb-6 rounded-3xl hover:border-2 hover:border-cyan-900 hover:px-12 hover:py-5 hover:shadow-2xl transition-all px-8 py-3 bg-[#b1AAAA] dark:bg-gray-900 "
 						>
-							Close
+							Upload
 						</button>
 					</div>
-				)} */}
-
+					{selectedKey && (
+						<div className="absolute top-0 right-2 bg-[#d2d8e1] dark:bg-gray-900 mt-8 p-4 rounded-lg shadow-lg opacity-70 z-10">
+							<h2 className="text-xl font-bold mb-2">Key Details</h2>
+							<p>
+								<strong>Name:</strong> {selectedKey.name}
+							</p>
+							<p>
+								<strong>Type:</strong> {selectedKey.type}
+							</p>
+							<div>
+								<strong>Constraints:</strong>
+								<ul>
+									{selectedKey.constraints.map((constraint, index) => (
+										<li key={index}>
+											{constraint.name}: {constraint.value}
+										</li>
+									))}
+								</ul>
+							</div>
+							<button
+								onClick={() => setSelectedKey(null)}
+								className="mt-4 bg-red-500 text-white rounded px-4 py-2"
+							>
+								Close
+							</button>
+						</div>
+					)}
+				</div>
+			</div>
 		</div>
 	);
 };
