@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const Sidebar: React.FC = () => {
     const pathname = usePathname();
-    const showSidebar = pathname !== "/signin" && pathname !== "/signup" && pathname !== "/test" && pathname !== "/forgot-password" ? 1 : 0;
+    const showSidebar = pathname !== "/drag-test" && pathname !== "/signin" && pathname !== "/signup" && pathname !== "/test" && pathname !== "/forgot-password" ? 1 : 0;
 
     if (!showSidebar) return <></>;
 

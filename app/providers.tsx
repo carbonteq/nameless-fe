@@ -8,6 +8,8 @@ import { useDispatch } from "react-redux";
 import { setUserId } from "./redux/slices/authSlice";
 import extractIdFromToken from "./token";
 import { JWT_TOKEN } from "@/components/constants";
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 export interface ProvidersProps {
   children: React.ReactNode;
@@ -29,8 +31,10 @@ export function Providers({ children, themeProps }: ProvidersProps) {
 
 
   return (
-    <NextUIProvider navigate={router.push}  >
-      <NextThemesProvider {...themeProps}>{children}</NextThemesProvider>
+    <NextUIProvider navigate={router.push}>
+      <DndProvider backend={HTML5Backend}>
+        <NextThemesProvider {...themeProps}>{children}</NextThemesProvider>
+      </DndProvider>
     </NextUIProvider>
   );
 }
