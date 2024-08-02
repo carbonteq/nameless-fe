@@ -301,6 +301,7 @@ const Home = () => {
 									)}
 								</>
 							)}
+
 						</div>
 					</div>
 				</div>
@@ -311,13 +312,14 @@ const Home = () => {
 					ref={drop}
 					className="flex flex-col flex-1 p-4 bg-gray-100 bg-opacity-80 dark:bg-gray-900 dark:bg-opacity-95 rounded-xl"
 				>
-					<div className="flex p-4  border border-red-500 rounded-xl ">
+					<div className={`flex p-4  ${typeSelected ? "border" : ""} border-gray-900 rounded-xl `}>
 						{renderDroppedItems()}
 					</div>
-					<div className="flex justify-end pr-12 ">
+					<div className="flex flex-1 items-end justify-center ">
 						<button
 							type="submit"
-							onClick={handleAdd}
+							onClick={handleSubmit}
+							// onClick={handleAdd}
 							className="mb-6 rounded-3xl hover:border-2 hover:border-cyan-900 hover:px-12 hover:py-5 hover:shadow-2xl transition-all px-8 py-3 bg-[#b1AAAA] dark:bg-gray-900 "
 						>
 							Add
@@ -325,9 +327,9 @@ const Home = () => {
 					</div>
 				</div>
 
-				<div onClick={handleSubmit}>UPLOAD</div>
+				{/* <div onClick={handleSubmit}>UPLOAD</div> */}
 			</div>
-			<div className="relative w-full flex justify-center">
+			{/* <div className="relative w-full flex justify-center">
 				<div className="bg-[#d2d8e1] dark:bg-gray-900 rounded-lg mt-6 p-4 opacity-70">
 					<h1 className="text-2xl font-bold">Added Keys</h1>
 					<div className="flex gap-x-4 gap-y-2 flex-wrap p-4">
@@ -376,9 +378,8 @@ const Home = () => {
 							Close
 						</button>
 					</div>
-				)}
-			</div>
-		</div>
+				)} */}
+		</div >
 	);
 };
 
