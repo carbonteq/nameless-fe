@@ -144,7 +144,7 @@ const Home = () => {
 					<>
 						<div
 							key={index}
-							className=" h-12 flex justify-center px-2 gap-x-2 items-center  rounded-full text-black text-center align-middle bg-[#d2d8e1] dark:bg-[#1a222e] dark:text-white"
+							className=" h-12 flex justify-center px-4 gap-x-2 items-center  rounded-full text-black text-center align-middle bg-[#d2d8e1] dark:bg-[#1a222e] dark:text-white"
 						>
 							{item.type}:
 							<input
@@ -172,17 +172,19 @@ const Home = () => {
 						<div
 							// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 							key={index}
-							className="w-24 h-12 border border-gray-500 p-2 m-2"
+							className=" h-12 flex justify-center px-4 gap-x-2 items-center  rounded-full text-black text-center align-middle bg-[#d2d8e1] dark:bg-[#1a222e] dark:text-white"
+
 						>
 							{item.type}
+							<button
+								className=" w-[20px] h-[20px] text-[10px] bg-red-500 rounded-full"
+								type="button"
+								onClick={() => handleRemoveConstraint(item.type)}
+							>
+								X
+							</button>
 						</div>
-						<button
-							className="ml-2 w-[20px] h-[20px] text-[10px] bg-red-500 rounded-full"
-							type="button"
-							onClick={() => handleRemoveConstraint(item.type)}
-						>
-							X
-						</button>
+
 					</>
 				);
 			}
@@ -254,7 +256,7 @@ const Home = () => {
 				<div className="flex flex-col gap-4">
 					<div className="w-[202px] h-[272px] bg-gray-100 bg-opacity-80 dark:bg-gray-800 dark:bg-opacity-80 rounded-xl flex flex-col items-center p-4">
 						<h1 className="text-2xl font-bold">Types</h1>
-						<div className="flex flex-col flex-1 justify-center overflow-scroll">
+						<div className="flex flex-col flex-1 justify-center overflow-auto appearance-none">
 							{isTypeDisabled && (
 								<p className="text-center">Type Already Selected</p>
 							)}
@@ -269,7 +271,7 @@ const Home = () => {
 					</div>
 
 					{/* TODO */}
-					<div className="w-[202px] h-[272px] overflow-scroll bg-gray-100 bg-opacity-80 dark:bg-gray-800 dark:bg-opacity-80 rounded-xl flex flex-col items-center p-4">
+					<div className="w-[202px] h-[272px] overflow-auto bg-gray-100 bg-opacity-80 dark:bg-gray-800 dark:bg-opacity-80 rounded-xl flex flex-col items-center p-4">
 						<h1 className="text-2xl font-bold">Constraints</h1>
 
 						<div className="flex flex-col flex-1 justify-center">
@@ -310,7 +312,7 @@ const Home = () => {
 
 				<div
 					ref={drop}
-					className="flex flex-col h-[560px] overflow-scroll flex-1 p-4 bg-gray-100 bg-opacity-80 dark:bg-gray-800 dark:bg-opacity-80 rounded-xl"
+					className="flex flex-col h-[560px] overflow-auto flex-1 p-4 bg-gray-100 bg-opacity-80 dark:bg-gray-800 dark:bg-opacity-80 rounded-xl"
 				>
 					<div
 						className={`flex p-2 gap-x-4 flex-wrap items-center ${typeSelected ? "border" : ""} border-gray-500 rounded-full `}
@@ -320,8 +322,8 @@ const Home = () => {
 					<div className="flex flex-1 items-end justify-center ">
 						<button
 							type="submit"
-							onClick={handleSubmit}
-							// onClick={handleAdd}
+							//onClick={handleSubmit}
+							onClick={handleAdd}
 							className="mb-6 rounded-3xl hover:border-2 hover:border-cyan-900 hover:px-12 hover:py-5 hover:shadow-2xl transition-all px-8 py-3 bg-[#b1AAAA] dark:bg-gray-900 "
 						>
 							Add
@@ -329,7 +331,7 @@ const Home = () => {
 					</div>
 				</div>
 
-				{/* <div onClick={handleSubmit}>UPLOAD</div> */}
+				<div onClick={handleSubmit}>UPLOAD</div>
 			</div>
 			{/* <div className="relative w-full flex justify-center">
 				<div className="bg-[#d2d8e1] dark:bg-gray-900 rounded-lg mt-6 p-4 opacity-70">
@@ -381,6 +383,7 @@ const Home = () => {
 						</button>
 					</div>
 				)} */}
+
 		</div>
 	);
 };
