@@ -5,6 +5,7 @@ import { setSchema } from "../redux/slices/validationSchemaSlice";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { button, ThemeColour } from "@/components/primitives";
+import { constants } from "buffer";
 
 interface Con {
 	name: string;
@@ -91,11 +92,14 @@ const Home = () => {
 		);
 	};
 
-	const handleRemoveKey = (index: number) => {
+	const handleRemoveKeyWithId = (index: number) => {
 		setKeys((prevKeys) => prevKeys.filter((_, i) => i !== index));
 		if (selectedKey && keys[index].name === selectedKey.name) {
 			setSelectedKey(null);
 		}
+	};
+	const handleRemoveKeyWithName = (KeyName: string) => {
+		setKeys((prevKeys) => prevKeys.filter((k) => k.name !== KeyName));
 	};
 
 	const showKey = (index: number) => () => {
@@ -137,7 +141,6 @@ const Home = () => {
 						</div>
 					</>
 				);
-				// biome-ignore lint/style/noUselessElse: <explanation>
 			} else if (item.type === "Min" || item.type === "Max") {
 				const constraint = constraints.find((c) => c.name === item.type);
 				return (
@@ -246,6 +249,19 @@ const Home = () => {
 		setIsTypeDisabled(false);
 	};
 
+	const handleEdit = (selectedKey: Key, index: any) => {
+		setItems((prevItems) => [...prevItems, { type: selectedKey.type }])
+		selectedKey.constraints.map((constraint) => {
+			setItems((prevItems) => [...prevItems, { type: constraint.name }])
+			setConstraints((prev) => [...prev, constraint])
+		})
+		setName(selectedKey.name)
+		setTypeSelected(selectedKey.type)
+
+		handleRemoveKeyWithName(selectedKey.name)
+		console.log(items)
+	}
+
 	return (
 		<div
 			className={` flex flex-col rounded-xl p-6 bg-opacity-50  ${ThemeColour.variants.background.main}`}
@@ -313,7 +329,7 @@ const Home = () => {
 					className="flex flex-col h-[560px] overflow-auto flex-1 p-4 bg-gray-100 bg-opacity-80 dark:bg-gray-800 dark:bg-opacity-80 rounded-xl"
 				>
 					<div
-						className={`flex p-2 gap-x-4 flex-wrap items-center ${typeSelected ? "border" : ""} border-gray-500 rounded-full `}
+						className={`flex p-2 gap-4 flex-wrap items-center ${typeSelected ? "border" : ""} border-gray-500 rounded-xl `}
 					>
 						{renderDroppedItems()}
 					</div>
@@ -345,7 +361,7 @@ const Home = () => {
 									<button
 										className="w-[20px] h-[20px] text-[10px] bg-red-500 rounded-full ml-2"
 										type="button"
-										onClick={() => handleRemoveKey(index)}
+										onClick={() => handleRemoveKeyWithId(index)}
 									>
 										X
 									</button>
@@ -361,7 +377,7 @@ const Home = () => {
 						</button>
 					</div>
 					{selectedKey && (
-						<div className="absolute top-0 right-2 bg-[#d2d8e1] dark:bg-gray-900 mt-8 p-4 rounded-lg shadow-lg opacity-70 z-10">
+						<div className="absolute top-0 right-2 bg-[#d2d8e1] dark:bg-gray-900 mt-8 p-4 rounded-lg shadow-lg opacity-95 z-10">
 							<h2 className="text-xl font-bold mb-2">Key Details</h2>
 							<p>
 								<strong>Name:</strong> {selectedKey.name}
@@ -384,6 +400,15 @@ const Home = () => {
 								className="mt-4 bg-red-500 text-white rounded px-4 py-2"
 							>
 								Close
+							</button>
+							<button
+								onClick={() => {
+									setSelectedKey(null)
+									handleEdit(selectedKey)
+								}}
+								className="ml-2 mt-4 bg-green-700 text-white rounded px-4 py-2"
+							>
+								Edit
 							</button>
 						</div>
 					)}
