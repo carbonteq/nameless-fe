@@ -119,41 +119,45 @@ const Home = () => {
 							value={name}
 							onChange={(e) => handleChangeKey(index, "name", e.target.value)}
 							placeholder="Key Name"
-							className="w-30 h-12 rounded p-4 mt-2 text-black bg-[#d2d8e1] dark:bg-[#1a222e] dark:text-white"
+							className="w-30 h-12 rounded-full p-4 text-black bg-[#d2d8e1] dark:bg-[#1a222e] dark:text-white"
 							required
 						/>
 						<div
 							key={index}
-							className="w-24 h-12 pt-3 ml-2 mt-2 rounded text-black text-center align-middle bg-[#d2d8e1] dark:bg-[#1a222e] dark:text-white"
+							className="w-24 h-12 flex justify-center gap-x-2 items-center   rounded-full text-black text-center align-middle bg-[#d2d8e1] dark:bg-[#1a222e] dark:text-white"
 						>
 							{typeSelected}
+							<button
+								className=" w-[20px] h-[20px] text-[10px] bg-red-500 rounded-full"
+								type="button"
+								onClick={() => handleRemoveType(item.type)}
+							>
+								X
+							</button>
 						</div>
-						<button
-							className="ml-1 w-[20px] h-[20px] text-[10px] bg-red-500 rounded-full"
-							type="button"
-							onClick={() => handleRemoveType(item.type)}
-						>
-							X
-						</button>
 					</>
 				);
+				// biome-ignore lint/style/noUselessElse: <explanation>
 			} else if (item.type === "Min" || item.type === "Max") {
 				const constraint = constraints.find((c) => c.name === item.type);
 				return (
 					<>
-						<div key={index} className="flex ">
-							<label className="pl-2 pt-4 text-md ml-2">{item.type}:</label>
+						<div
+							key={index}
+							className=" h-12 flex justify-center px-2 gap-x-2 items-center  rounded-full text-black text-center align-middle bg-[#d2d8e1] dark:bg-[#1a222e] dark:text-white"
+						>
+							{item.type}:
 							<input
 								type="number"
 								value={constraint ? constraint.value : ""}
 								onChange={(e) =>
 									handleChangeConstraint(item.type, e.target.value)
 								}
-								className="appearance-none pl-2 mt-2 rounded text-black bg-[#d2d8e1] dark:bg-[#1a222e] dark:text-white size-10"
+								className="appearance-none  h-6 p-2 rounded-full text-black bg-white dark:bg-gray-800 dark:text-white size-10"
 								required
 							/>
 							<button
-								className="ml-1 w-[20px] h-[20px] text-[10px] bg-red-500 rounded-full"
+								className=" w-[20px] h-[20px] text-[10px] bg-red-500 rounded-full"
 								type="button"
 								onClick={() => handleRemoveConstraint(item.type)}
 							>
@@ -166,6 +170,7 @@ const Home = () => {
 				return (
 					<>
 						<div
+							// biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
 							key={index}
 							className="w-24 h-12 border border-gray-500 p-2 m-2"
 						>
@@ -243,17 +248,13 @@ const Home = () => {
 
 	return (
 		<div
-			className={` flex flex-col rounded-xl p-6 bg-opacity-50 ${ThemeColour.variants.background.main}`}
+			className={` flex flex-col rounded-xl p-6 bg-opacity-50  ${ThemeColour.variants.background.main}`}
 		>
-			<h1 className="flex-1 text-4xl text-center font-bold my-8">
-				Drag-and-Drop Interface
-			</h1>
 			<div className="flex gap-4">
 				<div className="flex flex-col gap-4">
-					<div className="w-[202px] h-[272px] bg-gray-100 bg-opacity-80 dark:bg-gray-900 dark:bg-opacity-95 rounded-xl flex flex-col items-center p-4">
+					<div className="w-[202px] h-[272px] bg-gray-100 bg-opacity-80 dark:bg-gray-800 dark:bg-opacity-80 rounded-xl flex flex-col items-center p-4">
 						<h1 className="text-2xl font-bold">Types</h1>
-
-						<div className="flex flex-col flex-1 justify-center">
+						<div className="flex flex-col flex-1 justify-center overflow-scroll">
 							{isTypeDisabled && (
 								<p className="text-center">Type Already Selected</p>
 							)}
@@ -268,7 +269,7 @@ const Home = () => {
 					</div>
 
 					{/* TODO */}
-					<div className="w-[202px] h-[192px] bg-gray-100 bg-opacity-80 dark:bg-gray-900 dark:bg-opacity-95 rounded-xl flex flex-col items-center p-4">
+					<div className="w-[202px] h-[272px] overflow-scroll bg-gray-100 bg-opacity-80 dark:bg-gray-800 dark:bg-opacity-80 rounded-xl flex flex-col items-center p-4">
 						<h1 className="text-2xl font-bold">Constraints</h1>
 
 						<div className="flex flex-col flex-1 justify-center">
@@ -301,7 +302,6 @@ const Home = () => {
 									)}
 								</>
 							)}
-
 						</div>
 					</div>
 				</div>
@@ -310,9 +310,11 @@ const Home = () => {
 
 				<div
 					ref={drop}
-					className="flex flex-col flex-1 p-4 bg-gray-100 bg-opacity-80 dark:bg-gray-900 dark:bg-opacity-95 rounded-xl"
+					className="flex flex-col h-[560px] overflow-scroll flex-1 p-4 bg-gray-100 bg-opacity-80 dark:bg-gray-800 dark:bg-opacity-80 rounded-xl"
 				>
-					<div className={`flex p-4  ${typeSelected ? "border" : ""} border-gray-900 rounded-xl `}>
+					<div
+						className={`flex p-2 gap-x-4 flex-wrap items-center ${typeSelected ? "border" : ""} border-gray-500 rounded-full `}
+					>
 						{renderDroppedItems()}
 					</div>
 					<div className="flex flex-1 items-end justify-center ">
@@ -379,7 +381,7 @@ const Home = () => {
 						</button>
 					</div>
 				)} */}
-		</div >
+		</div>
 	);
 };
 
