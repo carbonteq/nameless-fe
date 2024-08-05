@@ -3,21 +3,22 @@ import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import { button } from "../primitives";
-import { useMemo, useState } from "react";
-
-export function ModeToggle() {
+import { useLayoutEffect, useState } from "react";
+import classnames from 'classnames'
+export default function ModeToggle() {
 	const { theme, setTheme } = useTheme();
 	const [isHovered, setIsHovered] = useState(false);
+	const [isMoonHidden, setIsMoonHidden] = useState(false)
+	const isDark = theme === "dark";
 
 	const toggleTheme = () => {
 		setTheme(theme === "dark" ? "light" : "dark");
 	};
-	const isDark = theme === "dark";
 
-	const isMoonHidden = useMemo(
-		() => (isDark ? isHovered : !isHovered),
-		[isHovered, isDark],
-	);
+	useLayoutEffect(() => {
+		setIsMoonHidden(isDark ? isHovered : !isHovered)
+	}, [isHovered, isDark])
+
 	const isSunHidden = !isMoonHidden;
 
 	return (
@@ -31,10 +32,10 @@ export function ModeToggle() {
 		>
 			<>
 				<Sun
-					className={`absolute h-[1.2rem] w-[1.2rem] ${isSunHidden ? "hidden" : ""}`}
+					className={classnames('absolute h-[1.2rem] w-[1.2rem]', { hidden: isSunHidden })}
 				/>
 				<Moon
-					className={`absolute h-[1.2rem] w-[1.2rem] ${isMoonHidden ? "hidden" : ""}`}
+					className={classnames('absolute h-[1.2rem] w-[1.2rem]', { hidden: isMoonHidden })}
 				/>
 				<span className="sr-only">Toggle theme</span>
 			</>

@@ -6,7 +6,7 @@ const createValidationSchema = (keys) => {
     const schemaObject = keys.reduce((acc, key) => {
         let keySchema = z.any();
 
-        switch (key.type) {
+        switch (key.typeSelected) {
             case 'string':
                 keySchema = z.string();
                 key.constraints.forEach((constraint) => {

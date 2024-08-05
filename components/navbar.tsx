@@ -7,11 +7,16 @@ import {
 } from "@nextui-org/navbar";
 import { Button } from "@nextui-org/button";
 import NextLink from "next/link";
-import { ModeToggle } from "./ui/toggle-theme";
+import ModeToggle from "./ui/toggle-theme";
+
 import { button, ThemeColour } from "./primitives";
 import Link from "next/link";
 import { useSelector } from "react-redux";
 import ProfileDropdown from "./profileDropdown";
+import dynamic from "next/dynamic";
+// const ModeToggle = dynamic(() => import('./ui/toggle-theme'), {
+// 	ssr: false
+// })
 
 export const Navbar = () => {
 	const userId = useSelector((state: any) => state.auth.userId);

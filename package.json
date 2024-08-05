@@ -38,6 +38,7 @@
 		"@reduxjs/toolkit": "^2.2.6",
 		"@tanstack/react-table": "^8.19.3",
 		"class-variance-authority": "^0.7.0",
+		"classnames": "^2.5.1",
 		"clsx": "^2.1.1",
 		"framer-motion": "~11.1.1",
 		"intl-messageformat": "^10.5.0",
