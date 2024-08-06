@@ -35,8 +35,7 @@ const Home = () => {
 	const { toast } = useToast();
 
 	const [type, setType] = useState<string>();
-	const [constraintErr, setConstraintErr] = useState<string[]>([]);
-	const [nameErr, setNameErr] = useState<string[]>([]);
+
 	const [rowSelected, setRowSelected] = useState<number>(0)
 	// Array of Rows to store all All Related Values of a key
 
@@ -56,9 +55,8 @@ const Home = () => {
 	};
 
 	const addTypeToRow = (rowIndex: number, newItem: string) => {
-		let exist: boolean
-		exist = (rows[rowIndex].typeSelected === "" || rows[rowIndex].typeSelected === null) ? false : true
-		if (exist === false) {
+		const exist: boolean = !(rows[rowIndex].typeSelected === "" || rows[rowIndex].typeSelected === null)
+		if (!exist) {
 			setRows(prevRows =>
 				prevRows.map((row, index) =>
 					index === rowIndex ? { ...row, typeSelected: newItem } : row
@@ -151,67 +149,76 @@ const Home = () => {
 	};
 
 	const validateConstraintInput = () => {
-		setConstraintErr([])
+		let consErrors: string[] = []
 		rows.map((row, index) => {
 			row.constraints.map((constraint) => {
 				if (constraint.name === 'Min' || constraint.name === 'Max') {
 					if (constraint.value === "") {
-						setConstraintErr(prev => [...prev, `Error in Constraint ${constraint.name} Value in row ${index + 1}`])
+						consErrors.push(`Error in Constraint ${constraint.name} Value in row ${index + 1}`)
 					}
 				}
 			})
 		})
+		return consErrors
 	}
 
-	const validateKeyNames = () => {
-		setNameErr([])
+	const validateKeyNames = (): string[] => {
+		let keyErrors: string[] = []
+		let emptyErrCheck: boolean
 		rows.map((row1, index1) => {
-			rows.map((row2, index2) => {
-				if ((index2 > index1) && (row1.name.trim() === row2.name.trim())) {
-					console.log("SETTING ERRORS IN NAMES");
-					setNameErr(prev => [...prev, `Same Key Name in Row ${index1 + 1} and Row ${index2 + 1} `])
-				}
-			})
+			emptyErrCheck = false
+			if (row1.name === "") {
+				keyErrors.push(`Empty Key Name in Row ${index1 + 1}`)
+				emptyErrCheck = true
+			}
+			if (!emptyErrCheck) {
+				rows.map((row2, index2) => {
+					if ((index2 > index1) && (row1.name.trim() === row2.name.trim())) {
+						keyErrors.push(`Same Key Name in Row ${index1 + 1} and Row ${index2 + 1} `)
+					}
+				})
+			}
 		})
+		return keyErrors
 	}
 
 	const handleSubmit = (e: { preventDefault: () => void; }) => {
 		e.preventDefault();
-		validateKeyNames()
-		validateConstraintInput()
-	};
 
-	useEffect(() => {
-		console.log(constraintErr);
-		const errors = nameErr.length === 0 ? constraintErr.length === 0 ? "" : constraintErr : nameErr
-
-		if (errors !== "") {
-			console.log("There are some errors");
-			let errs = "";
-			errors.map((err) => errs = errs + "\n" + err)
-			console.log(constraintErr);
-			alert(errs)
-			toast({
-				title: "ERROR",
-				description: errs,
-			});
-		}
-
-		else {
-			const keys = rows.map(({ name, typeSelected, constraints }) => ({
-				name,
-				typeSelected,
-				constraints
-			}));
-			if (dispatch(setSchema(keys))) {
-				console.log("SUCCESS");
+		if (rows.length !== 0) {
+			const keyErrors = validateKeyNames()
+			const consErrors = validateConstraintInput()
+			const errors: string[] = [...keyErrors, ...consErrors]
+			if (errors.length !== 0) {
+				const showErrors = errors.reduce((acc, err) => `${acc}\n${err}`)
+				alert(showErrors)
+				toast({
+					title: "ERROR",
+					description: showErrors,
+				});
+				return
 			}
-			if (keys[0]?.typeSelected) {
-				// console.log(convertToJson(keys));
+			else {
+				const keys = rows.map(({ name, typeSelected, constraints }) => ({
+					name,
+					typeSelected,
+					constraints
+				}));
+				if (dispatch(setSchema(keys))) {
+					console.log("SUCCESS");
+				}
 				router.push("/upload");
 			}
 		}
-	}, [constraintErr, nameErr])
+		else {
+			// alert("No Row Added")
+			toast({
+				title: "ERROR",
+				description: "No Row Added",
+			});
+			return
+		}
+	};
 
 	const renderDroppedItems = (index: number) => {
 		return rows.map((item, i) => {
