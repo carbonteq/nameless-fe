@@ -1,12 +1,13 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useDrag, useDrop } from "react-dnd";
+import { useDrag } from "react-dnd";
 import { setSchema } from "../redux/slices/validationSchemaSlice";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { ThemeColour } from "@/components/primitives";
 import Row from "@/components/row";
-import React from "react";
+import { useToast } from "@/components/ui/use-toast";
+import { convertToJson } from "../jsonSchemaCreator";
 
 interface Con {
 	name: string;
@@ -31,15 +32,12 @@ const defaultType = ["string", "email", "integer"];
 const Home = () => {
 	const router = useRouter();
 	const dispatch = useDispatch();
-
-	// Final Keys to save in Redux State and generate the ZOD scheme
-
-	// const [keys, setKeys] = useState<Key[]>([]);
+	const { toast } = useToast();
 
 	const [type, setType] = useState<string>();
-
-	// ------------------------------------------------------------------------
-
+	const [constraintErr, setConstraintErr] = useState<string[]>([]);
+	const [nameErr, setNameErr] = useState<string[]>([]);
+	const [rowSelected, setRowSelected] = useState<number>(0)
 	// Array of Rows to store all All Related Values of a key
 
 	const [rows, setRows] = useState<IColumn[]>([{
@@ -99,11 +97,11 @@ const Home = () => {
 		);
 	};
 
-	const handleChangeKey = (index, value) => {
+	const handleChangeKey = (index: number, value: number) => {
 		handleChangeRow(index, "name", value);
 	};
 
-	const handleChangeConstraint = (index, name, value) => {
+	const handleChangeConstraint = (index: number, name: string, value: string) => {
 		setRows((prevRows) =>
 			prevRows.map((row, i) =>
 				i === index
@@ -118,7 +116,7 @@ const Home = () => {
 		);
 	};
 
-	const handleRemoveConstraint = (index, constraintName) => {
+	const handleRemoveConstraint = (index: number, constraintName: string) => {
 		setRows((prevRows) =>
 			prevRows.map((row, i) =>
 				i === index
@@ -134,7 +132,7 @@ const Home = () => {
 		);
 	};
 
-	const handleRemoveType = (index: number) => {
+	const handleRemoveRow = (index: number) => {
 		setRows((prevRows) =>
 			prevRows.filter((_, i) => i !== index)
 		);
@@ -152,7 +150,70 @@ const Home = () => {
 		]);
 	};
 
-	const renderDroppedItems = (index) => {
+	const validateConstraintInput = () => {
+		setConstraintErr([])
+		rows.map((row, index) => {
+			row.constraints.map((constraint) => {
+				if (constraint.name === 'Min' || constraint.name === 'Max') {
+					if (constraint.value === "") {
+						setConstraintErr(prev => [...prev, `Error in Constraint ${constraint.name} Value in row ${index + 1}`])
+					}
+				}
+			})
+		})
+	}
+
+	const validateKeyNames = () => {
+		setNameErr([])
+		rows.map((row1, index1) => {
+			rows.map((row2, index2) => {
+				if ((index2 > index1) && (row1.name.trim() === row2.name.trim())) {
+					console.log("SETTING ERRORS IN NAMES");
+					setNameErr(prev => [...prev, `Same Key Name in Row ${index1 + 1} and Row ${index2 + 1} `])
+				}
+			})
+		})
+	}
+
+	const handleSubmit = (e: { preventDefault: () => void; }) => {
+		e.preventDefault();
+		validateKeyNames()
+		validateConstraintInput()
+	};
+
+	useEffect(() => {
+		console.log(constraintErr);
+		const errors = nameErr.length === 0 ? constraintErr.length === 0 ? "" : constraintErr : nameErr
+
+		if (errors !== "") {
+			console.log("There are some errors");
+			let errs = "";
+			errors.map((err) => errs = errs + "\n" + err)
+			console.log(constraintErr);
+			alert(errs)
+			toast({
+				title: "ERROR",
+				description: errs,
+			});
+		}
+
+		else {
+			const keys = rows.map(({ name, typeSelected, constraints }) => ({
+				name,
+				typeSelected,
+				constraints
+			}));
+			if (dispatch(setSchema(keys))) {
+				console.log("SUCCESS");
+			}
+			if (keys[0]?.typeSelected) {
+				// console.log(convertToJson(keys));
+				router.push("/upload");
+			}
+		}
+	}, [constraintErr, nameErr])
+
+	const renderDroppedItems = (index: number) => {
 		return rows.map((item, i) => {
 
 			console.log("Checking Rows => ", item)
@@ -177,7 +238,7 @@ const Home = () => {
 								<button
 									className="w-[20px] h-[20px] text-[10px] bg-red-500 rounded-full"
 									type="button"
-									onClick={() => handleRemoveType(index)}
+									onClick={() => handleRemoveRow(index)}
 								>
 									X
 								</button>
@@ -235,81 +296,6 @@ const Home = () => {
 		});
 	};
 
-	const handleSubmit = (e) => {
-		e.preventDefault();
-
-		const keys = rows.map(({ name, typeSelected, constraints }) => ({
-			name,
-			typeSelected,
-			constraints
-		}));
-
-		if (dispatch(setSchema(keys))) {
-			console.log("SUCCESS");
-		}
-		router.push("/upload");
-	};
-
-	// const handleAdd = (): void => {
-	// 	if (name.length === 0) {
-	// 		alert("Key Name is required");
-	// 		return;
-	// 	}
-
-	// 	let failValidation = constraints.map((constraint) => {
-	// 		if (constraint.name === "Min" || constraint.name === "Max") {
-	// 			if (constraint.value === "") {
-	// 				alert(`${constraint} Value is Required`);
-	// 				return "fail";
-	// 			}
-	// 		}
-	// 		return "pass";
-	// 	});
-	// 	if (failValidation[0] === "fail") {
-	// 		console.log(name);
-	// 		console.log(constraints);
-	// 		console.log(typeSelected);
-	// 		return;
-	// 	}
-
-	// 	const keyExists = keys.some((key) => key.name === name);
-
-	// 	if (keyExists) {
-	// 		alert(
-	// 			"A key with the same name already exists. Please choose a different name.",
-	// 		);
-	// 	} else {
-	// 		const newKey: Key = {
-	// 			name: name,
-	// 			type: typeSelected!,
-	// 			constraints: constraints,
-	// 		};
-	// 		setKeys((prevKeys) => [...prevKeys, newKey]);
-	// 		reset();
-	// 		console.log(keys);
-	// 	}
-	// };
-
-	// const reset = () => {
-	// 	setName("");
-	// 	setTypeSelected(null);
-	// 	setConstraints([]);
-	// 	setItems([]);
-	// 	setIsTypeDisabled(false);
-	// };
-
-	// const handleEdit = (selectedKey: Key, index: any) => {
-	// 	setItems((prevItems) => [...prevItems, { type: selectedKey.type }])
-	// 	selectedKey.constraints.map((constraint) => {
-	// 		setItems((prevItems) => [...prevItems, { type: constraint.name }])
-	// 		setConstraints((prev) => [...prev, constraint])
-	// 	})
-	// 	setName(selectedKey.name)
-	// 	setTypeSelected(selectedKey.type)
-	// 	setIsTypeDisabled(true)
-	// 	handleRemoveKeyWithName(selectedKey.name)
-	// }
-
 	return (
 		<div
 			className={`flex flex-col rounded-xl p-4 bg-opacity-50 ${ThemeColour.variants.background.main}`}
@@ -331,27 +317,21 @@ const Home = () => {
 					<div className="w-[202px] h-[272px] overflow-auto bg-gray-100 bg-opacity-80 dark:bg-gray-800 dark:bg-opacity-80 rounded-xl flex flex-col items-center p-4">
 						<h1 className="text-2xl font-bold">Constraints</h1>
 						<div className="flex flex-col flex-1 justify-center ">
-							{!type && (
-								<p className="text-center">
-									Please Select a Type First to Add Constraints
-								</p>
-							)}
-							{type && (
+							{rows[rowSelected]?.typeSelected ? (
 								<>
-									{defaultConstraints.string.map((cons) => (
-										<Draggable key={cons} type={cons}>
-											{cons}
-										</Draggable>
-									)
-									)}
-									{defaultConstraints.email.map((cons) => (
+									{defaultConstraints[rows[rowSelected].typeSelected].map((cons) => (
 										<Draggable key={cons} type={cons}>
 											{cons}
 										</Draggable>
 									)
 									)}
 								</>
-							)}
+							) : <p className="text-center">
+								Please Select a Type First to Add Constraints
+							</p>}
+							{/* {type && (
+								
+							)} */}
 						</div>
 					</div>
 				</div>
@@ -371,6 +351,9 @@ const Home = () => {
 							addConstraintToRow={addConstraintToRow}
 							rows={rows}
 							defaultConstraints={defaultConstraints}
+							rowSelected={rowSelected}
+							setRowSelected={setRowSelected}
+							handleRemoveRow={handleRemoveRow}
 						/>
 					))}
 					<div className="flex justify-center">
@@ -379,7 +362,7 @@ const Home = () => {
 				</div>
 			</div>
 			<div className="mt-4 flex justify-center">
-				<button onClick={handleSubmit} className="font-black mb-6 rounded-3xl hover:border-2 hover:border-cyan-900 hover:px-12 hover:py-4 hover:shadow-2xl transition-all px-8 py-3 bg-[#b1AAAA] dark:bg-gray-900 " >Upload</button>
+				<button onClick={handleSubmit} className="font-black mb-6 border border-gray-500 dark:border-white rounded-3xl hover:border-2 hover:border-cyan-900  hover:shadow-2xl px-8 py-3 bg-[#b1AAAA] dark:bg-gray-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300" >Upload</button>
 			</div>
 		</div>
 	);
@@ -399,9 +382,10 @@ const Draggable = ({ type, children }) => {
 	return (
 		<div
 			ref={drag}
-			className={`w-24 h-12 border border-gray-500 rounded-full text-center p-2 m-2 cursor-pointer ${isDragging ? "z-10" : ""}  ${isDragging ? "hidden" : ""}`}
+			className={`w-24 h-12 border border-gray-500 rounded-full text-center p-2 m-2 cursor-pointer ${isDragging ? "hidden" : ""}`}
 		>
 			{children}
 		</div>
 	);
 };
+

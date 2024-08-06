@@ -40,7 +40,7 @@ export const Navbar = () => {
 						className="flex gap-0 justify-start items-center pt-2"
 						href="/"
 					>
-						<p className="ml-0 font-bold text-gray-800 dark:text-white text-[40px]">
+						<p className="ml-0 font-bold text-gray-800 max-sm:text-xl dark:text-white text-[40px]">
 							NAMELESS
 						</p>
 					</NextLink>
@@ -48,13 +48,13 @@ export const Navbar = () => {
 			</NavbarContent>
 
 			<NavbarContent
-				className="hidden sm:flex basis-1/5 sm:basis-full"
+				className=" sm:flex basis-1/5 sm:basis-full"
 				justify="end"
 			>
-				<NavbarItem className="hidden gap-2 sm:flex">
+				<NavbarItem className="flex">
 					<ModeToggle />
 				</NavbarItem>
-				<NavbarItem className="hidden md:flex">
+				<NavbarItem className="flex">
 					{userId && <ProfileDropdown />}
 
 					{!userId && (

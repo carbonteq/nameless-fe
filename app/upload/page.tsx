@@ -13,6 +13,7 @@ import { Tooltip } from "@nextui-org/react";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import createValidationSchema from "../zodSchemaCreator";
+import { log } from "console";
 
 
 
@@ -43,6 +44,8 @@ export default function UploadPage() {
 
         // Event Handler
         reader.onload = async (event) => {
+            console.log("FILE STRUCTURE", event.target?.result);
+
             Papa.parse(event.target.result, {
                 header: true,
                 dynamicTyping: true,
@@ -132,7 +135,7 @@ export default function UploadPage() {
                         </div>
                         <div className={title()}>Validation Form</div>
                     </div>
-                    <div className="mt-6 flex flex-col justify-center align-middle bg-[#b1AAAA] dark:bg-gray-900 opacity-80 dark:opacity-80 ">
+                    <div className=" border mt-6 flex flex-col overflow-auto justify-center align-middle bg-[#b1AAAA] dark:bg-gray-900 opacity-80 dark:opacity-80 ">
                         <table>
                             <thead className="text-lg">
                                 {table.getHeaderGroups().map((headerGroup) => (

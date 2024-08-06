@@ -1,6 +1,5 @@
 
-
-function flattenToSingularObject(cons) {
+const flattenToSingularObject = (cons) => {
     if (cons) {
         let objs = {};
         cons.map((con) => { objs = { ...objs, [con.name]: con.value } })
@@ -18,6 +17,6 @@ export const convertToJson = (keys: any) => {
         return acc
     }, {})
     //flattenToSingularObject(keys[0].constraints)
-    console.log("JsonObj", jsonObj)
+    return jsonObj
 }
 

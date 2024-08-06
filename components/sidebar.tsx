@@ -12,7 +12,7 @@ const Sidebar: React.FC = () => {
     return (
         <>
             <div
-                className={`font-black sidebar fixed top-[60px] bottom-0 p-2 max-sm:hidden lg:w-[250px] xl:w-[280px] overflow-y-auto text-center ${ThemeColour.variants.background.main}`}
+                className={`font-black sidebar fixed top-[60px] bottom-0 p-2 max-lg:hidden rounded-3xl lg:w-[280px]  overflow-y-auto text-center ${ThemeColour.variants.background.main}`}
                 style={{ transition: "all 0.3s ease-in-out" }}
             >
                 <div className="mt-6 flex items-center rounded-md px-3 duration-300 text-white">
