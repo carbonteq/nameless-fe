@@ -9,7 +9,7 @@ import Row from "@/components/row";
 import { useToast } from "@/components/ui/use-toast";
 import { convertToJson } from "../jsonSchemaCreator";
 
-interface Con {
+export interface Con {
 	name: string;
 	value: string;
 }
@@ -22,9 +22,9 @@ interface IColumn {
 }
 
 const defaultConstraints = {
-	String: ["Min", "Max", "Optional"],
-	Number: ["Min", "Max", "Int", "Optional"],
-	Email: ["regex", "Optional"],
+	String: ["Min", "Max", "Default"],
+	Number: ["Min", "Max", "Int", "Default"],
+	Email: ["regex", "Default"],
 };
 
 const defaultType = ["String", "Email", "Number"];
@@ -152,7 +152,7 @@ const Home = () => {
 		let consErrors: string[] = []
 		rows.map((row, index) => {
 			row.constraints.map((constraint) => {
-				if (constraint.name === 'Min' || constraint.name === 'Max') {
+				if (constraint.name === 'Min' || constraint.name === 'Max' || constraint.name === 'Default') {
 					if (constraint.value === "") {
 						consErrors.push(`Error in Constraint ${constraint.name} Value in row ${index + 1}`)
 					}
@@ -251,7 +251,7 @@ const Home = () => {
 							</div>
 						</div>
 					);
-				} else if (itemElement === "Min" || itemElement === "Max") {
+				} else if (itemElement === "Min" || itemElement === "Max" || itemElement === "Default") {
 					const constraint = rows[index].constraints.find(
 						(c) => c.name === itemElement
 					);
@@ -262,12 +262,13 @@ const Home = () => {
 							>
 								{itemElement}:
 								<input
-									type="number"
+									type={rows[index].typeSelected === "Number" ? "number" : "text"}
 									value={constraint ? constraint.value : ""}
 									onChange={(e) =>
 										handleChangeConstraint(index, itemElement, e.target.value)
 									}
-									className="appearance-none h-6 p-2 rounded-full text-black bg-white dark:bg-gray-800 dark:text-white size-10"
+									className={`appearance-none h-6 p-2 rounded-full text-black bg-white dark:bg-gray-800 dark:text-white
+										${rows[index].typeSelected === "Number" || (itemElement === "Min" || itemElement === "Max" )  ? "size-10" : "size-36"}`}
 									required
 								/>
 								<button

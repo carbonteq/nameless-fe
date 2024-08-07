@@ -1,18 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-
-interface Constraint {
-    name: string;
-    value: string;
-}
-
-interface Key {
-    name: string;
-    type: string;
-    constraints: Constraint[];
-}
+import { Con } from "@/app/drag-test/page";
+import { IKey } from "@/app/zodSchemaCreator";
 
 interface ValidationSchemaState {
-    schema: Key[] | null;
+    schema: IKey[] | null;
 }
 
 const initialState: ValidationSchemaState = {

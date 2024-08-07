@@ -41,7 +41,7 @@ const Row = ({
 
             }
 
-            if (item.type === "Min" || item.type === "Max" || item.type === "regex" || item.type === "Int" || item.type === "Optional") {
+            if (item.type === "Min" || item.type === "Max" || item.type === "regex" || item.type === "Int" || item.type === "Default") {
                 if (!addConstraintToRow(index, item.type)) {
                     addItemToRow(index, item.type);
                     setRowSelected(index)
@@ -58,7 +58,7 @@ const Row = ({
         <div
             key={index}
             ref={drop}
-            className={`flex relative p-2 gap-4 h-[70px] flex-none flex-wrap items-center border border-gray-500 rounded-xl ${index === rowSelected ? "border-gray-950 dark:border-white" : ""}`}
+            className={`flex relative p-2 gap-4 flex-wrap items-center border border-gray-500 rounded-xl ${index === rowSelected ? "border-gray-950 dark:border-white" : ""}`}
             onClick={() => handleClick(index)}
         >
             <span className={`pl-2 ${index === rowSelected ? "font-black text-xl" : " font-medium "}`}>{index + 1}</span>
