@@ -45,12 +45,10 @@ const createValidationSchema = (keys: IKey[] | null) => {
                         });
                     }
                     else if (constraint.name === 'Max') {
-                    else if (constraint.name === 'Max') {
                         keySchema = keySchema.max(parseInt(constraint.value), {
                             message: `${key.name} should be less than or equal to ${constraint.value}`
                         });
                     }
-                    else if (constraint.name === 'Int') {
                     else if (constraint.name === 'Int') {
                         keySchema = keySchema.int({
                             message: `${key.name} should be a valid integer`

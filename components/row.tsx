@@ -1,3 +1,4 @@
+import { Tooltip } from '@nextui-org/react';
 import { useDrop } from 'react-dnd';
 
 const Row = ({
@@ -11,7 +12,8 @@ const Row = ({
     defaultConstraints,
     rowSelected,
     setRowSelected,
-    handleRemoveRow
+    handleRemoveRow,
+    handleDuplicateRow
 }) => {
 
     //console.log("CONSTRAINTS FOR SPECIFIC TYPE => ", defaultConstraints[rows[index].typeSelected])
@@ -41,7 +43,7 @@ const Row = ({
 
             }
 
-            if (item.type === "Min" || item.type === "Max" || item.type === "regex" || item.type === "Int" || item.type === "Default") {
+            if (item.type === "Min" || item.type === "Max" || item.type === "regex" || item.type === "Int" || item.type === "Optional") {
                 if (!addConstraintToRow(index, item.type)) {
                     addItemToRow(index, item.type);
                     setRowSelected(index)
@@ -54,11 +56,12 @@ const Row = ({
         setRowSelected(index)
     }
 
+
     return (
         <div
             key={index}
             ref={drop}
-            className={`flex relative p-2 gap-4 flex-wrap items-center border border-gray-500 rounded-xl ${index === rowSelected ? "border-gray-950 dark:border-white" : ""}`}
+            className={`flex relative p-2 gap-4 h-[70px] flex-none flex-wrap items-center border border-gray-500 rounded-xl ${index === rowSelected ? "border-gray-950 dark:border-white" : ""}`}
             onClick={() => handleClick(index)}
         >
             <span className={`pl-2 ${index === rowSelected ? "font-black text-xl" : " font-medium "}`}>{index + 1}</span>
@@ -70,6 +73,17 @@ const Row = ({
             >
                 X
             </button>
+            <Tooltip
+                content="Duplicate"
+                placement="right"
+            >
+                <button className="absolute border flex items-center justify-center bg-gray-400 border-gray-500 bottom-2 right-2 font-black w-[20px] h-[20px] text-[20px] rounded-full"
+                    type="button"
+                    onClick={() => handleDuplicateRow(index)}>
+                    <span>+</span>
+                </button>
+            </Tooltip>
+
         </div>
     );
 };

@@ -16,11 +16,16 @@ import createValidationSchema from "../zodSchemaCreator";
 import Newlines from "@/components/new-line";
 
 
+type mapping = {
+    name: string,
+    value: string
+}
 
 export default function UploadPage() {
 
     const keys = useSelector((state: RootState) => state.validationSchema.schema);
     const dataSchema = createValidationSchema(keys);
+
     let schemaKeyNames: string[] = keys?.map((key) => key.name) || []
 
     const [file, setFile] = useState(null);
@@ -28,9 +33,11 @@ export default function UploadPage() {
     const [invalidCells, setInvalidCells] = useState({});
     const [isUploaded, setIsUploaded] = useState<boolean>(false);
     const [showMapper, setShowMapper] = useState<boolean>(false);
-    const [headerMapping, setHeaderMapping] = useState({});
+    const [headerMapping, setHeaderMapping] = useState<mapping>();
+    const [mappedKeys, setMappedKeys] = useState([{}])
+    const [isMatch, setIsMatch] = useState([{}])
 
-    const handleFileChange = (e) => {
+    const handleFileChange = (e: { target: { files: any[]; }; }) => {
         setFile(e.target.files[0]);
         console.log(e.target.files[0])
     };
@@ -38,6 +45,25 @@ export default function UploadPage() {
     const handleMappingChange = (csvHeader: string, mappedKey: string) => {
         setHeaderMapping((prev) => ({ ...prev, [csvHeader]: mappedKey }));
     };
+
+    const autoMatching = () => {
+        columns.map((column, index) => {
+            schemaKeyNames.map((key) => {
+                console.log("KEYS FROM SCHEMA => ", key);
+                console.log("COLUMN NAME => ", column.header);
+
+
+                if (column.header === key) {
+                    handleMappingChange(column.header, key)
+                    setMappedKeys(prev => [...prev, { name: key, value: index }])
+                }
+            })
+        })
+
+        console.log("AFTER MAPPING AUTOMATICALLY => ", headerMapping);
+
+
+    }
 
     const handleFileUpload = () => {
 
@@ -48,6 +74,7 @@ export default function UploadPage() {
         const reader = new FileReader();
         reader.readAsText(file);
 
+
         // Event Handler
         reader.onload = async (event) => {
             console.log("FILE STRUCTURE", event.target?.result);
@@ -56,16 +83,16 @@ export default function UploadPage() {
             Papa.parse(event.target.result, {
                 header: true,
                 dynamicTyping: true,
-                complete: (results: { data: any; }) => {
+                complete: (results: { data: any }) => {
                     const parsedData = results.data;
                     setData(parsedData);
                     console.log("THIS IS MY ORIGINAL CSV FILE => ", parsedData);
 
                     setShowMapper(true)
+
                 },
             });
         };
-
     };
 
     const handleFinalMappedUpload = () => {
@@ -181,16 +208,32 @@ export default function UploadPage() {
                                     <td className="p-4 border">
                                         <select
                                             className={`${ThemeColour.variants.background.main} w-full h-full justify-center dropdown`}
-                                            onChange={(e) =>
+                                            onChange={(e) => {
                                                 handleMappingChange(column.header, e.target.value)
-                                            }
+                                                // If A Mapped Key already exist for this index 
+                                                if (mappedKeys.some((mappedKey) => mappedKey?.value === index)) {
+                                                    setMappedKeys(prev => prev.filter(mapped => mapped.value !== index))
+                                                    // In Case of switching from one key to another
+                                                    if (e.target.value !== "") {
+                                                        setMappedKeys(prev => [...prev, { name: e.target.value, value: index }])
+                                                    }
+                                                }
+                                                else {
+                                                    setMappedKeys(prev => [...prev, { name: e.target.value, value: index }])
+                                                }
+
+                                            }}
                                         >
                                             <option value="">Select a key</option>
-                                            {schemaKeyNames.map((item, idx) => (
-                                                <option key={idx} value={item}>
-                                                    {item}
-                                                </option>
-                                            ))}
+                                            {schemaKeyNames.map((item, idx) => {
+                                                if (!mappedKeys.some(mappedKey => mappedKey.name === item && mappedKey.value !== index)) {
+                                                    return (
+                                                        <option key={idx} value={item}>
+                                                            {item}
+                                                        </option>
+                                                    )
+                                                }
+                                            })}
                                         </select>
                                     </td>
                                 </tr>
@@ -204,112 +247,118 @@ export default function UploadPage() {
                         Map
                     </button>
                 </div>
-            )}
+            )
+            }
 
 
+            {/* Final Validation Table */}
 
-            {isUploaded && (
-                <>
-                    <div className="flex items-center space-x-2">
-                        <div
-                            onClick={() => {
-                                setIsUploaded(false);
-                                setFile(null)
-                                setData([])
-                                setHeaderMapping({})
-                                setShowMapper(false)
-                            }}
-                            className="w-[40px] text-5xl rounded-full cursor-pointer"
-                        >
-                            &#8249;
+
+            {
+                isUploaded && (
+                    <>
+                        <div className="flex items-center space-x-2">
+                            <div
+                                onClick={() => {
+                                    setIsUploaded(false);
+                                    setFile(null)
+                                    setData([])
+                                    setHeaderMapping({})
+                                    setShowMapper(false)
+                                    setMappedKeys([])
+                                }}
+                                className="w-[40px] text-5xl rounded-full cursor-pointer"
+                            >
+                                &#8249;
+                            </div>
+                            <div className={title()}>Validation Form</div>
                         </div>
-                        <div className={title()}>Validation Form</div>
-                    </div>
-                    <div className=" border mt-6 flex flex-col overflow-auto justify-center align-middle bg-[#b1AAAA] dark:bg-gray-900 opacity-80 dark:opacity-80 ">
-                        <table>
-                            <thead className="text-lg">
-                                {table.getHeaderGroups().map((headerGroup) => (
-                                    <tr key={headerGroup.id}>
-                                        {headerGroup.headers.map((header) => (
-                                            <th className="border p-2" key={header.id}>
-                                                {header.isPlaceholder
-                                                    ? null
-                                                    : flexRender(
-                                                        header.column.columnDef.header,
-                                                        header.getContext(),
+                        <div className=" border mt-6 flex flex-col overflow-auto justify-center align-middle bg-[#b1AAAA] dark:bg-gray-900 opacity-80 dark:opacity-80 ">
+                            <table>
+                                <thead className="text-lg">
+                                    {table.getHeaderGroups().map((headerGroup) => (
+                                        <tr key={headerGroup.id}>
+                                            {headerGroup.headers.map((header) => (
+                                                <th className="border p-2" key={header.id}>
+                                                    {header.isPlaceholder
+                                                        ? null
+                                                        : flexRender(
+                                                            header.column.columnDef.header,
+                                                            header.getContext(),
+                                                        )}
+                                                </th>
+                                            ))}
+                                        </tr>
+                                    ))}
+                                </thead>
+                                <tbody>
+                                    {table.getRowModel().rows.map((row) => (
+                                        <tr key={row.id} className="border">
+                                            {row.getVisibleCells().map((cell) => (
+                                                <td
+                                                    key={cell.id}
+                                                    className={`border p-3 px-4 ${invalidCells[row.index]?.[cell.column.id]
+                                                        ? "bg-red-800 text-white"
+                                                        : ""
+                                                        }`}
+                                                >
+                                                    {invalidCells[row.index]?.[cell.column.id] ? (
+                                                        <Tooltip
+                                                            content={
+                                                                <div className="px-1 py-2">
+                                                                    <Newlines text={invalidCells[row.index][cell.column.id]} />
+                                                                </div>
+                                                            }
+                                                            color="error"
+                                                            placement="top"
+                                                            showArrow={true}
+                                                        >
+                                                            <span>
+                                                                {flexRender(
+                                                                    cell.column.columnDef.cell,
+                                                                    cell.getContext(),
+                                                                )}
+                                                            </span>
+                                                        </Tooltip>
+                                                    ) : (
+                                                        flexRender(
+                                                            cell.column.columnDef.cell,
+                                                            cell.getContext(),
+                                                        )
                                                     )}
-                                            </th>
-                                        ))}
-                                    </tr>
-                                ))}
-                            </thead>
-                            <tbody>
-                                {table.getRowModel().rows.map((row) => (
-                                    <tr key={row.id} className="border">
-                                        {row.getVisibleCells().map((cell) => (
-                                            <td
-                                                key={cell.id}
-                                                className={`border p-3 px-4 ${invalidCells[row.index]?.[cell.column.id]
-                                                    ? "bg-red-800 text-white"
-                                                    : ""
-                                                    }`}
-                                            >
-                                                {invalidCells[row.index]?.[cell.column.id] ? (
-                                                    <Tooltip
-                                                        content={
-                                                            <div className="px-1 py-2">
-                                                                <Newlines text={invalidCells[row.index][cell.column.id]} />
-                                                            </div>
-                                                        }
-                                                        color="error"
-                                                        placement="top"
-                                                        showArrow={true}
-                                                    >
-                                                        <span>
-                                                            {flexRender(
-                                                                cell.column.columnDef.cell,
-                                                                cell.getContext(),
-                                                            )}
-                                                        </span>
-                                                    </Tooltip>
-                                                ) : (
-                                                    flexRender(
-                                                        cell.column.columnDef.cell,
-                                                        cell.getContext(),
-                                                    )
-                                                )}
-                                            </td>
-                                        ))}
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
+                                                </td>
+                                            ))}
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
 
-                    <div className="flex justify-center mt-[50px]">
-                        <button
-                            onClick={() => table.previousPage()}
-                            disabled={!table.getCanPreviousPage()}
-                            className="p-4"
-                        >
-                            Previous
-                        </button>
-                        <span className="p-4">
-                            Page {table.getState().pagination.pageIndex + 1} of{" "}
-                            {table.getPageCount()}
-                        </span>
-                        <button
-                            onClick={() => table.nextPage()}
-                            disabled={!table.getCanNextPage()}
-                            className="p-4"
-                        >
-                            Next
-                        </button>
-                    </div>
-                </>
-            )}
+                        <div className="flex justify-center mt-[50px]">
+                            <button
+                                onClick={() => table.previousPage()}
+                                disabled={!table.getCanPreviousPage()}
+                                className="p-4"
+                            >
+                                Previous
+                            </button>
+                            <span className="p-4">
+                                Page {table.getState().pagination.pageIndex + 1} of{" "}
+                                {table.getPageCount()}
+                            </span>
+                            <button
+                                onClick={() => table.nextPage()}
+                                disabled={!table.getCanNextPage()}
+                                className="p-4"
+                            >
+                                Next
+                            </button>
+                        </div>
+                    </>
+                )
+            }
 
-        </div>
+        </div >
     );
 }
 

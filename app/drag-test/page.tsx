@@ -9,7 +9,7 @@ import Row from "@/components/row";
 import { useToast } from "@/components/ui/use-toast";
 import { convertToJson } from "../jsonSchemaCreator";
 
-export interface Con {
+interface Con {
 	name: string;
 	value: string;
 }
@@ -22,9 +22,9 @@ interface IColumn {
 }
 
 const defaultConstraints = {
-	String: ["Min", "Max", "Default"],
-	Number: ["Min", "Max", "Int", "Default"],
-	Email: ["regex", "Default"],
+	String: ["Min", "Max", "Optional"],
+	Number: ["Min", "Max", "Int", "Optional"],
+	Email: ["regex", "Optional"],
 };
 
 const defaultType = ["String", "Email", "Number"];
@@ -148,11 +148,21 @@ const Home = () => {
 		]);
 	};
 
+	const handleDuplicateRow = (index: number) => {
+		setRows((prevRows) => [...prevRows, {
+			name: rows[index].name + '_copy',
+			typeSelected: rows[index].typeSelected,
+			constraints: rows[index].constraints,
+			items: rows[index].items
+		},
+		]);
+	}
+
 	const validateConstraintInput = () => {
 		let consErrors: string[] = []
 		rows.map((row, index) => {
 			row.constraints.map((constraint) => {
-				if (constraint.name === 'Min' || constraint.name === 'Max' || constraint.name === 'Default') {
+				if (constraint.name === 'Min' || constraint.name === 'Max') {
 					if (constraint.value === "") {
 						consErrors.push(`Error in Constraint ${constraint.name} Value in row ${index + 1}`)
 					}
@@ -251,7 +261,7 @@ const Home = () => {
 							</div>
 						</div>
 					);
-				} else if (itemElement === "Min" || itemElement === "Max" || itemElement === "Default") {
+				} else if (itemElement === "Min" || itemElement === "Max") {
 					const constraint = rows[index].constraints.find(
 						(c) => c.name === itemElement
 					);
@@ -262,13 +272,12 @@ const Home = () => {
 							>
 								{itemElement}:
 								<input
-									type={rows[index].typeSelected === "Number" ? "number" : "text"}
+									type="number"
 									value={constraint ? constraint.value : ""}
 									onChange={(e) =>
 										handleChangeConstraint(index, itemElement, e.target.value)
 									}
-									className={`appearance-none h-6 p-2 rounded-full text-black bg-white dark:bg-gray-800 dark:text-white
-										${rows[index].typeSelected === "Number" || (itemElement === "Min" || itemElement === "Max" )  ? "size-10" : "size-36"}`}
+									className="appearance-none h-6 p-2 rounded-full text-black bg-white dark:bg-gray-800 dark:text-white size-10"
 									required
 								/>
 								<button
@@ -336,9 +345,6 @@ const Home = () => {
 							) : <p className="text-center">
 								Please Select a Type First to Add Constraints
 							</p>}
-							{/* {type && (
-								
-							)} */}
 						</div>
 					</div>
 				</div>
@@ -361,6 +367,7 @@ const Home = () => {
 							rowSelected={rowSelected}
 							setRowSelected={setRowSelected}
 							handleRemoveRow={handleRemoveRow}
+							handleDuplicateRow={handleDuplicateRow}
 						/>
 					))}
 					<div className="flex justify-center">
