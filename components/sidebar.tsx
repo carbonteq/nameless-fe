@@ -2,18 +2,45 @@
 import { usePathname } from "next/navigation";
 import { ThemeColour } from "./primitives";
 import Link from "next/link";
+import { useState } from "react";
+import menuIcon from "../public/images/menu.svg"
+import Image from 'next/image';
 
 const Sidebar: React.FC = () => {
     const pathname = usePathname();
     const showSidebar = pathname !== "/drag-test" && pathname !== "/signin" && pathname !== "/signup" && pathname !== "/test" && pathname !== "/forgot-password" ? 1 : 0;
 
     if (!showSidebar) return <></>;
+    const [sidebarWidth, setSidebarWidth] = useState("hidden")
+    const [shouldShow, setShouldShow] = useState(true)
+
+    function handleSidebarWidth(){
+        if(shouldShow)
+        {
+            setSidebarWidth("w-[280px]")
+            setShouldShow(false)
+        }
+        else{
+            setSidebarWidth("hidden")
+            setShouldShow(true)
+        }    
+    }
 
     return (
         <>
+        <div >
+            <button onClick={handleSidebarWidth} className={`pt-1 px-1 lg:hidden absolute z-20`}>
+                    <Image
+            priority
+            src={menuIcon}
+            width={24}
+            height={24}
+            alt="Follow us on Twitter"
+            className="dark:invert"
+            />
+            </button>   
             <div
-                className={`font-black sidebar fixed top-[60px] bottom-0 p-2 max-lg:hidden rounded-3xl lg:w-[280px]  overflow-y-auto text-center ${ThemeColour.variants.background.main}`}
-                style={{ transition: "all 0.3s ease-in-out" }}
+                className={`font-black fixed p-2 h-full max-lg:${sidebarWidth} rounded-r-3xl z-10 w-[280px] transition-all overflow-y-auto text-center ${ThemeColour.variants.background.main}`}
             >
                 <div className="mt-6 flex items-center rounded-md px-3 duration-300 text-white">
                     <i className="bi bi-house-door-fill" />
@@ -62,6 +89,7 @@ const Sidebar: React.FC = () => {
                         </Link>
                     </h1>
                 </div>
+            </div>
             </div>
         </>
     );

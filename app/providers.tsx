@@ -31,7 +31,7 @@ export function Providers({ children, themeProps }: ProvidersProps) {
 
 
   return (
-    <NextUIProvider navigate={router.push}>
+    <NextUIProvider className="h-full" navigate={router.push}>
       <DndProvider backend={HTML5Backend}>
         <NextThemesProvider {...themeProps}>{children}</NextThemesProvider>
       </DndProvider>
