@@ -7,7 +7,7 @@ const createValidationSchema = (keys) => {
         let keySchema = z.any();
 
         switch (key.typeSelected) {
-            case 'string':
+            case 'String':
                 keySchema = z.string();
                 key.constraints.forEach((constraint) => {
                     if (constraint.name === 'Min') {
@@ -22,7 +22,7 @@ const createValidationSchema = (keys) => {
                     }
                 });
                 break;
-            case 'integer':
+            case 'Number':
                 keySchema = z.number();
                 key.constraints.forEach((constraint) => {
                     if (constraint.name === 'Min') {
@@ -35,9 +35,14 @@ const createValidationSchema = (keys) => {
                             message: `${key.name} should be less than or equal to ${constraint.value}`
                         });
                     }
+                    if (constraint.name === 'Int') {
+                        keySchema = keySchema.int({
+                            message: `${key.name} should be a valid integer`
+                        });
+                    }
                 });
                 break;
-            case 'email':
+            case 'Email':
                 keySchema = z.string().email({
                     message: `${key.name} must be a valid email address`
                 });

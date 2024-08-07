@@ -22,12 +22,12 @@ interface IColumn {
 }
 
 const defaultConstraints = {
-	string: ["Min", "Max"],
-	integer: ["Min", "Max"],
-	email: ["regex"],
+	String: ["Min", "Max"],
+	Number: ["Min", "Max", "Int"],
+	Email: ["regex"],
 };
 
-const defaultType = ["string", "email", "integer"];
+const defaultType = ["String", "Email", "Number"];
 
 const Home = () => {
 	const router = useRouter();
