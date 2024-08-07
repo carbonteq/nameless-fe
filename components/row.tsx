@@ -41,11 +41,10 @@ const Row = ({
 
             }
 
-            if (item.type === "Min" || item.type === "Max" || item.type === "regex" || item.type === "Int") {
+            if (item.type === "Min" || item.type === "Max" || item.type === "regex" || item.type === "Int" || item.type === "Optional") {
                 if (!addConstraintToRow(index, item.type)) {
                     addItemToRow(index, item.type);
                     setRowSelected(index)
-
                 }
             }
         },

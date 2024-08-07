@@ -8,12 +8,12 @@ import {
     flexRender,
     createColumnHelper,
 } from "@tanstack/react-table";
-import { title } from "@/components/primitives";
+import { ThemeColour, title } from "@/components/primitives";
 import { Tooltip } from "@nextui-org/react";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import createValidationSchema from "../zodSchemaCreator";
-import { log } from "console";
+import Newlines from "@/components/new-line";
 
 
 
@@ -21,15 +21,22 @@ export default function UploadPage() {
 
     const keys = useSelector((state: RootState) => state.validationSchema.schema);
     const dataSchema = createValidationSchema(keys);
+    let schemaKeyNames: string[] = keys?.map((key) => key.name) || []
 
     const [file, setFile] = useState(null);
     const [data, setData] = useState([]);
     const [invalidCells, setInvalidCells] = useState({});
-    const [isUploaded, setIsUploaded] = useState(false)
+    const [isUploaded, setIsUploaded] = useState<boolean>(false);
+    const [showMapper, setShowMapper] = useState<boolean>(false);
+    const [headerMapping, setHeaderMapping] = useState({});
 
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
         console.log(e.target.files[0])
+    };
+
+    const handleMappingChange = (csvHeader: string, mappedKey: string) => {
+        setHeaderMapping((prev) => ({ ...prev, [csvHeader]: mappedKey }));
     };
 
     const handleFileUpload = () => {
@@ -38,39 +45,76 @@ export default function UploadPage() {
             alert("No File Attached");
             return;
         }
-        setIsUploaded(true)
         const reader = new FileReader();
         reader.readAsText(file);
 
         // Event Handler
         reader.onload = async (event) => {
             console.log("FILE STRUCTURE", event.target?.result);
+            console.log("FILE STRUCTURE", keys);
 
             Papa.parse(event.target.result, {
                 header: true,
                 dynamicTyping: true,
                 complete: (results: { data: any; }) => {
                     const parsedData = results.data;
+                    setData(parsedData);
+                    console.log("THIS IS MY ORIGINAL CSV FILE => ", parsedData);
+
+                    setShowMapper(true)
+                },
+            });
+        };
+
+    };
+
+    const handleFinalMappedUpload = () => {
+        if (!file) {
+            alert("No File Attached");
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.readAsText(file);
+
+        reader.onload = async (event) => {
+            Papa.parse(event.target.result, {
+                header: true,
+                dynamicTyping: true,
+                transformHeader: (header) => headerMapping[header] || header,
+                complete: (results) => {
+                    const parsedData = results.data;
+                    setData(parsedData);
+                    console.log("TRANSFORMED DATA => ", parsedData);
+
                     const invalidCellsTemp = {};
 
-                    // Validate each row and cell
+                    //Validate each row and cell
                     parsedData.forEach((row, rowIndex) => {
+                        console.log("CHECKING FOR ERRORS = ", row);
                         try {
                             dataSchema.parse(row);
                         } catch (err) {
+                            console.log("IN ERROR REGION ", rowIndex);
+
                             invalidCellsTemp[rowIndex] = err.errors.reduce((acc, error) => {
-                                acc[error.path] = error.message;     // Set the property with invalid state to true
+                                if (!acc[error.path]) {
+                                    acc[error.path] = error.message;
+                                }
+                                else {
+                                    acc[error.path] += '\n' + error.message;     // Set the property with invalid state to true
+                                }
                                 return acc;                 // { error.path = 'name' acc [ name : true  , email : true ]
                             }, {});
                         }
                     });
 
-                    setData(parsedData);
+                    setIsUploaded(true)
                     setInvalidCells(invalidCellsTemp);
+
                 },
             });
         };
-
     };
 
     const columnHelper = createColumnHelper();
@@ -94,21 +138,20 @@ export default function UploadPage() {
     });
 
     return (
-        <div className="ml-[280px]">
-            {!isUploaded && (
+        <div>
+            {!isUploaded && !showMapper && (
                 <div className="border border-dashed border-gray-500 relative">
                     <input type="file" accept=".csv" onChange={handleFileChange} className="cursor-pointer relative block opacity-0 w-full h-full p-20 z-50" />
                     <div className="text-center px-10 py-5 absolute top-0 right-0 left-0 m-auto">
                         {!file && (
                             <h4 className="pt-[85px]">
-                                Drop files anywhere to upload
+                                Drop files anywhere to upload or Click to add
                             </h4>
                         )}
 
                         {file && (
                             <h4 className="pt-[75px]">
-                                File Selected
-                                <br />(Click Upload to Proceed)
+                                <div className="text-xl">{file.name} (Selected)</div>
                             </h4>
 
                         )}
@@ -119,8 +162,53 @@ export default function UploadPage() {
                 </div>
             )}
 
+            {(showMapper && !isUploaded) && (
+                <div className="flex flex-col justify-center items-center gap-6">
+                    <table className="w-[600px] border p-4">
+                        <thead>
+                            <tr className="flex-1 gap-52">
+                                <th className="border text-2xl py-4">Column Header</th>
+                                <th className="border text-2xl py-4">Key Names</th>
+                            </tr>
+                        </thead>
+                        <tbody className="mt-10">
+                            {columns.map((column, index) => (
+                                <tr
+                                    className={`${ThemeColour.variants.background.main} p-4 opacity-80`}
+                                    key={index}
+                                >
+                                    <td className="p-4 border">{column.header}</td>
+                                    <td className="p-4 border">
+                                        <select
+                                            className={`${ThemeColour.variants.background.main} w-full h-full justify-center dropdown`}
+                                            onChange={(e) =>
+                                                handleMappingChange(column.header, e.target.value)
+                                            }
+                                        >
+                                            <option value="">Select a key</option>
+                                            {schemaKeyNames.map((item, idx) => (
+                                                <option key={idx} value={item}>
+                                                    {item}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    <button
+                        className=" mt-4 rounded-3xl hover:border-2 hover:border-cyan-900 hover:px-12 hover:py-5 hover:shadow-2xl transition-all px-8 py-3 bg-[#b1AAAA] dark:bg-gray-900 "
+                        onClick={handleFinalMappedUpload}
+                    >
+                        Map
+                    </button>
+                </div>
+            )}
 
-            {data.length > 0 && file && (
+
+
+            {isUploaded && (
                 <>
                     <div className="flex items-center space-x-2">
                         <div
@@ -128,6 +216,8 @@ export default function UploadPage() {
                                 setIsUploaded(false);
                                 setFile(null)
                                 setData([])
+                                setHeaderMapping({})
+                                setShowMapper(false)
                             }}
                             className="w-[40px] text-5xl rounded-full cursor-pointer"
                         >
@@ -166,9 +256,14 @@ export default function UploadPage() {
                                             >
                                                 {invalidCells[row.index]?.[cell.column.id] ? (
                                                     <Tooltip
-                                                        content={invalidCells[row.index][cell.column.id]}
+                                                        content={
+                                                            <div className="px-1 py-2">
+                                                                <Newlines text={invalidCells[row.index][cell.column.id]} />
+                                                            </div>
+                                                        }
                                                         color="error"
-                                                        placement="topStart"
+                                                        placement="top"
+                                                        showArrow={true}
                                                     >
                                                         <span>
                                                             {flexRender(
@@ -217,3 +312,4 @@ export default function UploadPage() {
         </div>
     );
 }
+

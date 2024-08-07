@@ -1,7 +1,5 @@
 import { z } from "zod";
 
-
-
 const createValidationSchema = (keys) => {
     const schemaObject = keys.reduce((acc, key) => {
         let keySchema = z.any();
@@ -30,16 +28,20 @@ const createValidationSchema = (keys) => {
                             message: `${key.name} should be greater than or equal to ${constraint.value}`
                         });
                     }
-                    if (constraint.name === 'Max') {
+                    else if (constraint.name === 'Max') {
                         keySchema = keySchema.max(parseInt(constraint.value), {
                             message: `${key.name} should be less than or equal to ${constraint.value}`
                         });
                     }
-                    if (constraint.name === 'Int') {
+                    else if (constraint.name === 'Int') {
                         keySchema = keySchema.int({
                             message: `${key.name} should be a valid integer`
                         });
                     }
+                    else if (constraint.name === 'Optional') {
+                        keySchema = keySchema.optional();
+                    }
+
                 });
                 break;
             case 'Email':

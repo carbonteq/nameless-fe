@@ -9,6 +9,7 @@ import {
   ToastViewport,
 } from "@/components/ui/toast"
 import { useToast } from "@/components/ui/use-toast"
+import Newlines from "../new-line"
 
 export function Toaster() {
   const { toasts } = useToast()
@@ -21,7 +22,11 @@ export function Toaster() {
             <div className="grid gap-1">
               {title && <ToastTitle>{title}</ToastTitle>}
               {description && (
-                <ToastDescription>{description}</ToastDescription>
+                <ToastDescription>
+                  <div className="px-1 py-2">
+                    <Newlines text={description} />
+                  </div>
+                </ToastDescription>
               )}
             </div>
             {action}

@@ -22,9 +22,9 @@ interface IColumn {
 }
 
 const defaultConstraints = {
-	String: ["Min", "Max"],
-	Number: ["Min", "Max", "Int"],
-	Email: ["regex"],
+	String: ["Min", "Max", "Optional"],
+	Number: ["Min", "Max", "Int", "Optional"],
+	Email: ["regex", "Optional"],
 };
 
 const defaultType = ["String", "Email", "Number"];
@@ -191,7 +191,6 @@ const Home = () => {
 			const errors: string[] = [...keyErrors, ...consErrors]
 			if (errors.length !== 0) {
 				const showErrors = errors.reduce((acc, err) => `${acc}\n${err}`)
-				alert(showErrors)
 				toast({
 					title: "ERROR",
 					description: showErrors,
