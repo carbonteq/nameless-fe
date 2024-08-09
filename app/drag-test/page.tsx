@@ -8,8 +8,11 @@ import { ThemeColour } from "@/components/primitives";
 import Row from "@/components/row";
 import { useToast } from "@/components/ui/use-toast";
 import { convertToJson } from "../jsonSchemaCreator";
+import Ajv from "ajv";
+import metaSchema from "../metaSchema";
+import { log } from "util";
 
-interface Con {
+export interface Con {
 	name: string;
 	value: string;
 }
@@ -216,7 +219,19 @@ const Home = () => {
 				if (dispatch(setSchema(keys))) {
 					console.log("SUCCESS");
 				}
-				router.push("/upload");
+
+				const testSchema = convertToJson(keys)
+				const metaValidator = new Ajv({ strict: false });
+
+				metaValidator.validateSchema(metaSchema, true);
+
+				const validator = metaValidator.compile(metaSchema);
+
+				console.log("CHECKING FOR META => ", testSchema);
+
+				console.log(validator(testSchema));
+
+				//router.push("/upload");
 			}
 		}
 		else {

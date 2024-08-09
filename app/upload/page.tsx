@@ -18,7 +18,7 @@ import Newlines from "@/components/new-line";
 
 type mapping = {
     name: string,
-    value: string
+    value: number
 }
 
 export default function UploadPage() {
@@ -34,8 +34,7 @@ export default function UploadPage() {
     const [isUploaded, setIsUploaded] = useState<boolean>(false);
     const [showMapper, setShowMapper] = useState<boolean>(false);
     const [headerMapping, setHeaderMapping] = useState<mapping>();
-    const [mappedKeys, setMappedKeys] = useState([{}])
-    const [isMatch, setIsMatch] = useState([{}])
+    const [mappedKeys, setMappedKeys] = useState<mapping[]>([])
 
     const handleFileChange = (e: { target: { files: any[]; }; }) => {
         setFile(e.target.files[0]);
@@ -46,26 +45,7 @@ export default function UploadPage() {
         setHeaderMapping((prev) => ({ ...prev, [csvHeader]: mappedKey }));
     };
 
-    const autoMatching = () => {
-        columns.map((column, index) => {
-            schemaKeyNames.map((key) => {
-                console.log("KEYS FROM SCHEMA => ", key);
-                console.log("COLUMN NAME => ", column.header);
-
-
-                if (column.header === key) {
-                    handleMappingChange(column.header, key)
-                    setMappedKeys(prev => [...prev, { name: key, value: index }])
-                }
-            })
-        })
-
-        console.log("AFTER MAPPING AUTOMATICALLY => ", headerMapping);
-
-
-    }
-
-    const handleFileUpload = () => {
+    const handleFileUpload = async () => {
 
         if (!file) {
             alert("No File Attached");
@@ -73,7 +53,6 @@ export default function UploadPage() {
         }
         const reader = new FileReader();
         reader.readAsText(file);
-
 
         // Event Handler
         reader.onload = async (event) => {
@@ -87,13 +66,12 @@ export default function UploadPage() {
                     const parsedData = results.data;
                     setData(parsedData);
                     console.log("THIS IS MY ORIGINAL CSV FILE => ", parsedData);
-
                     setShowMapper(true)
-
                 },
             });
         };
     };
+
 
     const handleFinalMappedUpload = () => {
         if (!file) {
@@ -156,6 +134,25 @@ export default function UploadPage() {
         [data],
     );
 
+    useMemo(() => {
+        const newMappedKeys = [];
+
+        columns.forEach((column, index) => {
+            schemaKeyNames.forEach((key) => {
+                console.log("KEYS FROM SCHEMA => ", key);
+                console.log("COLUMN NAME => ", column.header);
+
+                if (column.header === key) {
+                    handleMappingChange(column.header, key);
+                    newMappedKeys.push({ name: key, value: index });
+                }
+            });
+        });
+        console.log("Auto Mapped Keys => ", newMappedKeys);
+
+        setMappedKeys(newMappedKeys);
+    }, [columns]);
+
     const table = useReactTable({
         data,
         columns,
@@ -184,70 +181,82 @@ export default function UploadPage() {
                         )}
                     </div>
                     <div className="flex justify-center">
-                        <button className="mb-6 rounded-3xl hover:border-2 hover:border-cyan-900 hover:px-12 hover:py-5 hover:shadow-2xl transition-all px-8 py-3 bg-[#b1AAAA] dark:bg-gray-900 " onClick={handleFileUpload}>Upload</button>
+                        <button className="mb-6 rounded-3xl hover:border-2 hover:border-cyan-900 hover:px-12 hover:py-5 hover:shadow-2xl transition-all px-8 py-3 bg-[#b1AAAA] dark:bg-gray-900 "
+                            onClick={() => {
+                                handleFileUpload()
+                            }}>Upload</button>
                     </div>
                 </div>
-            )}
-
-            {(showMapper && !isUploaded) && (
-                <div className="flex flex-col justify-center items-center gap-6">
-                    <table className="w-[600px] border p-4">
-                        <thead>
-                            <tr className="flex-1 gap-52">
-                                <th className="border text-2xl py-4">Column Header</th>
-                                <th className="border text-2xl py-4">Key Names</th>
-                            </tr>
-                        </thead>
-                        <tbody className="mt-10">
-                            {columns.map((column, index) => (
-                                <tr
-                                    className={`${ThemeColour.variants.background.main} p-4 opacity-80`}
-                                    key={index}
-                                >
-                                    <td className="p-4 border">{column.header}</td>
-                                    <td className="p-4 border">
-                                        <select
-                                            className={`${ThemeColour.variants.background.main} w-full h-full justify-center dropdown`}
-                                            onChange={(e) => {
-                                                handleMappingChange(column.header, e.target.value)
-                                                // If A Mapped Key already exist for this index 
-                                                if (mappedKeys.some((mappedKey) => mappedKey?.value === index)) {
-                                                    setMappedKeys(prev => prev.filter(mapped => mapped.value !== index))
-                                                    // In Case of switching from one key to another
-                                                    if (e.target.value !== "") {
-                                                        setMappedKeys(prev => [...prev, { name: e.target.value, value: index }])
-                                                    }
-                                                }
-                                                else {
-                                                    setMappedKeys(prev => [...prev, { name: e.target.value, value: index }])
-                                                }
-
-                                            }}
-                                        >
-                                            <option value="">Select a key</option>
-                                            {schemaKeyNames.map((item, idx) => {
-                                                if (!mappedKeys.some(mappedKey => mappedKey.name === item && mappedKey.value !== index)) {
-                                                    return (
-                                                        <option key={idx} value={item}>
-                                                            {item}
-                                                        </option>
-                                                    )
-                                                }
-                                            })}
-                                        </select>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                    <button
-                        className=" mt-4 rounded-3xl hover:border-2 hover:border-cyan-900 hover:px-12 hover:py-5 hover:shadow-2xl transition-all px-8 py-3 bg-[#b1AAAA] dark:bg-gray-900 "
-                        onClick={handleFinalMappedUpload}
-                    >
-                        Map
-                    </button>
-                </div>
             )
+            }
+
+            {
+                (showMapper && !isUploaded) && (
+                    <div className="flex flex-col justify-center items-center gap-6">
+                        <table className="w-[600px] border p-4">
+                            <thead>
+                                <tr className="flex-1 gap-52">
+                                    <th className="border text-2xl py-4">Column Header</th>
+                                    <th className="border text-2xl py-4">Key Names</th>
+                                </tr>
+                            </thead>
+                            <tbody className="mt-10">
+                                {columns.map((column, index) => {
+                                    // To automatically set the value if there is one already mapped
+                                    const mappedKey = mappedKeys.find(mappedKey => mappedKey.value === index);
+                                    return (
+                                        <tr
+                                            className={`${ThemeColour.variants.background.main} p-4 opacity-80`}
+                                            key={index}
+                                        >
+                                            <td className="p-4 border">{column.header}</td>
+                                            <td className="p-4 border">
+                                                <select
+                                                    className={`${ThemeColour.variants.background.main} w-full h-full justify-center dropdown`}
+                                                    value={mappedKey?.name || ""}
+                                                    onChange={(e) => {
+                                                        handleMappingChange(column.header, e.target.value)
+                                                        // If A Mapped Key already exist for this index 
+                                                        if (mappedKeys.some((mappedKey) => mappedKey?.value === index)) {
+                                                            setMappedKeys(prev => prev.filter(mapped => mapped.value !== index))
+                                                            // In Case of switching from one key to another
+                                                            if (e.target.value !== "") {
+                                                                setMappedKeys(prev => [...prev, { name: e.target.value, value: index }])
+                                                            }
+                                                        }
+                                                        else {
+                                                            setMappedKeys(prev => [...prev, { name: e.target.value, value: index }])
+                                                        }
+
+                                                    }}
+                                                >
+                                                    <option value="">
+                                                        Select a key
+                                                    </option>
+                                                    {schemaKeyNames.map((item, idx) => {
+                                                        if (!mappedKeys.some(mappedKey => mappedKey.name === item && mappedKey.value !== index)) {
+                                                            return (
+                                                                <option key={idx} value={item}>
+                                                                    {item}
+                                                                </option>
+                                                            )
+                                                        }
+                                                    })}
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    )
+                                })}
+                            </tbody>
+                        </table>
+                        <button
+                            className=" mt-4 rounded-3xl hover:border-2 hover:border-cyan-900 hover:px-12 hover:py-5 hover:shadow-2xl transition-all px-8 py-3 bg-[#b1AAAA] dark:bg-gray-900 "
+                            onClick={handleFinalMappedUpload}
+                        >
+                            Map
+                        </button>
+                    </div>
+                )
             }
 
 
