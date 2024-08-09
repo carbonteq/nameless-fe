@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDrag } from "react-dnd";
 import { setSchema } from "../redux/slices/validationSchemaSlice";
 import { useRouter } from "next/navigation";
@@ -10,7 +10,6 @@ import { useToast } from "@/components/ui/use-toast";
 import { convertToJson } from "../jsonSchemaCreator";
 import Ajv from "ajv";
 import metaSchema from "../metaSchema";
-import { log } from "util";
 
 export interface Con {
 	name: string;
@@ -25,12 +24,13 @@ interface IColumn {
 }
 
 const defaultConstraints = {
-	String: ["Min", "Max", "Optional"],
-	Number: ["Min", "Max", "Int", "Optional"],
-	Email: ["regex", "Optional"],
+	string: ["minLength", "maxLength", "format", "default", "optional"],
+	number: ["min", "max", "integer", "default", "optional"],
+	email: ["regex", "optional"],
+	boolean: ["default"]
 };
 
-const defaultType = ["String", "Email", "Number"];
+const defaultType = ["string", "email", "number"];   // TODO : Add boolean and remove email
 
 const Home = () => {
 	const router = useRouter();
@@ -65,6 +65,7 @@ const Home = () => {
 					index === rowIndex ? { ...row, typeSelected: newItem } : row
 				)
 			);
+
 			return false
 		}
 		else {
@@ -211,17 +212,24 @@ const Home = () => {
 				return
 			}
 			else {
-				const keys = rows.map(({ name, typeSelected, constraints }) => ({
-					name,
-					typeSelected,
-					constraints
-				}));
+				const keys = rows.map(({ name, typeSelected, constraints }) => (
+					{
+						name,
+						typeSelected,
+						constraints: constraints.map((constraint: Con) => ({
+							...constraint,
+							value: (constraint.name === "min" || constraint.name === "max" || constraint.name === "minLength" || constraint.name === "maxLength" || (constraint.name === "default" && typeSelected !== 'string')) ? Number(constraint.value) : (constraint.name === 'default' && typeSelected === 'string') ? constraint.value : true
+						}))
+					}
+				));
+
 				if (dispatch(setSchema(keys))) {
 					console.log("SUCCESS");
 				}
 
 				const testSchema = convertToJson(keys)
-				const metaValidator = new Ajv({ strict: false });
+
+				const metaValidator = new Ajv({ strict: true });
 
 				metaValidator.validateSchema(metaSchema, true);
 
@@ -231,7 +239,14 @@ const Home = () => {
 
 				console.log(validator(testSchema));
 
-				//router.push("/upload");
+				// To check the error returned 
+
+				if (!validator(testSchema)) {
+					console.log(validator.errors);
+
+				};
+
+				router.push("/upload");
 			}
 		}
 		else {
@@ -247,7 +262,7 @@ const Home = () => {
 	const renderDroppedItems = (index: number) => {
 		return rows.map((item, i) => {
 
-			console.log("Checking Rows => ", item)
+			//console.log("Checking Rows => ", item)
 
 			if (i !== index) return null;
 			return item.items.map((itemElement, itemIndex) => {
@@ -276,7 +291,8 @@ const Home = () => {
 							</div>
 						</div>
 					);
-				} else if (itemElement === "Min" || itemElement === "Max") {
+				}
+				else if (itemElement === "min" || itemElement === "max" || itemElement === "minLength" || itemElement === "maxLength") {
 					const constraint = rows[index].constraints.find(
 						(c) => c.name === itemElement
 					);
@@ -305,7 +321,39 @@ const Home = () => {
 							</div>
 						</div>
 					);
-				} else {
+				}
+				else if (itemElement === "default") {
+					const inputType = rows[index].typeSelected === 'string' ? "text" : "number"
+					const constraint = rows[index].constraints.find(
+						(c) => c.name === itemElement
+					);
+					return (
+						<div key={itemIndex}>
+							<div
+								className="h-12 flex justify-center px-4 gap-x-2 items-center rounded-full text-black text-center align-middle bg-[#d2d8e1] dark:bg-[#1a222e] dark:text-white"
+							>
+								{itemElement}:
+								<input
+									type={inputType}
+									value={constraint ? constraint.value : ""}
+									onChange={(e) =>
+										handleChangeConstraint(index, itemElement, e.target.value)
+									}
+									className="appearance-none h-6 p-2 rounded-full text-black bg-white dark:bg-gray-800 dark:text-white size-10"
+									required
+								/>
+								<button
+									className="w-[20px] h-[20px] text-[10px] bg-red-500 rounded-full"
+									type="button"
+									onClick={() => handleRemoveConstraint(index, itemElement)}
+								>
+									X
+								</button>
+							</div>
+						</div>
+					)
+				}
+				else {
 					return (
 						<div key={itemIndex}>
 							<div
@@ -391,7 +439,7 @@ const Home = () => {
 				</div>
 			</div>
 			<div className="mt-4 flex justify-center">
-				<button onClick={handleSubmit} className="font-black mb-6 border border-gray-500 dark:border-white rounded-3xl hover:border-2 hover:border-cyan-900  hover:shadow-2xl px-8 py-3 bg-[#b1AAAA] dark:bg-gray-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300" >Upload</button>
+				<button onClick={handleSubmit} className="font-black mb-6 border border-gray-500 dark:border-white rounded-3xl hover:border-2 hover:border-cyan-900  hover:shadow-2xl px-8 py-3 bg-[#b1AAAA] dark:bg-gray-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300" >Submit</button>
 			</div>
 		</div>
 	);

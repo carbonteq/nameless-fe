@@ -4,7 +4,7 @@ import { Con } from "./drag-test/page";
 
 export interface IKey {
     name: string,
-    typeSelected: "String" | "Number" | "Email",
+    typeSelected: "string" | "number" | "email" | "boolean",
     constraints: Con[]
 }
 
@@ -15,20 +15,20 @@ const createValidationSchema = (keys: IKey[] | null) => {
         let keySchema: ZodTypeAny;
 
         switch (key.typeSelected) {
-            case 'String':
+            case 'string':
                 keySchema = z.string();
                 key.constraints.forEach((constraint: Con) => {
-                    if (constraint.name === 'Min') {
+                    if (constraint.name === 'minLength') {
                         keySchema = keySchema.min(parseInt(constraint.value), {
                             message: `${key.name} should have a minimum length of ${constraint.value}`
                         });
                     }
-                    else if (constraint.name === 'Max') {
+                    else if (constraint.name === 'maxLength') {
                         keySchema = keySchema.max(parseInt(constraint.value), {
                             message: `${key.name} should have a maximum length of ${constraint.value}`
                         });
                     }
-                    else if (constraint.name === 'Default') {
+                    else if (constraint.name === 'default') {
                         keySchema = keySchema.default(constraint.value)
                     }
                     else {
@@ -36,20 +36,20 @@ const createValidationSchema = (keys: IKey[] | null) => {
                     }
                 });
                 break;
-            case 'Number':
+            case 'number':
                 keySchema = z.number();
                 key.constraints.forEach((constraint) => {
-                    if (constraint.name === 'Min') {
+                    if (constraint.name === 'min') {
                         keySchema = keySchema.min(parseInt(constraint.value), {
                             message: `${key.name} should be greater than or equal to ${constraint.value}`
                         });
                     }
-                    else if (constraint.name === 'Max') {
+                    else if (constraint.name === 'max') {
                         keySchema = keySchema.max(parseInt(constraint.value), {
                             message: `${key.name} should be less than or equal to ${constraint.value}`
                         });
                     }
-                    else if (constraint.name === 'Int') {
+                    else if (constraint.name === 'integer') {
                         keySchema = keySchema.int({
                             message: `${key.name} should be a valid integer`
                         });
@@ -63,7 +63,7 @@ const createValidationSchema = (keys: IKey[] | null) => {
                     }
                 });
                 break;
-            case 'Email':
+            case 'email':
                 keySchema = z.string().email({
                     message: `${key.name} must be a valid email address`
                 });

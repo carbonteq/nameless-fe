@@ -16,7 +16,12 @@ export const convertToJson = (keys: any) => {
         acc[key.name] = schema
         return acc
     }, {})
+
+    const updatedJsonObject = {
+        "columns": jsonObj
+    }
+
     //flattenToSingularObject(keys[0].constraints)
-    return jsonObj
+    return updatedJsonObject
 }
 

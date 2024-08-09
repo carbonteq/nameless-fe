@@ -20,11 +20,10 @@ const Row = ({
     const acceptConstraints: string[] = defaultConstraints[rows[index].typeSelected] || []
 
     const [_, drop] = useDrop({
-        accept: [...acceptConstraints, 'String', 'Email', 'Number'],
+        accept: [...acceptConstraints, 'string', 'email', 'number', 'boolean'],
 
         canDrop: (item, monitor) => {
-            const canDrop = [...acceptConstraints, 'String', 'Email', 'Number'].includes(item.type);
-            console.log("HAHAHA", canDrop);
+            const canDrop = [...acceptConstraints, 'string', 'email', 'number', 'boolean'].includes(item.type);
 
             if (!canDrop) {
                 alert(`Item of type ${item.type} cannot be dropped here.`);
@@ -34,7 +33,7 @@ const Row = ({
 
         drop: (item, monitor) => {
 
-            if (item.type === "String" || item.type === "Email" || item.type === "Number") {
+            if (item.type === "string" || item.type === "email" || item.type === "number" || item.type === 'boolean') {
                 setType(item.type);
                 if (!addTypeToRow(index, item.type)) {
                     addItemToRow(index, item.type);
@@ -43,7 +42,7 @@ const Row = ({
 
             }
 
-            if (item.type === "Min" || item.type === "Max" || item.type === "regex" || item.type === "Int" || item.type === "Optional") {
+            if (item.type === "min" || item.type === "max" || item.type === "minLength" || item.type === "maxLength" || item.type === "regex" || item.type === "integer" || item.type === "default" || item.type === "optional") {
                 if (!addConstraintToRow(index, item.type)) {
                     addItemToRow(index, item.type);
                     setRowSelected(index)
