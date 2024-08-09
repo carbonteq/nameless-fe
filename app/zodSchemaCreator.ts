@@ -28,6 +28,23 @@ const createValidationSchema = (keys: IKey[] | null) => {
                             message: `${key.name} should have a maximum length of ${constraint.value}`
                         });
                     }
+                    else if (constraint.name === 'format') {
+                        if (constraint.value === 'email') {
+                            keySchema = keySchema.email({
+                                message: `${key.name} is not a valid`
+                            });
+                        }
+                        else if (constraint.value === 'uuid') {
+                            keySchema = keySchema.uuid({
+                                message: `${key.name} is not a valid`
+                            });
+                        }
+                        else {
+                            keySchema = keySchema.url({
+                                message: `${key.name} is not a valid`
+                            });
+                        }
+                    }
                     else if (constraint.name === 'default') {
                         keySchema = keySchema.default(constraint.value)
                     }
@@ -62,24 +79,6 @@ const createValidationSchema = (keys: IKey[] | null) => {
                         keySchema = keySchema.optional()
                     }
                 });
-                break;
-            case 'email':
-                keySchema = z.string().email({
-                    message: `${key.name} must be a valid email address`
-                });
-                key.constraints.forEach((constraint) => {
-                    if (constraint.name === "regex") {
-                        keySchema = keySchema.regex(new RegExp(constraint.value), {
-                            message: `Invalid format for ${key.name}`
-                        });
-                    }
-                    else if (constraint.name === 'Default') {
-                        keySchema = keySchema.default(constraint.value)
-                    }
-                    else {
-                        keySchema = keySchema.optional()
-                    }
-                })
                 break;
             default:
                 break;

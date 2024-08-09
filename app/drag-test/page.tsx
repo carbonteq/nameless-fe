@@ -24,13 +24,13 @@ interface IColumn {
 }
 
 const defaultConstraints = {
-	string: ["minLength", "maxLength", "format", "default", "optional"],
+	string: ["minLength", "maxLength", "format", "regex", "default", "optional"],
 	number: ["min", "max", "integer", "default", "optional"],
-	email: ["regex", "optional"],
+	//email: ["regex", "optional"],
 	boolean: ["default"]
 };
 
-const defaultType = ["string", "email", "number"];   // TODO : Add boolean and remove email
+const defaultType = ["string", "number", "boolean"];   // TODO : Add boolean and remove email
 
 const Home = () => {
 	const router = useRouter();
@@ -218,7 +218,7 @@ const Home = () => {
 						typeSelected,
 						constraints: constraints.map((constraint: Con) => ({
 							...constraint,
-							value: (constraint.name === "min" || constraint.name === "max" || constraint.name === "minLength" || constraint.name === "maxLength" || (constraint.name === "default" && typeSelected !== 'string')) ? Number(constraint.value) : (constraint.name === 'default' && typeSelected === 'string') ? constraint.value : true
+							value: (constraint.name === "min" || constraint.name === "max" || constraint.name === "minLength" || constraint.name === "maxLength" || (constraint.name === "default" && typeSelected !== 'string')) ? Number(constraint.value) : ((constraint.name === 'default' && typeSelected === 'string') || constraint.name === 'format') ? constraint.value : true
 						}))
 					}
 				));
@@ -262,7 +262,7 @@ const Home = () => {
 	const renderDroppedItems = (index: number) => {
 		return rows.map((item, i) => {
 
-			//console.log("Checking Rows => ", item)
+			console.log("Checking Rows => ", item)
 
 			if (i !== index) return null;
 			return item.items.map((itemElement, itemIndex) => {
@@ -342,6 +342,48 @@ const Home = () => {
 									className="appearance-none h-6 p-2 rounded-full text-black bg-white dark:bg-gray-800 dark:text-white size-10"
 									required
 								/>
+								<button
+									className="w-[20px] h-[20px] text-[10px] bg-red-500 rounded-full"
+									type="button"
+									onClick={() => handleRemoveConstraint(index, itemElement)}
+								>
+									X
+								</button>
+							</div>
+						</div>
+					)
+				}
+				else if (itemElement === "format") {
+					const constraint = rows[index].constraints.find(
+						(c) => c.name === itemElement
+					);
+
+
+					return (
+						<div key={itemIndex}>
+							<div
+								className="h-12 flex justify-center px-4 gap-x-2 items-center rounded-full text-black text-center align-middle bg-[#d2d8e1] dark:bg-[#1a222e] dark:text-white"
+							>
+								{itemElement}:
+								<select
+									className={`${ThemeColour.variants.background.main} justify-center dropdown p-2`}
+									onChange={(e) => {
+										handleChangeConstraint(index, 'format', e.target.value)
+									}}
+								>
+									<option value="">
+										Select a key
+									</option>
+									<option>
+										uuid
+									</option>
+									<option>
+										email
+									</option>
+									<option>
+										url
+									</option>
+								</select>
 								<button
 									className="w-[20px] h-[20px] text-[10px] bg-red-500 rounded-full"
 									type="button"

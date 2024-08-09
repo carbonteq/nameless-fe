@@ -42,7 +42,7 @@ const Row = ({
 
             }
 
-            if (item.type === "min" || item.type === "max" || item.type === "minLength" || item.type === "maxLength" || item.type === "regex" || item.type === "integer" || item.type === "default" || item.type === "optional") {
+            if (item.type === "min" || item.type === "max" || item.type === "minLength" || item.type === "maxLength" || item.type === "regex" || item.type === "integer" || item.type === "default" || item.type === "optional" || item.type === "format") {
                 if (!addConstraintToRow(index, item.type)) {
                     addItemToRow(index, item.type);
                     setRowSelected(index)
