@@ -6,7 +6,7 @@ import { ThemeColour } from '@/components/primitives';
 import { useRouter } from "next/navigation";
 
 
-const schemas = localStorage
+const schemas = JSON.parse(localStorage.getItem("SCHEMA-d718c116-0004-49f8-b13e-c3a02244c109") as string)
 
 
 
@@ -14,6 +14,39 @@ const schemas = localStorage
 const Schemas = () => {
     const items: any = [];
     const router = useRouter();
+    const temp = schemas.schema.columns
+    console.log(temp);
+
+
+
+    let i = 0;
+    for (const [name, subSchema] of Object.entries(temp)) {
+        items.push(
+            <Card className='h-72 hover:scale-110 hover:z-10 lg:col-span-1 col-span-2 max-sm:col-span-4'>
+                <CardHeader>
+                    <h1 className='font-black text-2xl text-center'>Schema {i + 1}</h1>
+                </CardHeader>
+                <CardBody className='flex flex-col gap-y-2'>
+                    <div className='flex justify-between px-2 mb-3'>
+                        <h1 className='text-xl font-bold'>Key</h1>
+                        <h1 className='text-xl font-bold'>Type</h1>
+                    </div>
+                    <div className='flex justify-between px-2'>
+                        <p className=' font-semibold'>{name}</p>
+                        <p className=''>{subSchema.type}</p>
+                    </div>
+                </CardBody>
+                <CardFooter>
+                    <div className='py-2 px-11 flex justify-between w-full'>
+                        <button>Edit</button>
+                        <button>Delete</button>
+                    </div>
+
+                </CardFooter>
+            </Card>
+        )
+        i = 100
+    }
 
     // schemas.map((schema: any, i) => {
     //     items.push(
