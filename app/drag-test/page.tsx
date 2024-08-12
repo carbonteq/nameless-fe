@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import { useDrag } from "react-dnd";
 import { setSchema } from "../redux/slices/validationSchemaSlice";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
@@ -10,27 +9,19 @@ import { useToast } from "@/components/ui/use-toast";
 import { convertToJson } from "../jsonSchemaCreator";
 import Ajv from "ajv";
 import metaSchema from "../metaSchema";
+import { DEFAULT_CONSTRAINTS, TYPES } from "@/components/constants";
+import Draggable from "@/components/Draggable";
 
 export interface Con {
 	name: string;
 	value: string;
 }
-
 interface IColumn {
 	name: string;
 	typeSelected: string;
 	items: string[]
 	constraints: Con[];
 }
-
-const defaultConstraints = {
-	string: ["minLength", "maxLength", "format", "regex", "default", "optional"],
-	number: ["min", "max", "integer", "default", "optional"],
-	//email: ["regex", "optional"],
-	boolean: ["default"]
-};
-
-const defaultType = ["string", "number", "boolean"];   // TODO : Add boolean and remove email
 
 const Home = () => {
 	const router = useRouter();
@@ -166,7 +157,7 @@ const Home = () => {
 		let consErrors: string[] = []
 		rows.map((row, index) => {
 			row.constraints.map((constraint) => {
-				if (constraint.name === 'Min' || constraint.name === 'Max') {
+				if (constraint.name === 'min' || constraint.name === 'max' || constraint.name === 'minLength' || constraint.name === 'maxLength' || constraint.name === 'format') {
 					if (constraint.value === "") {
 						consErrors.push(`Error in Constraint ${constraint.name} Value in row ${index + 1}`)
 					}
@@ -196,6 +187,12 @@ const Home = () => {
 		return keyErrors
 	}
 
+	const castValue = (constraint: Con, typeSelected: string) => {
+		// Type Cast the values from string to integer and boolean where required
+
+		return (constraint.name === "min" || constraint.name === "max" || constraint.name === "minLength" || constraint.name === "maxLength" || (constraint.name === "default" && typeSelected !== 'string')) ? Number(constraint.value) : ((constraint.name === 'default' && typeSelected === 'string') || constraint.name === 'format') ? constraint.value : true
+	}
+
 	const handleSubmit = (e: { preventDefault: () => void; }) => {
 		e.preventDefault();
 
@@ -218,7 +215,7 @@ const Home = () => {
 						typeSelected,
 						constraints: constraints.map((constraint: Con) => ({
 							...constraint,
-							value: (constraint.name === "min" || constraint.name === "max" || constraint.name === "minLength" || constraint.name === "maxLength" || (constraint.name === "default" && typeSelected !== 'string')) ? Number(constraint.value) : ((constraint.name === 'default' && typeSelected === 'string') || constraint.name === 'format') ? constraint.value : true
+							value: castValue(constraint, typeSelected)
 						}))
 					}
 				));
@@ -262,7 +259,7 @@ const Home = () => {
 	const renderDroppedItems = (index: number) => {
 		return rows.map((item, i) => {
 
-			console.log("Checking Rows => ", item)
+			// console.log("Checking Rows => ", item)
 
 			if (i !== index) return null;
 			return item.items.map((itemElement, itemIndex) => {
@@ -330,7 +327,7 @@ const Home = () => {
 					return (
 						<div key={itemIndex}>
 							<div
-								className="h-12 flex justify-center px-4 gap-x-2 items-center rounded-full text-black text-center align-middle bg-[#d2d8e1] dark:bg-[#1a222e] dark:text-white"
+								className="h-12 flex justify-center px-4 gap-x-2 items-center rounded-full text-black text-center align-middle bg-[#cbd4e2] dark:bg-[#1a222e] dark:text-white"
 							>
 								{itemElement}:
 								<input
@@ -366,13 +363,13 @@ const Home = () => {
 							>
 								{itemElement}:
 								<select
-									className={`${ThemeColour.variants.background.main} justify-center dropdown p-2`}
+									className={`dark:bg-gray-900  bg-[#c2cad7] justify-center dropdown p-2`}
 									onChange={(e) => {
 										handleChangeConstraint(index, 'format', e.target.value)
 									}}
 								>
 									<option value="">
-										Select a key
+										Select
 									</option>
 									<option>
 										uuid
@@ -426,7 +423,7 @@ const Home = () => {
 					<div className="w-[202px] h-[272px] bg-gray-100 bg-opacity-80 dark:bg-gray-800 dark:bg-opacity-80 rounded-xl flex flex-col items-center p-4">
 						<h1 className="text-2xl font-bold">Types</h1>
 						<div className="flex flex-col flex-1 justify-center overflow-auto appearance-none">
-							{defaultType.map((type) => (
+							{TYPES.map((type) => (
 								<Draggable key={type} type={type}>
 									{type}
 								</Draggable>
@@ -440,7 +437,7 @@ const Home = () => {
 						<div className="flex flex-col flex-1 justify-center ">
 							{rows[rowSelected]?.typeSelected ? (
 								<>
-									{defaultConstraints[rows[rowSelected].typeSelected].map((cons) => (
+									{DEFAULT_CONSTRAINTS[rows[rowSelected].typeSelected].map((cons) => (
 										<Draggable key={cons} type={cons}>
 											{cons}
 										</Draggable>
@@ -462,13 +459,11 @@ const Home = () => {
 							key={index}
 							index={index}
 							setType={setType}
-							constraints={row.constraints}
 							renderDroppedItems={renderDroppedItems}
 							addItemToRow={addItemToRow}
 							addTypeToRow={addTypeToRow}
 							addConstraintToRow={addConstraintToRow}
 							rows={rows}
-							defaultConstraints={defaultConstraints}
 							rowSelected={rowSelected}
 							setRowSelected={setRowSelected}
 							handleRemoveRow={handleRemoveRow}
@@ -488,23 +483,4 @@ const Home = () => {
 }
 
 export default Home;
-
-const Draggable = ({ type, children }) => {
-	const [{ isDragging }, drag] = useDrag(() => ({
-		type,
-		item: { type },
-		collect: (monitor) => ({
-			isDragging: !!monitor.isDragging(),
-		}),
-	}));
-
-	return (
-		<div
-			ref={drag}
-			className={`w-24 h-12 border border-gray-500 rounded-full text-center p-2 m-2 cursor-pointer ${isDragging ? "hidden" : ""}`}
-		>
-			{children}
-		</div>
-	);
-};
 

@@ -15,7 +15,6 @@ import { RootState } from "../redux/store";
 import createValidationSchema from "../zodSchemaCreator";
 import Newlines from "@/components/new-line";
 
-
 type mapping = {
     name: string,
     value: number

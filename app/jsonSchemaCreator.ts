@@ -1,9 +1,7 @@
 
 const flattenToSingularObject = (cons) => {
     if (cons) {
-        let objs = {};
-        cons.map((con) => { objs = { ...objs, [con.name]: con.value } })
-        return objs
+        return cons.reduce((acc, con) => ({ ...acc, [con.name]: con.value }), '')
     }
 }
 
