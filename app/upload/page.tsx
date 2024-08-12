@@ -1,5 +1,5 @@
 "use client";
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import Papa from "papaparse";
 import {
     useReactTable,
@@ -14,7 +14,8 @@ import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import { toZodSchema } from "../zodSchemaCreator";
 import Newlines from "@/components/new-line";
-import convertObject from "./convertToKeys";
+import { convertToRowFromSchema } from "../services/createToRowFromSchema";
+import convertToKeys from "../services/convertToKeys";
 
 type mapping = {
     name: string,
@@ -26,8 +27,10 @@ export default function UploadPage() {
     const testSchema = useSelector((state: RootState) => state.validationSchema.schema);
     const dataSchema = toZodSchema(testSchema);
 
-    const keys = convertObject(testSchema)
+    const keys = convertToKeys(testSchema)
 
+    // Service to convert the schema selected to edit for UI Display
+    //const rows = convertToRowFromSchema(keys);
 
     let schemaKeyNames: string[] = keys?.map((key) => key.name) || []
 

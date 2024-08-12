@@ -1,4 +1,4 @@
-const convertObject = (inputObject: Record<string, unknown>) => {
+const convertToKeys = (inputObject: Record<string, unknown>) => {
     const result = [];
 
     const columns = inputObject.columns
@@ -21,5 +21,5 @@ const convertObject = (inputObject: Record<string, unknown>) => {
     return result;
 };
 
-export default convertObject
+export default convertToKeys
 

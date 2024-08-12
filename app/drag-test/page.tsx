@@ -11,7 +11,8 @@ import Ajv from "ajv";
 import metaSchema from "../metaSchema";
 import { DEFAULT_CONSTRAINTS, TYPES } from "@/components/constants";
 import Draggable from "@/components/Draggable";
-import convertObject from "../upload/convertToKeys";
+import convertObject from "../services/convertToKeys";
+import { generateId } from "../services/uuidGenator";
 
 export interface Con {
 	name: string;
@@ -24,7 +25,7 @@ export interface IColumn {
 	constraints: Con[];
 }
 
-const Home = () => {
+const SchemaCreator = () => {
 	const router = useRouter();
 	const dispatch = useDispatch();
 	const { toast } = useToast();
@@ -225,8 +226,6 @@ const Home = () => {
 					console.log("SUCCESS");
 				}
 
-				console.log("HEHEHEHEHEHEHEH => ", convertObject(testSchema));
-
 				const metaValidator = new Ajv({ strict: true });
 
 				metaValidator.validateSchema(metaSchema, true);
@@ -243,6 +242,14 @@ const Home = () => {
 					console.log(validator.errors);
 
 				};
+				const SCHEMA = {
+					id: generateId(),
+					schema: testSchema
+				}
+
+				localStorage.setItem(`SCHEMA-${SCHEMA.id}`, JSON.stringify(rows));
+
+				// console.log("UUID GENERATED => ", generateId());
 
 				router.push("/upload");
 			}
@@ -265,6 +272,7 @@ const Home = () => {
 			if (i !== index) return null;
 			return item.items.map((itemElement, itemIndex) => {
 				if (itemElement === rows[index].typeSelected) {
+
 					return (
 						<div className="flex gap-4" key={itemIndex} >
 							<input
@@ -484,5 +492,5 @@ const Home = () => {
 	);
 }
 
-export default Home;
+export default SchemaCreator;
 

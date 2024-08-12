@@ -37,6 +37,7 @@
 		"@react-aria/visually-hidden": "3.8.12",
 		"@reduxjs/toolkit": "^2.2.6",
 		"@tanstack/react-table": "^8.19.3",
+		"ajv": "^8.17.1",
 		"class-variance-authority": "^0.7.0",
 		"classnames": "^2.5.1",
 		"clsx": "^2.1.1",
@@ -55,6 +56,7 @@
 		"styled-components": "^6.1.12",
 		"tailwind-merge": "^2.4.0",
 		"tailwindcss-animate": "^1.0.7",
+		"uuid": "^10.0.0",
 		"zod": "^3.23.8"
 	},
 	"devDependencies": {
