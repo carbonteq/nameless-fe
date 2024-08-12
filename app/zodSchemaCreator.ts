@@ -1,97 +1,172 @@
-import { ZodTypeAny, z } from "zod";
-import { Con } from "./drag-test/page";
+import z from "zod";
 
+const sharedBetweenAll = z
+    .object({
+        optional: z.boolean().default(false),
+        nullable: z.boolean().default(false),
+    })
+    .partial();
 
-export interface IKey {
-    name: string,
-    typeSelected: "string" | "number" | "email" | "boolean",
-    constraints: Con[]
-}
+const stringSchema = z
+    .object({
+        type: z.literal("string"),
+        minLength: z.number().min(0).optional(),
+        maxLength: z.number().min(0).optional(),
+        regex: z.string().optional(),
+        format: z.enum(["email", "uuid", "url"]).optional(),
+        default: z.string().optional(),
+    })
+    .merge(sharedBetweenAll);
+type StringSchema = z.infer<typeof stringSchema>;
 
-const createValidationSchema = (keys: IKey[] | null) => {
-    if (keys === null)
-        return
-    const schemaObject: Record<string, ZodTypeAny> = keys.reduce((acc, key) => {
-        let keySchema: ZodTypeAny;
+const numberSchema = z
+    .object({
+        type: z.literal("number"),
+        min: z.number().min(0).optional(),
+        max: z.number().min(0).optional(),
+        integer: z.boolean().optional().default(true),
+        default: z.number().optional(),
+    })
+    .merge(sharedBetweenAll);
+type NumberSchema = (typeof numberSchema)["_output"];
 
-        switch (key.typeSelected) {
-            case 'string':
-                keySchema = z.string();
-                key.constraints.forEach((constraint: Con) => {
-                    if (constraint.name === 'minLength') {
-                        keySchema = keySchema.min(parseInt(constraint.value), {
-                            message: `${key.name} should have a minimum length of ${constraint.value}`
-                        });
-                    }
-                    else if (constraint.name === 'maxLength') {
-                        keySchema = keySchema.max(parseInt(constraint.value), {
-                            message: `${key.name} should have a maximum length of ${constraint.value}`
-                        });
-                    }
-                    else if (constraint.name === 'format') {
-                        if (constraint.value === 'email') {
-                            keySchema = keySchema.email({
-                                message: `${key.name} is not a valid`
-                            });
-                        }
-                        else if (constraint.value === 'uuid') {
-                            keySchema = keySchema.uuid({
-                                message: `${key.name} is not a valid`
-                            });
-                        }
-                        else {
-                            keySchema = keySchema.url({
-                                message: `${key.name} is not a valid`
-                            });
-                        }
-                    }
-                    else if (constraint.name === 'default') {
-                        keySchema = keySchema.default(constraint.value)
-                    }
-                    else {
-                        keySchema = keySchema.optional()
-                    }
-                });
-                break;
-            case 'number':
-                keySchema = z.number();
-                key.constraints.forEach((constraint) => {
-                    if (constraint.name === 'min') {
-                        keySchema = keySchema.min(parseInt(constraint.value), {
-                            message: `${key.name} should be greater than or equal to ${constraint.value}`
-                        });
-                    }
-                    else if (constraint.name === 'max') {
-                        keySchema = keySchema.max(parseInt(constraint.value), {
-                            message: `${key.name} should be less than or equal to ${constraint.value}`
-                        });
-                    }
-                    else if (constraint.name === 'integer') {
-                        keySchema = keySchema.int({
-                            message: `${key.name} should be a valid integer`
-                        });
+const booleanSchema = z
+    .object({
+        type: z.literal("boolean"),
+        default: z.boolean().optional(),
+    })
+    .merge(sharedBetweenAll);
+type BooleanSchema = z.infer<typeof booleanSchema>;
 
-                    }
-                    else if (constraint.name === 'Default') {
-                        keySchema = keySchema.default(parseInt(constraint.value))
-                    }
-                    else {
-                        keySchema = keySchema.optional()
-                    }
-                });
-                break;
-            default:
-                break;
-        }
+// const arraySchema = z.object({
+//     type: z.literal("array"),
+//     items: z.array(
+//         z.union([
+//             stringSchema,
+//             booleanSchema,
+//             z.lazy(() => objectSchema),
+//             z.lazy(() => arraySchema),
+//         ]),
+//     ),
+// });
+//
+// const objectSchema = z
+//     .object({
+//         type: z.literal("object"),
+//         properties: z.record(
+//             z.union([
+//                 stringSchema,
+//                 booleanSchema,
+//                 z.lazy(() => objectSchema),
+//                 z.lazy(() => arraySchema),
+//             ]),
+//         ),
+//     })
+//     .merge(sharedBetweenAll);
+// type ObjectSchema = {
+//     type: "object";
+//     properties: Record<string, StringSchema | BooleanSchema | ObjectSchema>;
+// };
 
-        acc[key.name] = keySchema;
-        return acc;
-    }, {});
+const zodSchemaValidator = z.object({
+    columns: z.record(
+        z.discriminatedUnion("type", [stringSchema, booleanSchema, numberSchema]),
+    ),
+});
 
-    return z.object(schemaObject);
+type ColumnValType = StringSchema | BooleanSchema | NumberSchema;
+type ZodSchemas = z.ZodBoolean | z.ZodString | z.ZodNumber;
+// // | z.ZodEffects<z.ZodString, string, string>;
+// type AddOptional<T extends z.ZodTypeAny> = z.ZodOptional<T>;
+// type AddNullable<T extends z.ZodTypeAny> = z.ZodNullable<T>;
+// type AddDefault<T extends z.ZodTypeAny> = z.ZodDefault<T>;
+
+// type ParserGeneratorRet =
+//     | ZodSchemas
+//     | AddOptional<ZodSchemas>
+//     | AddNullable<ZodSchemas>
+//     | AddDefault<ZodSchemas>
+//     | AddOptional<AddNullable<ZodSchemas>>
+//     | AddOptional<AddDefault<ZodSchemas>>;
+
+const commonHandler = (s: ZodSchemas, subSchema: ColumnValType) => {
+    let final: z.ZodTypeAny = s;
+
+    if (subSchema.optional) final = final.optional();
+    if (subSchema.default) final = final.default(subSchema.default);
+    if (subSchema.nullable) final = final.nullable();
+
+    return final;
 };
 
+const stringHandler = (subSchema: StringSchema) => {
+    let s = z.string();
 
-export default createValidationSchema
+    if (subSchema.minLength) s = s.min(subSchema.minLength);
+    if (subSchema.maxLength) s = s.max(subSchema.maxLength);
+    if (subSchema.regex) s = s.regex(new RegExp(subSchema.regex));
+    if (subSchema.format) {
+        if (subSchema.format === "email") s = s.email();
+        if (subSchema.format === "uuid") s = s.uuid();
+        if (subSchema.format === "url") s = s.url();
+    }
 
+    return s;
+};
 
+const booleanHandler = (subSchema: BooleanSchema) => {
+    const s = z.boolean();
+
+    return s;
+};
+
+const numberHandler = (subSchema: NumberSchema) => {
+    let s = z.number();
+
+    if (subSchema.min) s = s.min(subSchema.min);
+    if (subSchema.max) s = s.max(subSchema.max);
+    if (subSchema.integer) s = s.int();
+
+    return s;
+};
+
+const valueParserGenerator = (subSchema: ColumnValType) => {
+    if (subSchema.type === "string") {
+        const s = stringHandler(subSchema);
+
+        return commonHandler(s, subSchema);
+    }
+
+    if (subSchema.type === "boolean") {
+        const s = booleanHandler(subSchema);
+
+        return commonHandler(s, subSchema);
+    }
+
+    if (subSchema.type === "number") {
+        const s = numberHandler(subSchema);
+
+        return commonHandler(s, subSchema);
+    }
+
+    throw new Error("undefined type");
+};
+
+export const toZodSchema = <T extends Record<string, unknown>>(schema: T) => {
+    const schemaParsed = zodSchemaValidator.safeParse(schema);
+
+    const shape: Record<string, z.ZodTypeAny> = {};
+
+    if (!schemaParsed.success) throw schemaParsed.error;
+
+    const columns: Record<string, ColumnValType> = schemaParsed.data.columns;
+
+    for (const [name, subSchema] of Object.entries(columns)) {
+        const subZodSchema = valueParserGenerator(subSchema);
+        shape[name] = subZodSchema;
+    }
+
+    const finalSchema = z.object(shape);
+
+    return finalSchema;
+};

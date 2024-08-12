@@ -1,10 +1,24 @@
 import { Tooltip } from '@nextui-org/react';
 import { CONSTRAINTS, DEFAULT_CONSTRAINTS, TYPES } from './constants';
 import { useDrop, } from 'react-dnd';
+import { IColumn } from '@/app/drag-test/page';
+import { ReactNode } from 'react';
+
+interface IRowProps {
+    index: number,
+    renderDroppedItems: (index: number) => ReactNode,
+    addItemToRow: (rowIndex: number, newItem: string) => void,
+    addTypeToRow: (rowIndex: number, newItem: string) => boolean,
+    addConstraintToRow: (rowIndex: number, newCons: string) => boolean,
+    rows: IColumn[],
+    rowSelected: number,
+    setRowSelected: (index: number) => void,
+    handleRemoveRow: (index: number) => void,
+    handleDuplicateRow: (index: number) => void
+}
 
 const Row = ({
     index,
-    setType,
     renderDroppedItems,
     addItemToRow,
     addTypeToRow,
@@ -14,9 +28,8 @@ const Row = ({
     setRowSelected,
     handleRemoveRow,
     handleDuplicateRow
-}) => {
+}: IRowProps) => {
 
-    //console.log("CONSTRAINTS FOR SPECIFIC TYPE => ", defaultConstraints[rows[index].typeSelected])
     const acceptConstraints: string[] = DEFAULT_CONSTRAINTS[rows[index].typeSelected] || []
 
     const [_, drop] = useDrop({
@@ -34,7 +47,6 @@ const Row = ({
         drop: (item, monitor) => {
 
             if (TYPES.includes(item.type)) {
-                setType(item.type);
                 if (!addTypeToRow(index, item.type)) {
                     addItemToRow(index, item.type);
                     setRowSelected(index)

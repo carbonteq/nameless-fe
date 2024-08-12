@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Con } from "@/app/drag-test/page";
-import { IKey } from "@/app/zodSchemaCreator";
+// import { Con } from "@/app/drag-test/page";
+// import { IKey } from "@/app/zodSchemaCreator";
 
 interface ValidationSchemaState {
-    schema: IKey[] | null;
+    schema: Record<string, unknown> | null
 }
 
 const initialState: ValidationSchemaState = {

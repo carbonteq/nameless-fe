@@ -12,8 +12,9 @@ import { ThemeColour, title } from "@/components/primitives";
 import { Tooltip } from "@nextui-org/react";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
-import createValidationSchema from "../zodSchemaCreator";
+import { toZodSchema } from "../zodSchemaCreator";
 import Newlines from "@/components/new-line";
+import convertObject from "./convertToKeys";
 
 type mapping = {
     name: string,
@@ -22,8 +23,11 @@ type mapping = {
 
 export default function UploadPage() {
 
-    const keys = useSelector((state: RootState) => state.validationSchema.schema);
-    const dataSchema = createValidationSchema(keys);
+    const testSchema = useSelector((state: RootState) => state.validationSchema.schema);
+    const dataSchema = toZodSchema(testSchema);
+
+    const keys = convertObject(testSchema)
+
 
     let schemaKeyNames: string[] = keys?.map((key) => key.name) || []
 
@@ -56,7 +60,7 @@ export default function UploadPage() {
         // Event Handler
         reader.onload = async (event) => {
             console.log("FILE STRUCTURE", event.target?.result);
-            console.log("FILE STRUCTURE", keys);
+            // console.log("FILE STRUCTURE", keys);
 
             Papa.parse(event.target.result, {
                 header: true,
@@ -95,12 +99,10 @@ export default function UploadPage() {
 
                     //Validate each row and cell
                     parsedData.forEach((row, rowIndex) => {
-                        console.log("CHECKING FOR ERRORS = ", row);
+                        // console.log("CHECKING FOR ERRORS = ", row);
                         try {
                             dataSchema.parse(row);
                         } catch (err) {
-                            console.log("IN ERROR REGION ", rowIndex);
-
                             invalidCellsTemp[rowIndex] = err.errors.reduce((acc, error) => {
                                 if (!acc[error.path]) {
                                     acc[error.path] = error.message;
@@ -138,8 +140,8 @@ export default function UploadPage() {
 
         columns.forEach((column, index) => {
             schemaKeyNames.forEach((key) => {
-                console.log("KEYS FROM SCHEMA => ", key);
-                console.log("COLUMN NAME => ", column.header);
+                // console.log("KEYS FROM SCHEMA => ", key);
+                // console.log("COLUMN NAME => ", column.header);
 
                 if (column.header === key) {
                     handleMappingChange(column.header, key);

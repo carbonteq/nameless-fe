@@ -11,12 +11,13 @@ import Ajv from "ajv";
 import metaSchema from "../metaSchema";
 import { DEFAULT_CONSTRAINTS, TYPES } from "@/components/constants";
 import Draggable from "@/components/Draggable";
+import convertObject from "../upload/convertToKeys";
 
 export interface Con {
 	name: string;
 	value: string;
 }
-interface IColumn {
+export interface IColumn {
 	name: string;
 	typeSelected: string;
 	items: string[]
@@ -28,9 +29,7 @@ const Home = () => {
 	const dispatch = useDispatch();
 	const { toast } = useToast();
 
-	const [type, setType] = useState<string>();
-
-	const [rowSelected, setRowSelected] = useState<number>(0)
+	const [rowSelected, setRowSelected] = useState(0)
 	// Array of Rows to store all All Related Values of a key
 
 	const [rows, setRows] = useState<IColumn[]>([{
@@ -220,11 +219,13 @@ const Home = () => {
 					}
 				));
 
-				if (dispatch(setSchema(keys))) {
+
+				const testSchema = convertToJson(keys)
+				if (dispatch(setSchema(testSchema))) {
 					console.log("SUCCESS");
 				}
 
-				const testSchema = convertToJson(keys)
+				console.log("HEHEHEHEHEHEHEH => ", convertObject(testSchema));
 
 				const metaValidator = new Ajv({ strict: true });
 
@@ -437,11 +438,13 @@ const Home = () => {
 						<div className="flex flex-col flex-1 justify-center ">
 							{rows[rowSelected]?.typeSelected ? (
 								<>
-									{DEFAULT_CONSTRAINTS[rows[rowSelected].typeSelected].map((cons) => (
-										<Draggable key={cons} type={cons}>
-											{cons}
-										</Draggable>
-									)
+									{DEFAULT_CONSTRAINTS[rows[rowSelected].typeSelected].map((cons) => {
+										return (
+											<Draggable key={cons} type={cons}>
+												{cons}
+											</Draggable>
+										)
+									}
 									)}
 								</>
 							) : <p className="text-center">
@@ -458,7 +461,6 @@ const Home = () => {
 						<Row
 							key={index}
 							index={index}
-							setType={setType}
 							renderDroppedItems={renderDroppedItems}
 							addItemToRow={addItemToRow}
 							addTypeToRow={addTypeToRow}
