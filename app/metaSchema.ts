@@ -19,9 +19,20 @@ export default {
                 ],
             },
         },
+        name: {
+            type: "string",
+            description: "",
+            minLength: 3
+        },
+        dataStoreId: {
+            type: "string",
+            description: "",
+            format: "uuid",
+            pattern: "^[a-zA-Z0-9]{8}-?[a-zA-Z0-9]{4}-?[a-zA-Z0-9]{4}-?[a-zA-Z0-9]{4}-?[a-zA-Z0-9]{12}$"
+        }
     },
     additionalProperties: true,
-    required: ["columns"],
+    required: ["columns", "name"],
     definitions: {
         baseSchema: {
             type: "object",

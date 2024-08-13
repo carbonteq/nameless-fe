@@ -37,12 +37,8 @@ const EditSchema = () => {
     const { toast } = useToast();
 
     const [rowSelected, setRowSelected] = useState(0)
-    // Array of Rows to store all All Related Values of a key
-    let row: any = localStorage.getItem(`SCHEMA-${idd}`)
 
-    // Convert to keys
-    // Convert to rows
-    //console.log("IN EDIT SCHEMA => ", row);
+    let row: any = localStorage.getItem(`SCHEMA-${idd}`)
 
     if (row) {
         row = JSON.parse(row)

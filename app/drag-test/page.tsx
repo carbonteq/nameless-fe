@@ -27,7 +27,7 @@ export interface IColumn {
 
 const SchemaCreator = () => {
 	const router = useRouter();
-	const dispatch = useDispatch();
+	// const dispatch = useDispatch();
 	const { toast } = useToast();
 
 	const [rowSelected, setRowSelected] = useState(0)

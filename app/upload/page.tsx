@@ -24,13 +24,11 @@ type mapping = {
 
 export default function UploadPage() {
 
-    const testSchema = useSelector((state: RootState) => state.validationSchema.schema);
-    const dataSchema = toZodSchema(testSchema);
-
-    const keys = convertToKeys(testSchema)
-
-    // Service to convert the schema selected to edit for UI Display
-    //const rows = convertToRowFromSchema(keys);
+    let row: any = localStorage.getItem("SCHEMA-10d50b9d-4c69-492b-99bf-666710a95c29")
+    const testSchema = useSelector((state: RootState) => state.validationSchema.schema)
+    row = JSON.parse(row)
+    const dataSchema = toZodSchema(row.schema)
+    const keys = convertToKeys(row.schema)
 
     let schemaKeyNames: string[] = keys?.map((key) => key.name) || []
 
