@@ -29,7 +29,7 @@ const SchemaCreator = () => {
 	const router = useRouter();
 	// const dispatch = useDispatch();
 	const { toast } = useToast();
-
+	const [schemaName, setSchemaName] = useState<string>()
 	const [rowSelected, setRowSelected] = useState(0)
 	// Array of Rows to store all All Related Values of a key
 
@@ -187,19 +187,38 @@ const SchemaCreator = () => {
 		return keyErrors
 	}
 
+	const validateSchemeNameInput = (): string | null => {
+		let nameError: string = ""
+		if (!schemaName || schemaName.length < 3) {
+			nameError = "Schema Name Required"
+			return nameError
+		}
+		return null
+	}
+
 	const castValue = (constraint: Con, typeSelected: string) => {
 		// Type Cast the values from string to integer and boolean where required
 
 		return (constraint.name === "min" || constraint.name === "max" || constraint.name === "minLength" || constraint.name === "maxLength" || (constraint.name === "default" && typeSelected !== 'string')) ? Number(constraint.value) : ((constraint.name === 'default' && typeSelected === 'string') || constraint.name === 'format') ? constraint.value : true
 	}
 
+
 	const handleSubmit = (e: { preventDefault: () => void; }) => {
 		e.preventDefault();
 
 		if (rows.length !== 0) {
+			// Validation Part for Empty Contraints or Key Names
 			const keyErrors = validateKeyNames()
 			const consErrors = validateConstraintInput()
-			const errors: string[] = [...keyErrors, ...consErrors]
+			const schemaNameError = validateSchemeNameInput()
+			let errors: string[] = []
+			if (schemaNameError) {
+				errors = [schemaNameError, ...keyErrors, ...consErrors]
+			}
+			else {
+				errors = [...keyErrors, ...consErrors]
+			}
+
 			if (errors.length !== 0) {
 				const showErrors = errors.reduce((acc, err) => `${acc}\n${err}`)
 				toast({
@@ -221,10 +240,7 @@ const SchemaCreator = () => {
 				));
 
 
-				const testSchema = convertToJson(keys)
-				// if (dispatch(setSchema(testSchema))) {
-				// 	console.log("SUCCESS");
-				// }
+				const testSchema = convertToJson(keys, schemaName)
 
 				const metaValidator = new Ajv({ strict: true });
 				metaValidator.validateSchema(metaSchema, true);
@@ -419,8 +435,11 @@ const SchemaCreator = () => {
 
 	return (
 		<div
-			className={`flex flex-col rounded-xl p-4 bg-opacity-50 ${ThemeColour.variants.background.main}`}
+			className={`flex flex-col rounded-xl p-4 -mt-11 bg-opacity-50 ${ThemeColour.variants.background.main}`}
 		>
+			<div className="flex justify-center items-center">
+				<input value={schemaName} onChange={(e) => setSchemaName(e.target.value)} type="text" placeholder="Schema Name" className=" p-2 m-2 w-[200px] rounded" />
+			</div>
 			<div className="flex gap-4">
 				<div className="flex flex-col gap-4">
 					<div className="w-[202px] h-[272px] bg-gray-100 bg-opacity-80 dark:bg-gray-800 dark:bg-opacity-80 rounded-xl flex flex-col items-center p-4">

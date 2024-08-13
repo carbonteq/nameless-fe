@@ -14,8 +14,6 @@ export default {
                     { $ref: "#/definitions/stringSchema" },
                     { $ref: "#/definitions/numberSchema" },
                     { $ref: "#/definitions/booleanSchema" },
-                    //    { $ref: "#/definitions/arraySchema" },
-                    //   { $ref: "#/definitions/objectSchema" },
                 ],
             },
         },
@@ -27,7 +25,7 @@ export default {
         dataStoreId: {
             type: "string",
             description: "",
-            format: "uuid",
+            //format: uuid,
             pattern: "^[a-zA-Z0-9]{8}-?[a-zA-Z0-9]{4}-?[a-zA-Z0-9]{4}-?[a-zA-Z0-9]{4}-?[a-zA-Z0-9]{12}$"
         }
     },

@@ -9,7 +9,7 @@ const flattenToSingularObject = (cons) => {
     }
 }
 
-export const convertToJson = (keys: any): Record<string, unknown> => {
+export const convertToJson = (keys: any, schemaName: string | undefined): Record<string, unknown> => {
     const jsonObj = keys.reduce((acc, key) => {
         const schema = {
             type: key.typeSelected,
@@ -20,7 +20,8 @@ export const convertToJson = (keys: any): Record<string, unknown> => {
     }, {})
 
     const updatedJsonObject = {
-        "columns": jsonObj
+        "columns": jsonObj,
+        "name": schemaName
     }
 
     //flattenToSingularObject(keys[0].constraints)
