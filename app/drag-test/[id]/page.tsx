@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { setSchema } from "@/app/redux/slices/validationSchemaSlice";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { ThemeColour } from "@/components/primitives";
 import Row from "@/components/row";
@@ -12,6 +12,8 @@ import metaSchema from "@/app/metaSchema";
 import { DEFAULT_CONSTRAINTS, TYPES } from "@/components/constants";
 import Draggable from "@/components/Draggable";
 import convertObject from "@/app/services/convertToKeys";
+import convertToKeys from "@/app/services/convertToKeys";
+import { convertToRowFromSchema } from "@/app/services/createToRowFromSchema";
 
 export interface Con {
     name: string;
@@ -25,18 +27,28 @@ export interface IColumn {
 }
 
 const EditSchema = () => {
+    const pathname = usePathname();
+    const parts = pathname.split("/");
+    const idd = parts[parts.length - 1];
+    console.log("EXTRACTING THE ID FROM URL => ", idd);
+
     const router = useRouter();
     const dispatch = useDispatch();
     const { toast } = useToast();
 
     const [rowSelected, setRowSelected] = useState(0)
     // Array of Rows to store all All Related Values of a key
-    let row = localStorage.getItem("ROWS")
-    console.log("IN EDIT SCHEMA => ", row);
+    let row: any = localStorage.getItem(`SCHEMA-${idd}`)
+
+    // Convert to keys
+    // Convert to rows
+    //console.log("IN EDIT SCHEMA => ", row);
 
     if (row) {
         row = JSON.parse(row)
+        row = convertToRowFromSchema(convertToKeys(row.schema))
     }
+
     const [rows, setRows] = useState<IColumn[]>(row);
 
     const addItemToRow = (rowIndex: number, newItem: string) => {
@@ -221,19 +233,14 @@ const EditSchema = () => {
 
 
                 const testSchema = convertToJson(keys)
-                if (dispatch(setSchema(testSchema))) {
-                    console.log("SUCCESS");
-                }
-
-                console.log("HEHEHEHEHEHEHEH => ", convertObject(testSchema));
+                // if (dispatch(setSchema(testSchema))) {
+                // 	console.log("SUCCESS");
+                // }
 
                 const metaValidator = new Ajv({ strict: true });
-
                 metaValidator.validateSchema(metaSchema, true);
-
                 const validator = metaValidator.compile(metaSchema);
 
-                console.log("CHECKING FOR META => ", testSchema);
 
                 console.log(validator(testSchema));
 
@@ -241,10 +248,15 @@ const EditSchema = () => {
 
                 if (!validator(testSchema)) {
                     console.log(validator.errors);
-
                 };
+                const SCHEMA = {
+                    id: idd,	// UUID 
+                    schema: testSchema
+                }
 
-                router.push("/upload");
+                localStorage.setItem(`SCHEMA-${SCHEMA.id}`, JSON.stringify(SCHEMA));
+
+                router.push("/schemas");
             }
         }
         else {
@@ -259,8 +271,6 @@ const EditSchema = () => {
 
     const renderDroppedItems = (index: number) => {
         return rows.map((item, i) => {
-            console.log("ITEMS IN SCHEMA CREATION", item.items);
-
             // console.log("Checking Rows => ", item)
 
             if (i !== index) return null;

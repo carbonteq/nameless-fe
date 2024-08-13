@@ -6,7 +6,7 @@ interface IKey {
     constraints: Con[]
 }
 
-export const convertToRowFromSchema = (keys: IKey[]) => {
+export const convertToRowFromSchema = (keys: IKey[] | any) => {
 
     const rows: IColumn[] = []
     keys.map(key => {

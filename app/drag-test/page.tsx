@@ -222,17 +222,14 @@ const SchemaCreator = () => {
 
 
 				const testSchema = convertToJson(keys)
-				if (dispatch(setSchema(testSchema))) {
-					console.log("SUCCESS");
-				}
+				// if (dispatch(setSchema(testSchema))) {
+				// 	console.log("SUCCESS");
+				// }
 
 				const metaValidator = new Ajv({ strict: true });
-
 				metaValidator.validateSchema(metaSchema, true);
-
 				const validator = metaValidator.compile(metaSchema);
 
-				console.log("CHECKING FOR META => ", testSchema);
 
 				console.log(validator(testSchema));
 
@@ -240,18 +237,15 @@ const SchemaCreator = () => {
 
 				if (!validator(testSchema)) {
 					console.log(validator.errors);
-
 				};
 				const SCHEMA = {
-					id: generateId(),
+					id: generateId(),	// UUID 
 					schema: testSchema
 				}
 
-				localStorage.setItem(`SCHEMA-${SCHEMA.id}`, JSON.stringify(rows));
+				localStorage.setItem(`SCHEMA-${SCHEMA.id}`, JSON.stringify(SCHEMA));
 
-				// console.log("UUID GENERATED => ", generateId());
-
-				router.push("/upload");
+				router.push("/schemas");
 			}
 		}
 		else {

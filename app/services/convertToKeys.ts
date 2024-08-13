@@ -1,7 +1,9 @@
-const convertToKeys = (inputObject: Record<string, unknown>) => {
+const convertToKeys = (inputObject: Record<string, unknown> | any) => {
     const result = [];
 
     const columns = inputObject.columns
+    console.log("IN CONVERSION STATE ", columns);
+
 
     for (const [key, value] of Object.entries(columns)) {
         const transformed = {
