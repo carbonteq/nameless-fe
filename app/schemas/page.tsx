@@ -51,7 +51,7 @@ const Schemas = () => {
     };
 
     return (
-        <div className={`ml-[270px] py-6 px-5 bg-opacity-50 ${ThemeColour.variants.background.main} rounded-xl`}>
+        <div className={` py-6 px-5 bg-opacity-50 ${ThemeColour.variants.background.main} rounded-xl`}>
             {!isDetails ? (
                 <>
                     <h1
@@ -147,7 +147,7 @@ const Schemas = () => {
                                 </Card>
                             );
                         })}
-                        <Card onClick={() => router.push("/drag-test")} className='border border-dashed h-80 bg-opacity-0 cursor-pointer hover:scale-110 hover:z-10'>
+                        <Card onClick={() => router.push("/drag-test")} className='border border-dashed h-80 lg:col-span-1 col-span-2 max-sm:col-span-4  bg-opacity-0 cursor-pointer hover:scale-110 hover:z-10'>
                             <CardBody className='flex justify-center items-center'>
                                 <img src={addIconSrc} className='size-11 dark:invert'></img>
                             </CardBody>

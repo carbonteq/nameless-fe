@@ -26,7 +26,7 @@ export const Navbar = () => {
 
 	return (
 		<NextUINavbar
-			className={`${ThemeColour.variants.background.main} shadow-lg`}
+			className={`${ThemeColour.variants.background.main} shadow-lg fixed`}
 			maxWidth="full"
 			position="sticky"
 			style={navbarStyle}

@@ -14,21 +14,27 @@ const Sidebar: React.FC = () => {
     const [sidebarWidth, setSidebarWidth] = useState("hidden")
     const [shouldShow, setShouldShow] = useState(true)
 
-    function handleSidebarWidth() {
-        if (shouldShow) {
+    const [show, setShow] = useState(true)
+
+    function handleSidebar() {
+        if (!show || (sidebarWidth === "hidden" && window.innerWidth < 640)) {
+            setShow(true)
+            console.log(window.innerWidth);
+
             setSidebarWidth("w-[280px]")
-            setShouldShow(false)
         }
         else {
-            setSidebarWidth("hidden")
-            setShouldShow(true)
+            setShow(false)
+            console.log("Hide Sidebar");
+
         }
     }
 
     return (
         <>
-            <div >
-                <button onClick={handleSidebarWidth} className={`pt-1 px-1 lg:hidden absolute z-20`}>
+
+            <div>
+                <button onClick={handleSidebar} className={`pt-1 px-1 absolute top-16 z-40`}>
                     <Image
                         priority
                         src={menuIcon}
@@ -38,57 +44,61 @@ const Sidebar: React.FC = () => {
                         className="dark:invert"
                     />
                 </button>
-                <div
-                    className={`font-black fixed p-2 h-full max-lg:${sidebarWidth} rounded-r-3xl z-10 w-[280px] transition-all overflow-y-auto text-center ${ThemeColour.variants.background.main}`}
-                >
-                    <div className="mt-6 flex items-center rounded-md px-3 duration-300 text-white">
-                        <i className="bi bi-house-door-fill" />
-                        <span className="text-[25px] ml-4 text-gray-800 dark:text-white font-bold">
-                            Movies
-                        </span>
-                    </div>
-
+                {show &&
                     <div
-                        className="text-left mt-2 w-4/5 mx-auto font-bold"
-                        id="submenu"
+                        className={`font-black relative max-sm:fixed max-sm:w-full p-2 min-h-screen z-10 max-lg:${sidebarWidth} w-[280px] overflow-auto transition-all text-center ${ThemeColour.variants.background.main}`}
                     >
-                        <h1 className="cursor-pointer p-2 text-gray-600 hover:bg-[#969393] dark:text-white dark:hover:bg-[#1a222e] rounded-md mt-1">
-                            <Link href="/movies/collections" className="block w-full h-full">
-                                Collections
-                            </Link>
-                        </h1>
-                        <h1 className="cursor-pointer p-2 text-gray-600 hover:bg-[#969393] dark:text-white dark:hover:bg-[#1a222e] rounded-md mt-1">
-                            <Link href="/movies/track-movies" className="block w-full h-full">
-                                Track List
-                            </Link>
-                        </h1>
-                    </div>
-                    {/* Straight Line */}
-                    <div className="my-4 bg-gray-600 h-[1px]" />
+                        <div className="mt-16 pt-6">
+                            <div className="mt-6 flex items-center rounded-md px-3 duration-300 text-white">
+                                <i className="bi bi-house-door-fill" />
+                                <span className="text-[25px] ml-4 text-gray-800 dark:text-white font-bold">
+                                    Schemas
+                                </span>
+                            </div>
 
-                    <div className="mt-3 flex items-center rounded-md px-3 duration-300 text-white">
-                        <i className="bi bi-bookmark-fill" />
-                        <span className="text-[25px] ml-4 text-gray-800 dark:text-white font-bold">
-                            Books
-                        </span>
-                    </div>
+                            <div
+                                className="text-left mt-2 w-4/5 mx-auto font-bold"
+                                id="submenu"
+                            >
+                                <h1 className="cursor-pointer p-2 text-gray-600 hover:bg-[#969393] dark:text-white dark:hover:bg-[#1a222e] rounded-md mt-1">
+                                    <Link href="/drag-test" className="block w-full h-full">
+                                        New
+                                    </Link>
+                                </h1>
+                                <h1 className="cursor-pointer p-2 text-gray-600 hover:bg-[#969393] dark:text-white dark:hover:bg-[#1a222e] rounded-md mt-1">
+                                    <Link href="/schemas" className="block w-full h-full">
+                                        Manage
+                                    </Link>
+                                </h1>
+                            </div>
+                            {/* Straight Line */}
+                            <div className="my-4 bg-gray-600 h-[1px]" />
 
-                    <div
-                        className="text-left mt-2 w-4/5 mx-auto text-gray-200 font-bold"
-                        id="submenu"
-                    >
-                        <h1 className="cursor-pointer p-2 text-gray-600 hover:bg-[#969393] dark:text-white dark:hover:bg-[#1a222e] rounded-md mt-1">
-                            <Link href="/books/shelf" className="block w-full h-full">
-                                Shelves
-                            </Link>
-                        </h1>
-                        <h1 className="cursor-pointer text-gray-600 p-2 hover:bg-[#969393] dark:text-white dark:hover:bg-[#1a222e] rounded-md mt-1">
-                            <Link href="/books/track-books" className="block w-full h-full">
-                                Track Shelf
-                            </Link>
-                        </h1>
+                            <div className="mt-3 flex items-center rounded-md px-3 duration-300 text-white">
+                                <i className="bi bi-bookmark-fill" />
+                                <span className="text-[25px] ml-4 text-gray-800 dark:text-white font-bold">
+                                    Data
+                                </span>
+                            </div>
+
+                            <div
+                                className="text-left mt-2 w-4/5 mx-auto text-gray-200 font-bold"
+                                id="submenu"
+                            >
+                                <h1 className="cursor-pointer p-2 text-gray-600 hover:bg-[#969393] dark:text-white dark:hover:bg-[#1a222e] rounded-md mt-1">
+                                    <Link href="/books/shelf" className="block w-full h-full">
+                                        Shelves
+                                    </Link>
+                                </h1>
+                                <h1 className="cursor-pointer text-gray-600 p-2 hover:bg-[#969393] dark:text-white dark:hover:bg-[#1a222e] rounded-md mt-1">
+                                    <Link href="/books/track-books" className="block w-full h-full">
+                                        Track Shelf
+                                    </Link>
+                                </h1>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                }
             </div>
         </>
     );
