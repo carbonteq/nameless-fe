@@ -1,5 +1,5 @@
 export const JWT_TOKEN = "jwtToken";
-export const BASE_URL = "http://localhost:8000/api"
+export const BASE_URL = "http://localhost:3000/api"
 
 export const CONSTRAINTS: string[] = ["max", "min", "minLength", "maxLength", "regex", "format", "default", "optional", "integer"]
 export const INPUT_NUMBER_CONSTRAINTS: string[] = ["max", "min", "minLength", "maxLength", "regex", "format", "default"]
@@ -14,6 +14,7 @@ export const DEFAULT_CONSTRAINTS: IDefCon = {
     boolean: ["default"]
 };
 
+export const linkIconSrc = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAAAXNSR0IArs4c6QAAAf1JREFUaEPtmGtORDEIhZmVqStTV6auTEMyJEhoOdBSneT2z42xj/PxKHRu9ODj9uD66QL4aw9eHrg8sGiB0yH0TESvRMRfPd7vf7xleU4BjIR7ehkGBjkBwGLY6pkBQ3QDVMQLKATRCcBh8+GY/ZOIWBx/efA8CTE7PYToBBBxGuJFCbdiR3ky1dgNoCFm4gXG89p03QmATPLyXJs3HGoM4Y7/COB5YaizC4BFSJJmPcDzv82idgApPE+myjLE1x0mA3QMoKPCHguhSpGaJqTqh3TlntaCag5UxEtYzyC8fbcDjMRLddUVlkV71di720eVe2shm4mfdZAMIS20Z9GR+K2txEg8UmGlQOnvrPry/0LxPAnNgYx48QTS05ctL/QIwOgQz/IaNLLgsnjUAzp+BTwSrwupBVlqn21ZjzyQ7Q49WLSViDxWauasoEohQgBK4pEQsj1J5sZB3sH2dYbA/poThRDcVA1O5qT2Gjy5JjMNXimEVgHSFs0uyHoADaGsjvL8CMAWsHKylRUGC7MAvB3iBbl+kblLbBGA97yLbg7rtVYIBCDTPo9+oELOKXkC3XjlAdOaNyiAtMFIcZr1QSUrzxZlAHgf9BEf5ck2kCyAHKxjXV5a8hOKeGubyJ0eOCIqc0jVA5kzWudeAK3mBTa/PAAYqXXKw3vgB8uqeDGLK4etAAAAAElFTkSuQmCC"
 
 export const closeIconSrc = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAAAXNSR0IArs4c6QAAAUdJREFUSEvt1bsuRUEUxvGfS6XTewaJNxAhhAiFQkiUWgoPpEAhIiI6jZBoCF7FJS7R2EvmJHISZvbZyTmKM93OXrP+832z1poBPVoDPeLqg7vmfN/qf2X1KE6whYfMyWawXcUt4/Ov2NwdD+Ie43jEFO5+SbhYxR1jGGeI719XDhwbN7DLd88/YRo3bRkXkisB/UjQ86bgdvhLUt6Ct0PncJErlhLFrRyrOEjKW/AxHCZ73zBfAo2EdcARv4b9dJKAjyDq4B2zlROXOaWt/3XBsS+U72EoJQmlce/XpdBOFPcMvJ7UxgF+Wv2KKKqrUtV1rM4VV7RRUUXXsfpnL3etnToZIFnlOaujVW4xgeeqRycLR+ZpNWqXmk6ueCSOqmLaSXP7r3wxxTax0vSRKC3S2nE5q2snLN3QB5c61Tiub3VjC0sTfAHboEIfytnLXAAAAABJRU5ErkJggg=="
 

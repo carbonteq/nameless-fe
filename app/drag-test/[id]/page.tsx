@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { setSchema } from "@/app/redux/slices/validationSchemaSlice";
 import { usePathname, useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
@@ -14,6 +14,7 @@ import Draggable from "@/components/Draggable";
 import convertObject from "@/app/services/convertToKeys";
 import convertToKeys from "@/app/services/convertToKeys";
 import { convertToRowFromSchema } from "@/app/services/createToRowFromSchema";
+import { userService } from "@/app/services/userService";
 
 export interface Con {
     name: string;
@@ -27,25 +28,38 @@ export interface IColumn {
 }
 
 const EditSchema = () => {
-    const pathname = usePathname();
-    const parts = pathname.split("/");
-    const idd = parts[parts.length - 1];
-    console.log("EXTRACTING THE ID FROM URL => ", idd);
+
 
     const router = useRouter();
     const dispatch = useDispatch();
     const { toast } = useToast();
 
+    const [schemaName, setSchemaName] = useState<string>()
     const [rowSelected, setRowSelected] = useState(0)
+    const [schema, setSchema] = useState()
+    const [rows, setRows] = useState<IColumn[]>([]);
+    const pathname = usePathname();
+    const [schemaId, setSchemaId] = useState<string>("")
 
-    let row: any = localStorage.getItem(`SCHEMA-${idd}`)
+    useEffect(() => {
+        const fetchSchema = async (id: string) => {
+            const fetchedSchema = await userService.getSchemaById(id);
+            setSchema(fetchedSchema);
+            setSchemaName(fetchedSchema.schema.name);
 
-    if (row) {
-        row = JSON.parse(row)
-        row = convertToRowFromSchema(convertToKeys(row.schema))
-    }
+            // Convert the schema to rows
+            const convertedRows = convertToRowFromSchema(convertToKeys(fetchedSchema.schema));
+            setRows(convertedRows);
+        };
 
-    const [rows, setRows] = useState<IColumn[]>(row);
+
+        //Extracting schema id from url
+        const parts = pathname.split("/");
+        const id = parts[parts.length - 1];
+        setSchemaId(id)
+
+        fetchSchema(id);
+    }, []);
 
     const addItemToRow = (rowIndex: number, newItem: string) => {
         setRows(prevRows =>
@@ -200,7 +214,7 @@ const EditSchema = () => {
         return (constraint.name === "min" || constraint.name === "max" || constraint.name === "minLength" || constraint.name === "maxLength" || (constraint.name === "default" && typeSelected !== 'string')) ? Number(constraint.value) : ((constraint.name === 'default' && typeSelected === 'string') || constraint.name === 'format') ? constraint.value : true
     }
 
-    const handleSubmit = (e: { preventDefault: () => void; }) => {
+    const handleSubmit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
 
         if (rows.length !== 0) {
@@ -228,16 +242,13 @@ const EditSchema = () => {
                 ));
 
 
-                const testSchema = convertToJson(keys)
-                // if (dispatch(setSchema(testSchema))) {
-                // 	console.log("SUCCESS");
-                // }
+                const testSchema = convertToJson(keys, schemaName)
 
                 const metaValidator = new Ajv({ strict: true });
                 metaValidator.validateSchema(metaSchema, true);
                 const validator = metaValidator.compile(metaSchema);
 
-
+                // True/False
                 console.log(validator(testSchema));
 
                 // To check the error returned 
@@ -246,13 +257,12 @@ const EditSchema = () => {
                     console.log(validator.errors);
                 };
                 const SCHEMA = {
-                    id: idd,	// UUID 
-                    schema: testSchema
+                    schema: testSchema,
+                    dataStoreId: null
                 }
 
-                localStorage.setItem(`SCHEMA-${SCHEMA.id}`, JSON.stringify(SCHEMA));
+                await userService.updateSchema(SCHEMA, schemaId, () => router.push("/schemas"))
 
-                router.push("/schemas");
             }
         }
         else {
@@ -372,6 +382,7 @@ const EditSchema = () => {
                             >
                                 {itemElement}:
                                 <select
+                                    value={constraint?.value}
                                     className={`dark:bg-gray-900  bg-[#c2cad7] justify-center dropdown p-2`}
                                     onChange={(e) => {
                                         handleChangeConstraint(index, 'format', e.target.value)
@@ -425,8 +436,11 @@ const EditSchema = () => {
 
     return (
         <div
-            className={`flex flex-col rounded-xl p-4 bg-opacity-50 ${ThemeColour.variants.background.main}`}
+            className={`flex flex-col rounded-xl -mt-11 p-4 bg-opacity-50 ${ThemeColour.variants.background.main}`}
         >
+            <div className="flex justify-center items-center">
+                <input value={schemaName} onChange={(e) => setSchemaName(e.target.value)} type="text" placeholder="Schema Name" className=" p-2 m-2 w-[200px] rounded text-center" />
+            </div>
             <div className="flex gap-4">
                 <div className="flex flex-col gap-4">
                     <div className="w-[202px] h-[272px] bg-gray-100 bg-opacity-80 dark:bg-gray-800 dark:bg-opacity-80 rounded-xl flex flex-col items-center p-4">
@@ -485,8 +499,8 @@ const EditSchema = () => {
                     </div>
                 </div>
             </div>
-            <div className="mt-4 flex justify-center">
-                <button onClick={handleSubmit} className="font-black mb-6 border border-gray-500 dark:border-white rounded-3xl hover:border-2 hover:border-cyan-900  hover:shadow-2xl px-8 py-3 bg-[#b1AAAA] dark:bg-gray-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300" >Submit</button>
+            <div className="mt-3 flex justify-center">
+                <button onClick={handleSubmit} className="font-black mb-6 border border-gray-500 dark:border-white rounded-3xl hover:border-2 hover:border-cyan-900 hover:shadow-2xl px-8 py-3 bg-[#b1AAAA] dark:bg-gray-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300" >Update</button>
             </div>
         </div>
     );

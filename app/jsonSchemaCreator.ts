@@ -1,8 +1,3 @@
-
-type ISchema = {
-    columns: Record<string, unknown>
-}
-
 const flattenToSingularObject = (cons) => {
     if (cons) {
         return cons.reduce((acc, con) => ({ ...acc, [con.name]: con.value }), '')
@@ -20,8 +15,8 @@ export const convertToJson = (keys: any, schemaName: string | undefined): Record
     }, {})
 
     const updatedJsonObject = {
-        "columns": jsonObj,
-        "name": schemaName
+        "name": schemaName,
+        "columns": jsonObj
     }
 
     //flattenToSingularObject(keys[0].constraints)

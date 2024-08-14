@@ -1,8 +1,6 @@
 "use client";
 import { useState } from "react";
-import { setSchema } from "../redux/slices/validationSchemaSlice";
 import { useRouter } from "next/navigation";
-import { useDispatch } from "react-redux";
 import { ThemeColour } from "@/components/primitives";
 import Row from "@/components/row";
 import { useToast } from "@/components/ui/use-toast";
@@ -11,8 +9,7 @@ import Ajv from "ajv";
 import metaSchema from "../metaSchema";
 import { DEFAULT_CONSTRAINTS, TYPES } from "@/components/constants";
 import Draggable from "@/components/Draggable";
-import convertObject from "../services/convertToKeys";
-import { generateId } from "../services/uuidGenator";
+import { userService } from "../services/userService";
 
 export interface Con {
 	name: string;
@@ -202,8 +199,7 @@ const SchemaCreator = () => {
 		return (constraint.name === "min" || constraint.name === "max" || constraint.name === "minLength" || constraint.name === "maxLength" || (constraint.name === "default" && typeSelected !== 'string')) ? Number(constraint.value) : ((constraint.name === 'default' && typeSelected === 'string') || constraint.name === 'format') ? constraint.value : true
 	}
 
-
-	const handleSubmit = (e: { preventDefault: () => void; }) => {
+	const handleSubmit = async (e: { preventDefault: () => void; }) => {
 		e.preventDefault();
 
 		if (rows.length !== 0) {
@@ -255,17 +251,15 @@ const SchemaCreator = () => {
 					console.log(validator.errors);
 				};
 				const SCHEMA = {
-					id: generateId(),	// UUID 
-					schema: testSchema
+					schema: testSchema,
+					dataStoreId: null
 				}
 
-				localStorage.setItem(`SCHEMA-${SCHEMA.id}`, JSON.stringify(SCHEMA));
+				await userService.schemaCreator(SCHEMA, () => router.push("/schemas"))
 
-				router.push("/schemas");
 			}
 		}
 		else {
-			// alert("No Row Added")
 			toast({
 				title: "ERROR",
 				description: "No Row Added",
@@ -438,7 +432,7 @@ const SchemaCreator = () => {
 			className={`flex flex-col rounded-xl p-4 -mt-11 bg-opacity-50 ${ThemeColour.variants.background.main}`}
 		>
 			<div className="flex justify-center items-center">
-				<input value={schemaName} onChange={(e) => setSchemaName(e.target.value)} type="text" placeholder="Schema Name" className=" p-2 m-2 w-[200px] rounded" />
+				<input value={schemaName} onChange={(e) => setSchemaName(e.target.value)} type="text" placeholder="Schema Name" className=" p-2 m-2 w-[200px] rounded text-center" />
 			</div>
 			<div className="flex gap-4">
 				<div className="flex flex-col gap-4">
@@ -498,7 +492,7 @@ const SchemaCreator = () => {
 					</div>
 				</div>
 			</div>
-			<div className="mt-4 flex justify-center">
+			<div className="mt-3 flex justify-center">
 				<button onClick={handleSubmit} className="font-black mb-6 border border-gray-500 dark:border-white rounded-3xl hover:border-2 hover:border-cyan-900  hover:shadow-2xl px-8 py-3 bg-[#b1AAAA] dark:bg-gray-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300" >Submit</button>
 			</div>
 		</div>

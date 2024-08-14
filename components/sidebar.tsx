@@ -8,7 +8,7 @@ import Image from 'next/image';
 
 const Sidebar: React.FC = () => {
     const pathname = usePathname();
-    const showSidebar = pathname !== "/drag-test" && !pathname.startsWith("/drag-test") && pathname !== "/signin" && pathname !== "/signup" && pathname !== "/test" && pathname !== "/forgot-password" && pathname !== "/upload" ? 1 : 0;
+    const showSidebar = !pathname.startsWith("/upload") && !pathname.startsWith("/drag-test") && pathname !== "/signin" && pathname !== "/signup" && pathname !== "/test" && pathname !== "/forgot-password" && pathname !== "/upload" ? 1 : 0;
 
     if (!showSidebar) return <></>;
     const [sidebarWidth, setSidebarWidth] = useState("hidden")

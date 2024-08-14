@@ -1,5 +1,5 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Papa from "papaparse";
 import {
     useReactTable,
@@ -10,12 +10,12 @@ import {
 } from "@tanstack/react-table";
 import { ThemeColour, title } from "@/components/primitives";
 import { Tooltip } from "@nextui-org/react";
-import { useSelector } from "react-redux";
-import { RootState } from "../redux/store";
-import { toZodSchema } from "../services/zodSchemaCreator";
+import { toZodSchema } from "@/app/services/zodSchemaCreator";
 import Newlines from "@/components/new-line";
-import convertToKeys from "../services/convertToKeys";
+import convertToKeys from "@/app/services/convertToKeys";
 import { usePathname } from "next/navigation";
+import { userService } from "@/app/services/userService";
+import { ZodObject, ZodTypeAny } from "zod";
 
 type mapping = {
     name: string,
@@ -23,20 +23,29 @@ type mapping = {
 }
 
 export default function UploadPage() {
-
     const pathname = usePathname();
-    const parts = pathname.split("/");
-    const schemaId = parts[parts.length - 1];
-    console.log("EXTRACTING THE ID FROM URL => ", schemaId);
+    const [schema, setSchema] = useState()
+    const [keyNames, setKeyNames] = useState<string[]>([])
+    let keys
+    let schemaKeyNames: string[] = []
 
-    let row: any = localStorage.getItem(`SCHEMA-${schemaId}`)
-    // const testSchema = useSelector((state: RootState) => state.validationSchema.schema)
-    row = JSON.parse(row)
+    useEffect(() => {
+        const fetchSchema = async (id: string) => {
+            const fetchedSchema = await userService.getSchemaById(id);
+            setSchema(fetchedSchema);
+            const dataSchema = toZodSchema(fetchedSchema.schema)
+            setSchema(dataSchema)
+            keys = convertToKeys(fetchedSchema.schema)
+            schemaKeyNames = keys?.map((key) => key.name) || []
+            setKeyNames(schemaKeyNames)
+        };
 
-    const dataSchema = toZodSchema(row.schema)
-    const keys = convertToKeys(row.schema)
+        //Extracting schema id from url
+        const parts = pathname.split("/");
+        const id = parts[parts.length - 1];
 
-    let schemaKeyNames: string[] = keys?.map((key) => key.name) || []
+        fetchSchema(id);
+    }, []);
 
     const [file, setFile] = useState(null);
     const [data, setData] = useState([]);
@@ -75,13 +84,12 @@ export default function UploadPage() {
                 complete: (results: { data: any }) => {
                     const parsedData = results.data;
                     setData(parsedData);
-                    console.log("THIS IS MY ORIGINAL CSV FILE => ", parsedData);
+                    // console.log("THIS IS MY ORIGINAL CSV FILE => ", parsedData);
                     setShowMapper(true)
                 },
             });
         };
     };
-
 
     const handleFinalMappedUpload = () => {
         if (!file) {
@@ -101,14 +109,12 @@ export default function UploadPage() {
                     const parsedData = results.data;
                     setData(parsedData);
                     console.log("TRANSFORMED DATA => ", parsedData);
-
                     const invalidCellsTemp = {};
 
                     //Validate each row and cell
                     parsedData.forEach((row, rowIndex) => {
-                        // console.log("CHECKING FOR ERRORS = ", row);
                         try {
-                            dataSchema.parse(row);
+                            schema.parse(row);
                         } catch (err) {
                             invalidCellsTemp[rowIndex] = err.errors.reduce((acc, error) => {
                                 if (!acc[error.path]) {
@@ -146,7 +152,7 @@ export default function UploadPage() {
         const newMappedKeys = [];
 
         columns.forEach((column, index) => {
-            schemaKeyNames.forEach((key) => {
+            keyNames.forEach((key) => {
                 // console.log("KEYS FROM SCHEMA => ", key);
                 // console.log("COLUMN NAME => ", column.header);
 
@@ -241,8 +247,10 @@ export default function UploadPage() {
                                                     <option value="">
                                                         Select a key
                                                     </option>
-                                                    {schemaKeyNames.map((item, idx) => {
+                                                    {keyNames.map((item, idx) => {
                                                         if (!mappedKeys.some(mappedKey => mappedKey.name === item && mappedKey.value !== index)) {
+                                                            console.log(item);
+
                                                             return (
                                                                 <option key={idx} value={item}>
                                                                     {item}

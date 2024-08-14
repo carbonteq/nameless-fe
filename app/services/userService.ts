@@ -64,11 +64,9 @@ export class userService {
         const token = localStorage.getItem('jwtToken');
         if (token) {
             const response = await httpClient.FetchUserProfile(token)
-
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-
             const data = await response.json();
             return data;
         }
@@ -90,7 +88,6 @@ export class userService {
         return response
     }
 
-
     static resetPasswordService = async (password: string, id: string, func: () => void) => {
         const response = await httpClient.ResetPassword(password, id)
         if (response.ok) {
@@ -99,8 +96,98 @@ export class userService {
             func()
         } else {
             const errorText = await response.text();
+            console.log(errorText);
+
         }
         return response
     }
 
+    static schemaCreator = async (SCHEMA: { schema: Record<string, unknown> }, onSuccess: () => void) => {
+        const token = localStorage.getItem('jwtToken');
+        const response = await httpClient.schemaCreator(SCHEMA, token)
+        if (response.ok) {
+            const result = await response.json();
+            console.log(result.message)
+            onSuccess()
+        } else {
+            const errorText = await response.text();
+        }
+        return response
+    }
+
+    static getSchema = async (onSuccess?: () => void) => {
+        const token = localStorage.getItem('jwtToken');
+        if (token) {
+            const response = await httpClient.fetchSchema(token)
+            if (response.ok) {
+                const result = await response.json();
+                return result
+            } else {
+                const errorText = await response.text();
+            }
+
+            return response
+        }
+        else {
+            throw new Error("Invalid/No Token Found")
+        }
+    }
+
+    static getSchemaById = async (id: string, onSuccess?: () => void) => {
+        const token = localStorage.getItem('jwtToken');
+        if (token) {
+            const response = await httpClient.fetchSchemaById(id, token)
+            if (response.ok) {
+                const result = await response.json();
+                console.log(result);
+                return result
+            } else {
+                const errorText = await response.text();
+            }
+            return response
+        }
+        else {
+            throw new Error("Inalid/No User Token")
+        }
+    }
+
+    static updateSchema = async (SCHEMA: { schema: Record<string, unknown>, dataStoreId: null }, id: string, onSuccess: () => void) => {
+        const token = localStorage.getItem('jwtToken');
+        if (token) {
+            const response = await httpClient.updateSchema(SCHEMA, id, token)
+            if (response.ok) {
+                const result = await response.json();
+                console.log(result);
+                onSuccess()
+            } else {
+                const errorText = await response.text();
+                console.log(errorText);
+            }
+
+            return response
+        }
+        else {
+            throw new Error("Inalid/No User Token")
+        }
+    }
+
+    static delSchema = async (id: string, onSuccess: () => void) => {
+        const token = localStorage.getItem('jwtToken');
+        if (token) {
+            const response = await httpClient.delSchema(id, token)
+            if (response.ok) {
+                const result = await response.json();
+                console.log(result);
+                onSuccess()
+            } else {
+                const errorText = await response.text();
+                console.log(errorText);
+            }
+
+            return response
+        }
+        else {
+            throw new Error("Inalid/No User Token")
+        }
+    }
 }
