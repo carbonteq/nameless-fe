@@ -255,7 +255,12 @@ const SchemaCreator = () => {
 					dataStoreId: null
 				}
 
-				await userService.schemaCreator(SCHEMA, () => router.push("/schemas"))
+				await userService.schemaCreator(SCHEMA, () => {
+					toast({
+						title: "Schema Created"
+					})
+					router.push("/view-schemas")
+				})
 
 			}
 		}
@@ -278,7 +283,7 @@ const SchemaCreator = () => {
 				if (itemElement === rows[index].typeSelected) {
 
 					return (
-						<div className="flex gap-4" key={itemIndex} >
+						<div className="flex gap-4 max-lg:flex-col" key={itemIndex} >
 							<input
 								type="text"
 								value={rows[index].name}

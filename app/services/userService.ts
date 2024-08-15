@@ -2,7 +2,6 @@ import { ActionCreatorWithPayload, Dispatch } from "@reduxjs/toolkit";
 import { JWT_TOKEN } from "@/components/constants";
 import extractIdFromToken from "../token";
 import { httpClient } from "./httpClient";
-import { toast } from "@/components/ui/use-toast";
 
 
 export class userService {
@@ -143,6 +142,7 @@ export class userService {
                 return result
             } else {
                 const errorText = await response.text();
+                console.log("HOHOHOHHOHO ", response);
             }
             return response
         }
@@ -184,6 +184,7 @@ export class userService {
                 console.log(errorText);
             }
 
+            console.log("HOHOHOHHOHO ", response);
             return response
         }
         else {

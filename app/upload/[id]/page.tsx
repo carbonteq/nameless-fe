@@ -13,9 +13,10 @@ import { Tooltip } from "@nextui-org/react";
 import { toZodSchema } from "@/app/services/zodSchemaCreator";
 import Newlines from "@/components/new-line";
 import convertToKeys from "@/app/services/convertToKeys";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { userService } from "@/app/services/userService";
 import { ZodObject, ZodTypeAny } from "zod";
+import { toast } from "@/components/ui/use-toast";
 
 type mapping = {
     name: string,
@@ -23,6 +24,7 @@ type mapping = {
 }
 
 export default function UploadPage() {
+    const router = useRouter()
     const pathname = usePathname();
     const [schema, setSchema] = useState()
     const [keyNames, setKeyNames] = useState<string[]>([])
@@ -32,6 +34,12 @@ export default function UploadPage() {
     useEffect(() => {
         const fetchSchema = async (id: string) => {
             const fetchedSchema = await userService.getSchemaById(id);
+            if (fetchedSchema.ok === false) {
+                toast({
+                    title: "BRO WTF!!"
+                })
+                router.push('/')
+            }
             setSchema(fetchedSchema);
             const dataSchema = toZodSchema(fetchedSchema.schema)
             setSchema(dataSchema)

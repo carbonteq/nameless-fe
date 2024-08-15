@@ -48,7 +48,7 @@ export default function RootLayout({
 				)}
 			>
 				<ReduxProvider>
-					<Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
+					<Providers themeProps={{ attribute: "class", defaultTheme: "" }}>
 						<div className={`flex relative h-full flex-col `}>
 							<Navbar />
 							<div className="flex relative flex-row h-full ">

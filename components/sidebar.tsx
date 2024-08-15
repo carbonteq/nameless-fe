@@ -38,7 +38,7 @@ const Sidebar: React.FC = () => {
                         src={menuIcon}
                         width={24}
                         height={24}
-                        alt="Follow us on Twitter"
+                        alt="Sidebar Icon"
                         className="dark:invert"
                     />
                 </button>
@@ -84,12 +84,12 @@ const Sidebar: React.FC = () => {
                                 id="submenu"
                             >
                                 <h1 className="cursor-pointer p-2 text-gray-600 hover:bg-[#969393] dark:text-white dark:hover:bg-[#1a222e] rounded-md mt-1">
-                                    <Link href="/create-datastore" className="block w-full h-full">
+                                    <Link href="/" className="block w-full h-full">
                                         Create
                                     </Link>
                                 </h1>
                                 <h1 className="cursor-pointer text-gray-600 p-2 hover:bg-[#969393] dark:text-white dark:hover:bg-[#1a222e] rounded-md mt-1">
-                                    <Link href="/view-datastore" className="block w-full h-full">
+                                    <Link href="/" className="block w-full h-full">
                                         View
                                     </Link>
                                 </h1>

@@ -261,7 +261,12 @@ const EditSchema = () => {
                     dataStoreId: null
                 }
 
-                await userService.updateSchema(SCHEMA, schemaId, () => router.push("/schemas"))
+                await userService.updateSchema(SCHEMA, schemaId, () => {
+                    toast({
+                        title: "Schema Updated"
+                    })
+                    router.push("/view-schemas")
+                })
 
             }
         }

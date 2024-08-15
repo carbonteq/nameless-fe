@@ -7,6 +7,7 @@ import { addIconSrc, delIconSrc, duplicateIconSrc, editIconSrc, linkIconSrc } fr
 import { generateId } from '../services/uuidGenator';
 import convertToKeys from '../services/convertToKeys';
 import { userService } from '../services/userService';
+import { toast } from '@/components/ui/use-toast';
 
 interface Con {
     name: string;
@@ -103,7 +104,7 @@ const Schemas = () => {
                                         <div className='py-2 flex justify-evenly w-full dark:invert'>
                                             <button
                                                 onClick={() => {
-                                                    router.push(`/drag-test/${schema.id}`);
+                                                    router.push(`/create-schema/${schema.id}`);
                                                 }}
                                             >
                                                 <img src={editIconSrc} alt='' className='size-7' />
@@ -134,7 +135,9 @@ const Schemas = () => {
                                                 onClick={async () => {
                                                     try {
                                                         await navigator.clipboard.writeText(`http://localhost:8000/upload/${schema.id}`);
-                                                        alert('Link copied to clipboard!');
+                                                        toast({
+                                                            title: "Link Copied"
+                                                        });
                                                     } catch (err) {
                                                         console.error('Failed to copy!', err);
                                                     }
@@ -147,7 +150,7 @@ const Schemas = () => {
                                 </Card>
                             );
                         })}
-                        <Card onClick={() => router.push("/drag-test")} className='border border-dashed h-80 lg:col-span-1 col-span-2 max-sm:col-span-4  bg-opacity-0 cursor-pointer hover:scale-110 hover:z-10'>
+                        <Card isPressable={true} disableRipple={false} onPress={() => router.push("/create-schema")} className='border border-dashed h-80 lg:col-span-1 col-span-2 max-sm:col-span-4  bg-opacity-0 cursor-pointer hover:scale-110 hover:z-10'>
                             <CardBody className='flex justify-center items-center'>
                                 <img src={addIconSrc} className='size-11 dark:invert'></img>
                             </CardBody>
