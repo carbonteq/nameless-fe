@@ -8,12 +8,10 @@ import Image from 'next/image';
 
 const Sidebar: React.FC = () => {
     const pathname = usePathname();
-    const showSidebar = !pathname.startsWith("/upload") && !pathname.startsWith("/drag-test") && pathname !== "/signin" && pathname !== "/signup" && pathname !== "/test" && pathname !== "/forgot-password" && pathname !== "/upload" ? 1 : 0;
+    const showSidebar = !pathname.startsWith("/upload") && pathname !== "/signin" && pathname !== "/signup" && pathname !== "/test" && pathname !== "/forgot-password" && pathname !== "/upload" ? 1 : 0;
 
     if (!showSidebar) return <></>;
     const [sidebarWidth, setSidebarWidth] = useState("hidden")
-    const [shouldShow, setShouldShow] = useState(true)
-
     const [show, setShow] = useState(true)
 
     function handleSidebar() {
@@ -33,8 +31,8 @@ const Sidebar: React.FC = () => {
     return (
         <>
 
-            <div>
-                <button onClick={handleSidebar} className={`pt-1 px-1 absolute top-16 z-40`}>
+            <div className={`relative ${show ? "w-[280px]" : ""}`}>
+                <button onClick={handleSidebar} className={`pt-1 px-1 fixed  z-40`}>
                     <Image
                         priority
                         src={menuIcon}
@@ -46,9 +44,9 @@ const Sidebar: React.FC = () => {
                 </button>
                 {show &&
                     <div
-                        className={`font-black relative max-sm:fixed max-sm:w-full p-2 min-h-screen z-10 max-lg:${sidebarWidth} w-[280px] overflow-auto transition-all text-center ${ThemeColour.variants.background.main}`}
+                        className={`font-black fixed max-sm:fixed max-sm:w-full p-2 min-h-screen z-10 max-lg:${sidebarWidth} w-[280px] overflow-auto transition-all text-center ${ThemeColour.variants.background.main}`}
                     >
-                        <div className="mt-16 pt-6">
+                        <div className=" pt-6">
                             <div className="mt-6 flex items-center rounded-md px-3 duration-300 text-white">
                                 <i className="bi bi-house-door-fill" />
                                 <span className="text-[25px] ml-4 text-gray-800 dark:text-white font-bold">
@@ -61,13 +59,13 @@ const Sidebar: React.FC = () => {
                                 id="submenu"
                             >
                                 <h1 className="cursor-pointer p-2 text-gray-600 hover:bg-[#969393] dark:text-white dark:hover:bg-[#1a222e] rounded-md mt-1">
-                                    <Link href="/drag-test" className="block w-full h-full">
-                                        New
+                                    <Link href="/create-schema" className="block w-full h-full">
+                                        Create
                                     </Link>
                                 </h1>
                                 <h1 className="cursor-pointer p-2 text-gray-600 hover:bg-[#969393] dark:text-white dark:hover:bg-[#1a222e] rounded-md mt-1">
-                                    <Link href="/schemas" className="block w-full h-full">
-                                        Manage
+                                    <Link href="/view-schemas" className="block w-full h-full">
+                                        View
                                     </Link>
                                 </h1>
                             </div>
@@ -77,7 +75,7 @@ const Sidebar: React.FC = () => {
                             <div className="mt-3 flex items-center rounded-md px-3 duration-300 text-white">
                                 <i className="bi bi-bookmark-fill" />
                                 <span className="text-[25px] ml-4 text-gray-800 dark:text-white font-bold">
-                                    Data
+                                    Datastores
                                 </span>
                             </div>
 
@@ -86,13 +84,13 @@ const Sidebar: React.FC = () => {
                                 id="submenu"
                             >
                                 <h1 className="cursor-pointer p-2 text-gray-600 hover:bg-[#969393] dark:text-white dark:hover:bg-[#1a222e] rounded-md mt-1">
-                                    <Link href="/books/shelf" className="block w-full h-full">
-                                        Shelves
+                                    <Link href="/create-datastore" className="block w-full h-full">
+                                        Create
                                     </Link>
                                 </h1>
                                 <h1 className="cursor-pointer text-gray-600 p-2 hover:bg-[#969393] dark:text-white dark:hover:bg-[#1a222e] rounded-md mt-1">
-                                    <Link href="/books/track-books" className="block w-full h-full">
-                                        Track Shelf
+                                    <Link href="/view-datastore" className="block w-full h-full">
+                                        View
                                     </Link>
                                 </h1>
                             </div>

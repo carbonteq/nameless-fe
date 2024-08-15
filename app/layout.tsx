@@ -49,11 +49,13 @@ export default function RootLayout({
 			>
 				<ReduxProvider>
 					<Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
-						<div className="flex relative h-full flex-col">
+						<div className={`flex relative h-full flex-col `}>
 							<Navbar />
 							<div className="flex relative flex-row h-full ">
-								<Sidebar />
-								<main className="container flex-grow px-6 pt-12 mx-auto max-w-7xl mt-16">
+								<div className="relative">
+									<Sidebar />
+								</div>
+								<main className="container flex-grow px-6 pt-12 mx-auto max-w-7xl">
 									{children}
 								</main>
 								<Toaster />
