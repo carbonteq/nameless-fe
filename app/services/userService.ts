@@ -2,6 +2,7 @@ import { ActionCreatorWithPayload, Dispatch } from "@reduxjs/toolkit";
 import { JWT_TOKEN } from "@/components/constants";
 import extractIdFromToken from "../token";
 import { httpClient } from "./httpClient";
+import { toast } from "@/components/ui/use-toast";
 
 
 export class userService {
@@ -46,14 +47,21 @@ export class userService {
             onSuccess()
 
         } else {
-            if (response.status === 401) {
+            if (response.status === 401 || response.status === 422) {
+                const errorText = await response.json();
+
                 toast({
                     title: "Try Again",
-                    description: "Invalid Email/Password",
+                    description: errorText.description,
                 });
             }
-            const errorText = await response.text();
-            console.log(errorText)
+            else if (response.status === 409) {
+                const errorText = await response.json();
+                toast({
+                    title: "Cannot create account",
+                    description: errorText.message,
+                });
+            }
         }
         return response
 
@@ -101,8 +109,7 @@ export class userService {
         return response
     }
 
-    static schemaCreator = async (SCHEMA: { schema: Record<string, unknown> }, onSuccess: () => void) => {
-        const token = localStorage.getItem('jwtToken');
+    static schemaCreator = async (token: string, SCHEMA: { schema: Record<string, unknown> }, onSuccess: () => void) => {
         const response = await httpClient.schemaCreator(SCHEMA, token)
         if (response.ok) {
             const result = await response.json();
@@ -114,81 +121,53 @@ export class userService {
         return response
     }
 
-    static getSchema = async (onSuccess?: () => void) => {
-        const token = localStorage.getItem('jwtToken');
-        if (token) {
-            const response = await httpClient.fetchSchema(token)
-            if (response.ok) {
-                const result = await response.json();
-                return result
-            } else {
-                const errorText = await response.text();
-            }
+    static getSchema = async (token: string, onSuccess?: () => void) => {
+        const response = await httpClient.fetchSchema(token)
+        if (response.ok) {
+            const result = await response.json();
+            return result
+        } else {
+            const errorText = await response.text();
+        }
 
-            return response
-        }
-        else {
-            throw new Error("Invalid/No Token Found")
-        }
+        return response
     }
 
     static getSchemaById = async (id: string, onSuccess?: () => void) => {
-        const token = localStorage.getItem('jwtToken');
-        if (token) {
-            const response = await httpClient.fetchSchemaById(id, token)
-            if (response.ok) {
-                const result = await response.json();
-                console.log(result);
-                return result
-            } else {
-                const errorText = await response.text();
-                console.log("HOHOHOHHOHO ", response);
-            }
-            return response
+        const response = await httpClient.fetchSchemaById(id)
+        if (response.ok) {
+            const result = await response.json();
+            console.log(result);
+            return result
+        } else {
+            const errorText = await response.text();
         }
-        else {
-            throw new Error("Inalid/No User Token")
-        }
+        return response
     }
 
-    static updateSchema = async (SCHEMA: { schema: Record<string, unknown>, dataStoreId: null }, id: string, onSuccess: () => void) => {
-        const token = localStorage.getItem('jwtToken');
-        if (token) {
-            const response = await httpClient.updateSchema(SCHEMA, id, token)
-            if (response.ok) {
-                const result = await response.json();
-                console.log(result);
-                onSuccess()
-            } else {
-                const errorText = await response.text();
-                console.log(errorText);
-            }
-
-            return response
+    static updateSchema = async (token: string, SCHEMA: { schema: Record<string, unknown>, dataStoreId: null }, id: string, onSuccess: () => void) => {
+        const response = await httpClient.updateSchema(SCHEMA, id, token)
+        if (response.ok) {
+            const result = await response.json();
+            console.log(result);
+            onSuccess()
+        } else {
+            const errorText = await response.text();
+            console.log(errorText);
         }
-        else {
-            throw new Error("Inalid/No User Token")
-        }
+        return response
     }
 
-    static delSchema = async (id: string, onSuccess: () => void) => {
-        const token = localStorage.getItem('jwtToken');
-        if (token) {
-            const response = await httpClient.delSchema(id, token)
-            if (response.ok) {
-                const result = await response.json();
-                console.log(result);
-                onSuccess()
-            } else {
-                const errorText = await response.text();
-                console.log(errorText);
-            }
-
-            console.log("HOHOHOHHOHO ", response);
-            return response
+    static delSchema = async (token: string, id: string, onSuccess: () => void) => {
+        const response = await httpClient.delSchema(id, token)
+        if (response.ok) {
+            const result = await response.json();
+            console.log(result);
+            onSuccess()
+        } else {
+            const errorText = await response.text();
+            console.log(errorText);
         }
-        else {
-            throw new Error("Inalid/No User Token")
-        }
+        return response
     }
 }

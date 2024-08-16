@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { setSchema } from "@/app/redux/slices/validationSchemaSlice";
-import { usePathname, useRouter } from "next/navigation";
+import { redirect, usePathname, useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { ThemeColour } from "@/components/primitives";
 import Row from "@/components/row";
@@ -9,12 +9,13 @@ import { useToast } from "@/components/ui/use-toast";
 import { convertToJson } from "@/app/jsonSchemaCreator";
 import Ajv from "ajv";
 import metaSchema from "@/app/metaSchema";
-import { DEFAULT_CONSTRAINTS, TYPES } from "@/components/constants";
+import { DEFAULT_CONSTRAINTS, JWT_TOKEN, TYPES } from "@/components/constants";
 import Draggable from "@/components/Draggable";
 import convertObject from "@/app/services/convertToKeys";
 import convertToKeys from "@/app/services/convertToKeys";
 import { convertToRowFromSchema } from "@/app/services/createToRowFromSchema";
 import { userService } from "@/app/services/userService";
+import { boolean } from "zod";
 
 export interface Con {
     name: string;
@@ -30,6 +31,7 @@ export interface IColumn {
 const EditSchema = () => {
 
 
+
     const router = useRouter();
     const dispatch = useDispatch();
     const { toast } = useToast();
@@ -40,8 +42,14 @@ const EditSchema = () => {
     const [rows, setRows] = useState<IColumn[]>([]);
     const pathname = usePathname();
     const [schemaId, setSchemaId] = useState<string>("")
+    const [token, setToken] = useState("")
 
     useEffect(() => {
+        const token = localStorage.getItem(JWT_TOKEN)
+        if (!token) {
+            redirect('/signin')
+        }
+        setToken(token)
         const fetchSchema = async (id: string) => {
             const fetchedSchema = await userService.getSchemaById(id);
             setSchema(fetchedSchema);
@@ -211,7 +219,7 @@ const EditSchema = () => {
     const castValue = (constraint: Con, typeSelected: string) => {
         // Type Cast the values from string to integer and boolean where required
 
-        return (constraint.name === "min" || constraint.name === "max" || constraint.name === "minLength" || constraint.name === "maxLength" || (constraint.name === "default" && typeSelected !== 'string')) ? Number(constraint.value) : ((constraint.name === 'default' && typeSelected === 'string') || constraint.name === 'format') ? constraint.value : true
+        return (constraint.name === "min" || constraint.name === "max" || constraint.name === "minLength" || constraint.name === "maxLength" || (constraint.name === "default" && typeSelected === 'number')) ? Number(constraint.value) : ((constraint.name === 'default' && typeSelected === 'string') || constraint.name === 'format') ? constraint.value : true
     }
 
     const handleSubmit = async (e: { preventDefault: () => void; }) => {
@@ -261,7 +269,7 @@ const EditSchema = () => {
                     dataStoreId: null
                 }
 
-                await userService.updateSchema(SCHEMA, schemaId, () => {
+                await userService.updateSchema(token, SCHEMA, schemaId, () => {
                     toast({
                         title: "Schema Updated"
                     })
@@ -344,7 +352,9 @@ const EditSchema = () => {
                     );
                 }
                 else if (itemElement === "default") {
-                    const inputType = rows[index].typeSelected === 'string' ? "text" : "number"
+                    let inputType: string
+                    if (rows[index].typeSelected === "boolean") { inputType = "boolean" }
+                    else { inputType = rows[index].typeSelected === 'string' ? "text" : "number" }
                     const constraint = rows[index].constraints.find(
                         (c) => c.name === itemElement
                     );

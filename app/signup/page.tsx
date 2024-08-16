@@ -1,5 +1,4 @@
 "use client";
-import { Input } from "@/components/ui/input"; // Correct import
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -11,7 +10,6 @@ import {
 import Link from "next/link";
 import { useState } from "react";
 import { signInSchema } from "@/components/schema";
-import { toast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import InputField from "@/components/inputfield";
 import { userService } from "../services/userService";
@@ -40,12 +38,13 @@ export default function SignUp() {
         // ZOD Validation
         const result = signInSchema.safeParse({ email, password, username });
 
-        if (!result.success) {
+        if (result.success === false) {
             const formErrors = result.error.flatten().fieldErrors;
             setErrors({
                 email: formErrors.email?.[0],
                 password: formErrors.password?.[0],
             });
+
             return;
         }
         setErrors({});

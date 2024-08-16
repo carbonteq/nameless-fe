@@ -78,12 +78,12 @@ export class httpClient {
 
     }
 
-    static fetchSchemaById = async (id: string, token: string) => {
+    static fetchSchemaById = async (id: string) => {
         return await fetch(`${BASE_URL}/schema/${id}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`
+                // "Authorization": `Bearer ${token}`
             },
         });
 

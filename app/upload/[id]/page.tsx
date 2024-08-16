@@ -13,14 +13,15 @@ import { Tooltip } from "@nextui-org/react";
 import { toZodSchema } from "@/app/services/zodSchemaCreator";
 import Newlines from "@/components/new-line";
 import convertToKeys from "@/app/services/convertToKeys";
-import { usePathname, useRouter } from "next/navigation";
+import { redirect, usePathname, useRouter } from "next/navigation";
 import { userService } from "@/app/services/userService";
 import { ZodObject, ZodTypeAny } from "zod";
 import { toast } from "@/components/ui/use-toast";
+import { JWT_TOKEN } from "@/components/constants";
 
 type mapping = {
     name: string,
-    value: number
+    value: number | null
 }
 
 export default function UploadPage() {
@@ -34,18 +35,20 @@ export default function UploadPage() {
     useEffect(() => {
         const fetchSchema = async (id: string) => {
             const fetchedSchema = await userService.getSchemaById(id);
-            if (fetchedSchema.ok === false) {
+            if (fetchedSchema.status === 500) {
                 toast({
-                    title: "BRO WTF!!"
+                    title: "Invalid Schema ID"
                 })
-                router.push('/')
+                router.push("/")
             }
-            setSchema(fetchedSchema);
-            const dataSchema = toZodSchema(fetchedSchema.schema)
-            setSchema(dataSchema)
-            keys = convertToKeys(fetchedSchema.schema)
-            schemaKeyNames = keys?.map((key) => key.name) || []
-            setKeyNames(schemaKeyNames)
+            else {
+                setSchema(fetchedSchema);
+                const dataSchema = toZodSchema(fetchedSchema.schema)
+                setSchema(dataSchema)
+                keys = convertToKeys(fetchedSchema.schema)
+                schemaKeyNames = keys?.map((key) => key.name) || []
+                setKeyNames(schemaKeyNames)
+            }
         };
 
         //Extracting schema id from url
@@ -60,7 +63,7 @@ export default function UploadPage() {
     const [invalidCells, setInvalidCells] = useState({});
     const [isUploaded, setIsUploaded] = useState<boolean>(false);
     const [showMapper, setShowMapper] = useState<boolean>(false);
-    const [headerMapping, setHeaderMapping] = useState<mapping>();
+    const [headerMapping, setHeaderMapping] = useState<mapping>({ name: "", value: null });
     const [mappedKeys, setMappedKeys] = useState<mapping[]>([])
 
     const handleFileChange = (e: { target: { files: any[]; }; }) => {

@@ -1,13 +1,13 @@
 "use client";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { redirect, useRouter } from "next/navigation";
 import { ThemeColour } from "@/components/primitives";
 import Row from "@/components/row";
 import { useToast } from "@/components/ui/use-toast";
 import { convertToJson } from "../jsonSchemaCreator";
 import Ajv from "ajv";
 import metaSchema from "../metaSchema";
-import { DEFAULT_CONSTRAINTS, TYPES } from "@/components/constants";
+import { DEFAULT_CONSTRAINTS, JWT_TOKEN, TYPES } from "@/components/constants";
 import Draggable from "@/components/Draggable";
 import { userService } from "../services/userService";
 
@@ -23,11 +23,24 @@ export interface IColumn {
 }
 
 const SchemaCreator = () => {
+
+	useEffect(() => {
+		const token = localStorage.getItem(JWT_TOKEN);
+		if (!token) {
+			redirect('/signin')
+		}
+		setToken(token)
+
+		// Request to get configured datastores list from backend
+
+	}, [])
+	const [token, setToken] = useState<string>("")
+
 	const router = useRouter();
-	// const dispatch = useDispatch();
 	const { toast } = useToast();
 	const [schemaName, setSchemaName] = useState<string>()
 	const [rowSelected, setRowSelected] = useState(0)
+	const [dataStoreId, setDataStoreId] = useState<string | null>(null)
 	// Array of Rows to store all All Related Values of a key
 
 	const [rows, setRows] = useState<IColumn[]>([{
@@ -242,7 +255,6 @@ const SchemaCreator = () => {
 				metaValidator.validateSchema(metaSchema, true);
 				const validator = metaValidator.compile(metaSchema);
 
-
 				console.log(validator(testSchema));
 
 				// To check the error returned 
@@ -255,7 +267,7 @@ const SchemaCreator = () => {
 					dataStoreId: null
 				}
 
-				await userService.schemaCreator(SCHEMA, () => {
+				await userService.schemaCreator(token, SCHEMA, () => {
 					toast({
 						title: "Schema Created"
 					})
@@ -338,7 +350,9 @@ const SchemaCreator = () => {
 					);
 				}
 				else if (itemElement === "default") {
-					const inputType = rows[index].typeSelected === 'string' ? "text" : "number"
+					let inputType: string
+					if (rows[index].typeSelected === "boolean") { inputType = "boolean" }
+					else { inputType = rows[index].typeSelected === 'string' ? "text" : "number" }
 					const constraint = rows[index].constraints.find(
 						(c) => c.name === itemElement
 					);
@@ -436,9 +450,29 @@ const SchemaCreator = () => {
 		<div
 			className={`flex flex-col rounded-xl p-4 -mt-11 bg-opacity-50 ${ThemeColour.variants.background.main}`}
 		>
-			<div className="flex justify-center items-center">
-				<input value={schemaName} onChange={(e) => setSchemaName(e.target.value)} type="text" placeholder="Schema Name" className=" p-2 m-2 w-[200px] rounded text-center" />
+			<div className="flex justify-center gap-4 items-center mb-2">
+
+				<input value={schemaName} onChange={(e) => setSchemaName(e.target.value)} type="text" placeholder="Schema Name" className=" outline-none p-2 w-[200px] h-[43px] rounded-xl text-center" />
+				<select
+					className="rounded-xl p-2 h-full justify-center dropdown font-thin outline-none"
+					// value={mappedKey?.name || ""}
+					onChange={(e) => {
+					}}
+				>
+					<option value="">
+						Select Datastore
+					</option>
+					<option onClick={() => {
+						// Make Request to backend
+						setDataStoreId(id)
+
+					}}>
+						Dropbox
+					</option>
+
+				</select>
 			</div>
+
 			<div className="flex gap-4">
 				<div className="flex flex-col gap-4">
 					<div className="w-[202px] h-[272px] bg-gray-100 bg-opacity-80 dark:bg-gray-800 dark:bg-opacity-80 rounded-xl flex flex-col items-center p-4">
@@ -500,7 +534,7 @@ const SchemaCreator = () => {
 			<div className="mt-3 flex justify-center">
 				<button onClick={handleSubmit} className="font-black mb-6 border border-gray-500 dark:border-white rounded-3xl hover:border-2 hover:border-cyan-900  hover:shadow-2xl px-8 py-3 bg-[#b1AAAA] dark:bg-gray-900 transition ease-in-out hover:-translate-y-1 hover:scale-110 duration-300" >Submit</button>
 			</div>
-		</div>
+		</div >
 	);
 }
 

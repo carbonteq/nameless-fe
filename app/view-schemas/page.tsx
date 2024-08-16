@@ -2,8 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardHeader, CardBody, CardFooter } from '@nextui-org/react';
 import { ThemeColour } from '@/components/primitives';
-import { useRouter } from 'next/navigation';
-import { addIconSrc, delIconSrc, duplicateIconSrc, editIconSrc, linkIconSrc } from '@/components/constants';
+import { redirect, useRouter } from 'next/navigation';
+import { addIconSrc, delIconSrc, duplicateIconSrc, editIconSrc, JWT_TOKEN, linkIconSrc } from '@/components/constants';
 import { generateId } from '../services/uuidGenator';
 import convertToKeys from '../services/convertToKeys';
 import { userService } from '../services/userService';
@@ -33,10 +33,17 @@ const Schemas = () => {
     ]);
     const router = useRouter();
     const [isUpdate, setIsUpdate] = useState<boolean>(false)
+    const [token, setToken] = useState("")
 
     useEffect(() => {
+        const token = localStorage.getItem(JWT_TOKEN);
+        if (!token) {
+            redirect('/signin')
+        }
+        setToken(token)
+
         const fetchSchemas = async () => {
-            const schemas = await userService.getSchema();
+            const schemas = await userService.getSchema(token);
             setSchemasReceived(schemas);
             console.log('In Schemas Page', schemas);
         };
@@ -111,7 +118,7 @@ const Schemas = () => {
                                             </button>
                                             <button
                                                 onClick={async () => {
-                                                    await userService.delSchema(schema.id, () => {
+                                                    await userService.delSchema(token, schema.id, () => {
                                                         setIsUpdate(prev => !prev)
                                                     })
                                                 }}
@@ -124,7 +131,7 @@ const Schemas = () => {
                                                         schema: schema.schema,
                                                         dataStoreId: null
                                                     };
-                                                    await userService.schemaCreator(SCHEMA, () => {
+                                                    await userService.schemaCreator(token, SCHEMA, () => {
                                                         setIsUpdate(prev => !prev)
                                                     })
                                                 }}

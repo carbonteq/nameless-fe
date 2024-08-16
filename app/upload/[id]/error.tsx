@@ -16,8 +16,8 @@ export default function Error({
   }, [error]);
 
   return (
-    <div>
-      <h2>Something went wrong!</h2>
+    <div className="h-full flex  absolute top-1/2 left-1/2 flex-1 justify-center items-center">
+      <h2>Something went wrong {error.message}</h2>
       <button
         onClick={
           // Attempt to recover by trying to re-render the segment

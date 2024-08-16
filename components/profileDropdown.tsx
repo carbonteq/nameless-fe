@@ -57,7 +57,7 @@ const ProfileDropdown = () => {
 			{dropdownOpen && (
 				<div>
 					<div
-						className={`${ThemeColour.variants.background.main} absolute right-0 p-1 mt-4 w-48 border border-gray-200 rounded-md shadow-lg z-20`}
+						className={`${ThemeColour.variants.background.main} absolute right-0 p-1 mt-4 w-48 border border-gray-200 rounded-md shadow-lg z-50`}
 					>
 						<Link
 							onClick={() => {
